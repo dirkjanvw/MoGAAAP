@@ -1,0 +1,4 @@
+channels:
+  - conda-forge
+dependencies:
+  - gnuplot=5.4.8

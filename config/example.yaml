@@ -1,0 +1,10 @@
+prot_queries:
+    NBS_domain: "/path_to_data/blast_queries/query1.amac"
+
+nucl_queries:
+    chloroplast: "/path_to_data/blast_queries/chloroplast.fasta"
+    mitochondrion: "/path_to_data/blast_queries/mitochondrion.fasta"
+    telomere: "/path_to_data/blast_queryies/telomere.fasta"
+
+assemblies: 
+    assemblyA: "/path_to_data/assemblies/assemblyA.fa"
