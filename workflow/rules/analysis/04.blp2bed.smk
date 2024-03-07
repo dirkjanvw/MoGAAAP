@@ -8,14 +8,13 @@ rule blp2bed:
     benchmark:
         "results/benchmarks/04.blp2bed/{asmname}/{query_name}.vs.{asmname}.txt" 
     conda:
-        "../envs/bedtools.yaml"
+        "../../envs/bedtools.yaml"
     shell:
         """
         (
-        tclsh /path_to_data/x-bin-x/scripts/tcl_blast2bed_converter.tcl {input} {output}._temp1 1 12 13 0 BED 
+        tclsh workflow/scripts/tcl_blast2bed_converter.tcl {input} {output}._temp1 1 12 13 0 BED 
         sort -k1,1 -k2,2n -k3,3n {output}._temp1 > {output}._temp2 
         bedtools merge -d 600 -i {output}._temp2 > {output} 
-        ### REMOVE (PERL /FIND/REPLACE/) "ref|" and "|" SYMBOLS IN OUTPUT FILE ###
         perl -p -i -e 's/^ref\\|//' {output} 
         perl -p -i -e 's/\\|\t/\t/' {output} 
         ) &> {log} 

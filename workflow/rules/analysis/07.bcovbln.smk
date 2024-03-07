@@ -12,7 +12,7 @@ rule bcovbln:
     benchmark:
         "results/benchmarks/07.bcovbln/{asmname}/{query_name}.vs.{asmname}.txt" 
     conda:
-        "../envs/bedtools.yaml"
+        "../../envs/bedtools.yaml"
     shell:
         """
         ( 

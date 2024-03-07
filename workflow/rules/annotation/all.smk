@@ -2,4 +2,4 @@ rule annotate:
     input:
         ""
     output:
-        touch("results/assembly/.done")
+        touch("results/4.annotation/.done")

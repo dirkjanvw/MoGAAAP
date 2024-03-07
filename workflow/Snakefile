@@ -1,18 +1,19 @@
 from snakemake.utils import min_version
-min_version("8.4")
+min_version("8")
 
 configfile: "config/config.yaml" 
 
+include: "rules/common.smk"
 include: "rules/assembly/all.smk"
 include: "rules/scaffolding/all.smk"
-include: "rules/cleaning/all.smk"
+include: "rules/analysis/all.smk"
 include: "rules/annotation/all.smk"
 include: "rules/quality_control/all.smk"
 
 rule all: 
     input: 
-        "results/assembly/.done",
-        "results/scaffolding/.done",
-        "results/cleaning/.done",
-        "results/annotation/.done",
-        "results/quality_control/.done",
+        "results/1.assembly/.done",
+        "results/2.scaffolding/.done",
+        "results/3.analysis/.done",
+        "results/4.annotation/.done",
+        "results/5.quality_control/.done",

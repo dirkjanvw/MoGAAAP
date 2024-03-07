@@ -2,4 +2,4 @@ rule assemble:
     input:
         ""
     output:
-        touch("results/assembly/.done")
+        touch("results/1.assembly/.done")

@@ -12,10 +12,12 @@ rule blast_p:
     benchmark:
         "results/benchmarks/02.blast_p/{asmname}/{query_name}.vs.{asmname}.txt" 
     threads:
-        12 
+        12
+    conda:
+        "../../envs/blast.yaml"
     shell:
         """
-        /path_to_data/x-bin-x/ncbi-blast-2.15/bin/tblastn \
+        tblastn \
            -query {input.query_file} -db {input.blast_db} -out {output} \
            -outfmt '7 qseqid sseqid evalue pident score length nident mismatch gaps frames qstart qend sstart send qcovhsp qlen slen' \
            -evalue 1e-10 -dbsize 1000000 -seg no -word_size 3 -max_intron_length 120 -qcov_hsp_perc 20 -xdrop_ungap 40 -xdrop_gap 60 \

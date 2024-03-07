@@ -8,7 +8,7 @@ rule bln2bed:
     benchmark:
         "results/benchmarks/05.bln2bed/{asmname}/{query_name}.vs.{asmname}.txt" 
     conda:
-        "../envs/bedtools.yaml"
+        "../../envs/bedtools.yaml"
     shell:
         """
         (

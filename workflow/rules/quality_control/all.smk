@@ -2,4 +2,4 @@ rule qc:
     input:
         ""
     output:
-        touch("results/assembly/.done")
+        touch("results/5.quality_control/.done")

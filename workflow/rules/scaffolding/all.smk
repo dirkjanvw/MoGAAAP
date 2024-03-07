@@ -2,4 +2,4 @@ rule scaffold:
     input:
         ""
     output:
-        touch("results/assembly/.done")
+        touch("results/2.scaffolding/.done")

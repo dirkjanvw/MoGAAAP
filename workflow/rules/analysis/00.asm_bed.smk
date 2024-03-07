@@ -6,13 +6,12 @@ rule asm_bed:
         chr_bed = "results/00.asm_bed/{asmname}/{asmname}.Chr_Len.BED",
         asm_1Mb = "results/00.asm_bed/{asmname}/{asmname}.Asm_Len.1Mb.Range",
         chr_1Mb = "results/00.asm_bed/{asmname}/{asmname}.Chr_Len.1Mb.Range",
-
     log:
         "results/logs/00.asm_bed/{asmname}.log"
     benchmark:
         "results/benchmarks/00.asm_bed/{asmname}.txt"
     conda:
-        "../envs/bioawk.yaml"
+        "../../envs/bioawk.yaml"
     shell:
         """
         (
