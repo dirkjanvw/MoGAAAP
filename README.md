@@ -50,12 +50,12 @@ The following resources (apart from CPUs) might be heavily used by the pipeline:
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake -npc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
+snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake -pc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
+snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
 ```
 
 ### Reporting
