@@ -1,41 +1,18 @@
+from snakemake.utils import min_version
+min_version("8.4")
+
 configfile: "config/config.yaml" 
 
-include: "rules/00.asm_bed.smk"
-include: "rules/01.blastdb.smk"
-include: "rules/02.blast_p.smk"
-include: "rules/03.blast_n.smk"
-include: "rules/04.blp2bed.smk"
-include: "rules/05.bln2bed.smk"
-include: "rules/06.bcovblp.smk"
-include: "rules/07.bcovbln.smk"
-
+include: "rules/assembly/all.smk"
+include: "rules/scaffolding/all.smk"
+include: "rules/cleaning/all.smk"
+include: "rules/annotation/all.smk"
+include: "rules/quality_control/all.smk"
 
 rule all: 
     input: 
-        expand("results/00.asm_bed/{asmname}/{asmname}.Asm_Len.BED", asmname = config["assemblies"]), ### BED FILE WITH SEQ LEN ###
-        expand("results/00.asm_bed/{asmname}/{asmname}.Chr_Len.BED", asmname = config["assemblies"]), ### BED FILE WITH CHR LEN ###
-        expand("results/00.asm_bed/{asmname}/{asmname}.Asm_Len.1Mb.Range", asmname = config["assemblies"]), ### ASM FILE 1MB RANGE ###
-        expand("results/00.asm_bed/{asmname}/{asmname}.Chr_Len.1Mb.Range", asmname = config["assemblies"]), ### CHR FILE 1MB RANGE ###
-
-        expand("results/01.blastdb/{asmname}/{asmname}.BDB", asmname = config["assemblies"]), ### ASSEMBLY BLAST DB ### 
-        expand("results/02.blast_p/{asmname}/{query_name}.vs.{asmname}.m7", asmname = config["assemblies"], query_name = config["prot_queries"]), ### BLAST PROT QUERIES ### 
-        expand("results/03.blast_n/{asmname}/{query_name}.vs.{asmname}.m7", asmname = config["assemblies"], query_name = config["nucl_queries"]), ### BLAST NUCL QUERIES ### 
-        expand("results/04.blp2bed/{asmname}/{query_name}.vs.{asmname}.bed", asmname = config["assemblies"], query_name = config["prot_queries"]), ### BED FROM PROT BLAST M7 ### 
-        expand("results/05.bln2bed/{asmname}/{query_name}.vs.{asmname}.bed", asmname = config["assemblies"], query_name = config["nucl_queries"]), ### BED FROM NUCL BLAST M7 ### 
-
-        expand("results/06.bcovblp/{asmname}/{query_name}.vs.{asmname}.asm.coverage", asmname = config["assemblies"], query_name = config["prot_queries"]), ### ASM COVERAGE ### 
-        expand("results/06.bcovblp/{asmname}/{query_name}.vs.{asmname}.chr.coverage", asmname = config["assemblies"], query_name = config["prot_queries"]), ### CHR COVERAGE ### 
-        expand("results/06.bcovblp/{asmname}/{query_name}.vs.{asmname}.items.circos", asmname = config["assemblies"], query_name = config["prot_queries"]), ### CIRCOS ITEMS ###
-
-        expand("results/07.bcovbln/{asmname}/{query_name}.vs.{asmname}.asm.coverage", asmname = config["assemblies"], query_name = config["nucl_queries"]), ### ASM COVERAGE ###
-        expand("results/07.bcovbln/{asmname}/{query_name}.vs.{asmname}.chr.coverage", asmname = config["assemblies"], query_name = config["nucl_queries"]), ### CHR COVERAGE ###
-        expand("results/07.bcovbln/{asmname}/{query_name}.vs.{asmname}.fract.circos", asmname = config["assemblies"], query_name = config["nucl_queries"]), ### CIRCOS FRACT ###
-
-
-
-
-
-##################################################################################################################################################################################
-
-
-
+        "results/assembly/.done",
+        "results/scaffolding/.done",
+        "results/cleaning/.done",
+        "results/annotation/.done",
+        "results/quality_control/.done",
