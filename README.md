@@ -27,6 +27,7 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
 - `qc`: This module will perform quality control of the scaffolded assembly and the quick-and-dirty annotation.
+- `all`: This module will run all the above modules.
 
 ### Important parameters
 Several important `snakemake` parameters are important when running this pipeline:
@@ -61,5 +62,5 @@ snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources mem_mb=$
 ### Reporting
 The pipeline can generate an HTML `report.html` file with the most important results:
 ```bash
-snakemake -c1 --report report.html
+snakemake ${MODULE} -c1 --report report.html
 ```

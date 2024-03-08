@@ -1,3 +1,5 @@
+include: "01.hifiasm.smk"
+
 rule assemble:
     input:
         ""
