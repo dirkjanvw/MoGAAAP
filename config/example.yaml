@@ -20,4 +20,4 @@ prot_queries:
 nucl_queries:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
     mitochondrion: "resources/blast_queries/mitochondrion.fasta"
-    telomere: "resources/blast_queryies/telomere.fasta"
+    telomere: "resources/blast_queries/telomere.fasta"
