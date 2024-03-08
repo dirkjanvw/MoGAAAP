@@ -2,18 +2,18 @@ rule hifiasm:
     input:
         hifi = lambda wildcards: config["reads"]["hifi"][wildcards.asmname],
     output:
-        "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa", #without `--primary -l0` option
+        #"results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa", #without `--primary -l0` option
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.p_ctg.gfa", #with `--primary -l0` option
     log:
         "results/logs/1.assembly/hifiasm/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/hifiasm/{asmname}.txt"
     threads:
-        min(workflow.cores - 1, 50)
+        min(max(workflow.cores - 1, 1), 50)
     conda:
         "../../envs/hifiasm.yaml"
     shell:
-        "hifiasm -t {threads} -o $(echo {output} | rev | cut -d '.' -f 4- | rev) {input.hifi} 2> {log}"  # without `--primary -l0` option
+        #"hifiasm -t {threads} -o $(echo {output} | rev | cut -d '.' -f 4- | rev) {input.hifi} 2> {log}"  # without `--primary -l0` option
         "hifiasm -t {threads} --primary -l0 -o $(echo {output} | rev | cut -d '.' -f 4- | rev) {input.hifi} 2> {log}"  # with `--primary -l0` option
 
 rule hifiasm_with_ont:
@@ -21,7 +21,7 @@ rule hifiasm_with_ont:
         hifi = lambda wildcards: config["reads"]["hifi"][wildcards.asmname],
         ont = lambda wildcards: config["reads"]["ont"][wildcards.asmname],
     output:
-        "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa", #without `--primary -l0` option
+        #"results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa", #without `--primary -l0` option
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.p_ctg.gfa", #with `--primary -l0` option
     log:
         "results/logs/1.assembly/hifiasm_with_ont/{asmname}.log"
@@ -33,14 +33,14 @@ rule hifiasm_with_ont:
         "../../envs/hifiasm.yaml"
     shell:
         "hifiasm -t {threads} -o $(echo {output} | rev | cut -d '.' -f 4- | rev) --ul {input.ont} {input.hifi} 2> {log}"  # without `--primary -l0` option
-        "hifiasm -t {threads} --primary -l0 -o $(echo {output} | rev | cut -d '.' -f 4- | rev) --ul {input.ont} {input.hifi}  2> {log}"  # with `--primary -l0` option
+        #"hifiasm -t {threads} --primary -l0 -o $(echo {output} | rev | cut -d '.' -f 4- | rev) --ul {input.ont} {input.hifi}  2> {log}"  # with `--primary -l0` option
 
 rule gfa2fasta:
     input:
-        lambda wildcards: branch(wildcards.asmname in config["reads"]["ont"],  #without `--primary -l0` option
-            then = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa",
-            otherwise = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa"),
-        lambda wildcards: branch(wildcards.asmname in config["reads"]["ont"],  #with `--primary -l0` option
+        #lambda wildcards: branch(config["reads"]["ont"] and wildcards.asmname in config["reads"]["ont"],  #without `--primary -l0` option
+        #    then = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa",
+        #    otherwise = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa"),
+        lambda wildcards: branch(config["reads"]["ont"] and wildcards.asmname in config["reads"]["ont"],  #with `--primary -l0` option
             then = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.p_ctg.gfa",
             otherwise = "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.p_ctg.gfa"),
     output:
