@@ -2,7 +2,7 @@ rule circos_ticks:
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.ticks.conf",
     log:
-        "results/logs/3.analysis/circos_ticks/{asmname}.log"
+        "results/logs/3.analysis/3.analysis/circos_ticks/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_ticks/{asmname}.txt"
     shell:
@@ -47,7 +47,7 @@ rule circos_karyotype:
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
     log:
-        "results/logs/3.analysis/circos_karyotype/{asmname}.log"
+        "results/logs/3.analysis/3.analysis/circos_karyotype/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_karyotype/{asmname}.txt"
     shell:
@@ -61,7 +61,7 @@ rule circos_configuration:
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     log:
-        "results/logs/3.analysis/circos_configuration/{asmname}.log"
+        "results/logs/3.analysis/3.analysis/circos_configuration/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_configuration/{asmname}.txt"
     shell:
@@ -74,7 +74,7 @@ rule circos:
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.png",
     log:
-        "results/logs/3.analysis/circos/{asmname}.log"
+        "results/logs/3.analysis/3.analysis/circos/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos/{asmname}.txt"
     conda:

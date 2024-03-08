@@ -4,7 +4,7 @@ rule bln2bed:
     output:
         "results/{asmname}/3.analysis/05.bln2bed/{query_name}.vs.{asmname}.bed"
     log:
-        "results/logs/bln2bed/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/3.analysis/bln2bed/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/bln2bed/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:

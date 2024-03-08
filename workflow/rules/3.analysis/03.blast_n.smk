@@ -5,7 +5,7 @@ rule blast_n:
     output:
         "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.m7"
     log:
-        "results/logs/blast_n/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/3.analysis/blast_n/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/blast_n/{asmname}/{query_name}.vs.{asmname}.txt"
     threads:
