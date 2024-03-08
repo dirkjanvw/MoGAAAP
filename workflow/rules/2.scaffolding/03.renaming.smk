@@ -16,8 +16,8 @@ rule renaming_sequences:
     output:
         "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa"
     log:
-        "results/logs/renaming_sequences/{asmname}.log"
+        "results/logs/2.scaffolding/renaming_sequences/{asmname}.log"
     benchmark:
-        "results/benchmarks/renaming_sequences/{asmname}.txt"
+        "results/benchmarks/2.scaffolding/renaming_sequences/{asmname}.txt"
     shell:
         "??? &> {log}" #TODO: add script

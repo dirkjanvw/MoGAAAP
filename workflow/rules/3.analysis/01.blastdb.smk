@@ -6,7 +6,7 @@ rule blastdb:
     log:
         "results/logs/01.blastdb/{asmname}.log"
     benchmark:
-        "results/benchmarks/01.blastdb/{asmname}.txt"
+        "results/benchmarks/3.analysis/01.blastdb/{asmname}.txt"
     conda:
         "../../envs/blast.yaml"
     shell:

@@ -9,7 +9,7 @@ rule asm_bed:
     log:
         "results/logs/asm_bed/{asmname}.log"
     benchmark:
-        "results/benchmarks/asm_bed/{asmname}.txt"
+        "results/benchmarks/3.analysis/asm_bed/{asmname}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell: #TODO: don't hardcode the number of chromosomes

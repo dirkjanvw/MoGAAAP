@@ -7,7 +7,7 @@ rule blast_n:
     log:
         "results/logs/blast_n/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/blast_n/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/3.analysis/blast_n/{asmname}/{query_name}.vs.{asmname}.txt"
     threads:
         12
     conda:

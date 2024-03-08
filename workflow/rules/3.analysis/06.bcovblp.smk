@@ -10,7 +10,7 @@ rule bcovblp:
     log:
         "results/logs/bcovblp/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/bcovblp/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/3.analysis/bcovblp/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:
         "../../envs/bedtools.yaml"
     shell:

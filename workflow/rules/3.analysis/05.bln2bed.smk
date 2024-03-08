@@ -6,7 +6,7 @@ rule bln2bed:
     log:
         "results/logs/bln2bed/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/bln2bed/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/3.analysis/bln2bed/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:
         "../../envs/bedtools.yaml"
     shell:
