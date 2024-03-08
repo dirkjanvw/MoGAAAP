@@ -1,6 +1,6 @@
 rule renaming_sequences:
     input:
-        reference = config["ref_genome"],
+        reference = get_ref_genome,
         scaffolds = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
                 reference=config["ref_genome"],
                 minlen=config["min_contig_len"],

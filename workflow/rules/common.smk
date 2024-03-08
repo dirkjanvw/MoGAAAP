@@ -7,3 +7,9 @@ def get_all_accessions():
             for accession in config["reads"]["ont"].keys():
                 all_accessions.append(accession)
     return all_accessions
+
+def get_ref_genome(wildcards):
+    if len(config["ref_genome"]) == 1:
+        return [config["ref_genome"][name] for name in config["ref_genome"]]
+    else:
+        raise ValueError("Exactly one reference genome has to be specified.")

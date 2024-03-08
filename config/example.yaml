@@ -8,7 +8,8 @@ reads:
         accessionA: "resources/reads/ONT/readsA.fasta"
 
 # All filtering and scaffolding parameters
-ref_genome: "resources/reference_genome.fa"
+ref_genome:
+    accessionX_V0: "resources/reference_genome.fa"
 min_contig_len: 10000
 ntjoin_k: 52
 ntjoin_w: 10000
