@@ -4,9 +4,9 @@ rule filter_sequences:
     output:
         "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.fa"
     log:
-        "results/logs/04.contigs_filtered/filter_sequences/{asmname}.{minlen}.log"
+        "results/logs/filter_sequences/{asmname}.{minlen}.log"
     benchmark:
-        "results/benchmarks/04.contigs_filtered/filter_sequences/{asmname}.{minlen}.txt"
+        "results/benchmarks/filter_sequences/{asmname}.{minlen}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell:
@@ -18,9 +18,9 @@ rule sort_sequences:
     output:
         "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
     log:
-        "results/logs/04.contigs_filtered/sort_sequences/{asmname}.log"
+        "results/logs/sort_sequences/{asmname}.min{minlen}.log"
     benchmark:
-        "results/benchmarks/04.contigs_filtered/sort_sequences/{asmname}.txt"
+        "results/benchmarks/sort_sequences/{asmname}.min{minlen}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell:
@@ -39,9 +39,9 @@ rule add_prefix:
     output:
         "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.sorted.renamed.fa"
     log:
-        "results/logs/05.contigs_renamed/add_prefix/{asmname}.{minlen}.log"
+        "results/logs/add_prefix/{asmname}.min{minlen}.log"
     benchmark:
-        "results/benchmarks/05.contigs_renamed/add_prefix/{asmname}.{minlen}.txt"
+        "results/benchmarks/add_prefix/{asmname}.min{minlen}.txt"
     params:
         prefix=lambda wildcards: f"{wildcards.asmname}_C"
     conda:
@@ -53,4 +53,3 @@ rule add_prefix:
         perl -pe 's/ptg00//' > {output}
         ) &> {log}
         """
-
