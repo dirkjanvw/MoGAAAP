@@ -1,24 +1,23 @@
-# Here we define all input read sets. Using the same identifier for hifi and ont
-# will result in using both for the same assembly
+# All input read sets. Using the same identifier for hifi and ont will result in
+# using both for the same assembly
 reads:
     hifi:
-        accessionA: "/path_to_data/accessionA/HiFi/readsA.fasta"
-        accessionB: "/path_to_data/accessionA/HiFi/readsB.fasta"
+        accessionA: "resources/accessionA/HiFi/readsA.fasta"
+        accessionB: "resources/accessionA/HiFi/readsB.fasta"
     ont:
-        accessionA: "/path_to_data/accessionA/ONT/readsA.fasta"
+        accessionA: "resources/accessionA/ONT/readsA.fasta"
 
-# Here we define all parameters needed for filtering and scaffolding the genome
-ref_genome: "/path_to_data/reference_genome.fa"
-minlen: 10000
-k: 21
-w: 7
+# All filtering and scaffolding parameters
+ref_genome: "resources/reference_genome.fa"
+min_contig_len: 10000
+ntjoin_k: 21
+ntjoin_w: 7
 
-# Here we define all protein and nucleotide queries that need to be run for the
-# assembly analysis module
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module
 prot_queries:
-    NBS_domain: "/path_to_data/blast_queries/query1.amac"
+    NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
-    chloroplast: "/path_to_data/blast_queries/chloroplast.fasta"
-    mitochondrion: "/path_to_data/blast_queries/mitochondrion.fasta"
-    telomere: "/path_to_data/blast_queries/telomere.fasta"
-
+    chloroplast: "resources/blast_queries/chloroplast.fasta"
+    mitochondrion: "resources/blast_queries/mitochondrion.fasta"
+    telomere: "resources/blast_queryies/telomere.fasta"
