@@ -2,16 +2,16 @@
 # using both for the same assembly
 reads:
     hifi:
-        accessionA: "resources/accessionA/HiFi/readsA.fasta"
-        accessionB: "resources/accessionA/HiFi/readsB.fasta"
+        accessionA: "resources/reads/HiFi/readsA.fasta"
+        accessionB: "resources/reads/HiFi/readsB.fasta"
     ont:
-        accessionA: "resources/accessionA/ONT/readsA.fasta"
+        accessionA: "resources/reads/ONT/readsA.fasta"
 
 # All filtering and scaffolding parameters
 ref_genome: "resources/reference_genome.fa"
 min_contig_len: 10000
-ntjoin_k: 21
-ntjoin_w: 7
+ntjoin_k: 52
+ntjoin_w: 10000
 
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module

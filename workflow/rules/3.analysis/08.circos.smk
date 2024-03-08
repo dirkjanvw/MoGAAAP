@@ -56,7 +56,7 @@ rule circos_karyotype:
 rule circos_configuration:
     input:
         prot_queries = expand("results/{{asmname}}/3.analysis/06.bcovblp/{query_name}.vs.{{asmname}}.items.circos", query_name=config["prot_queries"]),  ### CIRCOS ITEMS ###
-        nucl_queries = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.items.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
+        nucl_queries = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.fract.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
