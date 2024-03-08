@@ -6,6 +6,7 @@ include: "04.blp2bed.smk"
 include: "05.bln2bed.smk"
 include: "06.bcovblp.smk"
 include: "07.bcovbln.smk"
+include: "08.circos.smk"
 
 rule analyse:
     input:
