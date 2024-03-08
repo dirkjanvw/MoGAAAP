@@ -21,3 +21,17 @@ rule renaming_sequences:
         "results/benchmarks/2.scaffolding/renaming_sequences/{asmname}.txt"
     shell:
         "??? &> {log}" #TODO: add script
+
+rule index_sequences:
+    input:
+        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa"
+    output:
+        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa.fai"
+    log:
+        "results/logs/2.scaffolding/index_sequences/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/index_sequences/{asmname}.txt"
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools faidx {input} &> {log}"
