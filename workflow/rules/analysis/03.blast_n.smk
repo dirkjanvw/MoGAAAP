@@ -1,13 +1,13 @@
 rule blast_n:
     input:
         query_file = lambda wildcards: config["nucl_queries"][wildcards.query_name], 
-        blast_db = "results/cleaning/{asmname}/01.blastdb/{asmname}.BDB",
+        blast_db = "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
     output:
-        "results/cleaning/{asmname}/03.blast_n/{query_name}.vs.{asmname}.m7" 
+        "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.m7" 
     log:
-        "results/logs/03.blast_n/{asmname}/{query_name}.vs.{asmname}.log" 
+        "results/logs/blast_n/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/03.blast_n/{asmname}/{query_name}.vs.{asmname}.txt" 
+        "results/benchmarks/blast_n/{asmname}/{query_name}.vs.{asmname}.txt"
     threads:
         12
     conda:

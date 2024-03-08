@@ -2,14 +2,14 @@ rule asm_bed:
     input:
         "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa",
     output:
-        asm_bed = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Asm_Len.BED", 
-        chr_bed = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Chr_Len.BED",
-        asm_1Mb = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Asm_Len.1Mb.Range",
-        chr_1Mb = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
+        asm_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.BED", 
+        chr_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.BED",
+        asm_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.1Mb.Range",
+        chr_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
     log:
-        "results/logs/00.asm_bed/{asmname}.log"
+        "results/logs/asm_bed/{asmname}.log"
     benchmark:
-        "results/benchmarks/00.asm_bed/{asmname}.txt"
+        "results/benchmarks/asm_bed/{asmname}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell: #TODO: don't hardcode the number of chromosomes

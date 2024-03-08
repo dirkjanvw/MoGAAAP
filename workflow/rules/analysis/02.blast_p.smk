@@ -1,13 +1,13 @@
 rule blast_p:
     input:
         query_file = lambda wildcards: config["prot_queries"][wildcards.query_name], 
-        blast_db   = "results/cleaning/{asmname}/01.blastdb/{asmname}.BDB", 
+        blast_db   = "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB", 
     output:
-        "results/cleaning/{asmname}/02.blast_p/{query_name}.vs.{asmname}.m7" 
+        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.m7" 
     log:
-        "results/logs/02.blast_p/{asmname}/{query_name}.vs.{asmname}.log" 
+        "results/logs/blast_p/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/02.blast_p/{asmname}/{query_name}.vs.{asmname}.txt" 
+        "results/benchmarks/blast_p/{asmname}/{query_name}.vs.{asmname}.txt"
     threads:
         12
     conda:
