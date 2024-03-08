@@ -5,9 +5,9 @@ rule mummer:
     output:
         "results/{asmname}/2.scaffolding/02.mummer/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.MUMmer.delta",
     log:
-        "results/logs/mummer/{reference}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.log"
+        "results/logs/2.scaffolding/mummer/{reference}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.log"
     benchmark:
-        "results/benchmarks/mummer/{reference}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.txt"
+        "results/benchmarks/2.scaffolding/mummer/{reference}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.txt"
     threads:
         24
     conda:
@@ -21,9 +21,9 @@ rule dotplot:
     output:
         "results/{asmname}/2.scaffolding/02.mummer/{alignment}.MUMmer.plot.gp",
     log:
-        "results/logs/dotplot/{asmname}/{alignment}.log"
+        "results/logs/2.scaffolding/dotplot/{asmname}/{alignment}.log"
     benchmark:
-        "results/benchmarks/dotplot/{asmname}/{alignment}.txt"
+        "results/benchmarks/2.scaffolding/dotplot/{asmname}/{alignment}.txt"
     conda:
         "../../envs/mummer.yaml"
     shell:

@@ -5,9 +5,9 @@ rule hifiasm:
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa", #without `--primary -l0` option
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_only.p_ctg.gfa", #with `--primary -l0` option
     log:
-        "results/logs/hifiasm/{asmname}.log"
+        "results/logs/1.assembly/hifiasm/{asmname}.log"
     benchmark:
-        "results/benchmarks/hifiasm/{asmname}.txt"
+        "results/benchmarks/1.assembly/hifiasm/{asmname}.txt"
     threads:
         min(workflow.cores - 1, 50)
     conda:
@@ -24,9 +24,9 @@ rule hifiasm_with_ont:
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa", #without `--primary -l0` option
         "results/1.assembly/{asmname}/01.hifiasm/{asmname}_hifi_and_ont.p_ctg.gfa", #with `--primary -l0` option
     log:
-        "results/logs/hifiasm_with_ont/{asmname}.log"
+        "results/logs/1.assembly/hifiasm_with_ont/{asmname}.log"
     benchmark:
-        "results/benchmarks/hifiasm_with_ont/{asmname}.txt"
+        "results/benchmarks/1.assembly/hifiasm_with_ont/{asmname}.txt"
     threads:
         min(workflow.cores - 1, 50)
     conda:
@@ -46,8 +46,8 @@ rule gfa2fasta:
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
     log:
-        "results/logs/gfa2fasta/{asmname}.log"
+        "results/logs/1.assembly/gfa2fasta/{asmname}.log"
     benchmark:
-        "results/benchmarks/gfa2fasta/{asmname}.txt"
+        "results/benchmarks/1.assembly/gfa2fasta/{asmname}.txt"
     shell:
         "awk '/^S/{{print \">\"$2; print $3;}}' {input} > {output} 2> {log}"

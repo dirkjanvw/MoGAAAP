@@ -3,23 +3,23 @@ from snakemake.utils import min_version
 min_version("8")
 
 # Load configuration
-configfile: "config/config.yaml" 
+configfile: "config/config.yaml"
 
 # Include modules
 include: "rules/common.smk"
-include: "rules/assembly/all.smk"
-include: "rules/scaffolding/all.smk"
-include: "rules/analysis/all.smk"
-include: "rules/annotation/all.smk"
-include: "rules/quality_control/all.smk"
+include: "rules/1.assembly/all.smk"
+include: "rules/2.scaffolding/all.smk"
+include: "rules/3.analysis/all.smk"
+include: "rules/4.annotation/all.smk"
+include: "rules/5.quality_control/all.smk"
 
 # Define global wildcard constraints
 wildcard_constraints:
     minlen="\\d+"
 
 # Define output of all modules
-rule all: 
-    input: 
+rule all:
+    input:
         "results/1.assembly/.done",
         "results/2.scaffolding/.done",
         "results/3.analysis/.done",
