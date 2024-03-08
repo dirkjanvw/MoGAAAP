@@ -1,8 +1,8 @@
 rule filter_sequences:
     input:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
     output:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.fa"
     log:
         "results/logs/filter_sequences/{asmname}.{minlen}.log"
     benchmark:
@@ -14,9 +14,9 @@ rule filter_sequences:
 
 rule sort_sequences:
     input:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.fa"
     output:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
     log:
         "results/logs/sort_sequences/{asmname}.min{minlen}.log"
     benchmark:
@@ -24,20 +24,13 @@ rule sort_sequences:
     conda:
         "../../envs/bioawk.yaml"
     shell:
-        """
-        (
-        bioawk -c fastx '{{ print ">"$name, length($seq), $seq }}' {input} | \
-        sort -k2nr | \
-        perl -pe 's/\\t/  L:/' | \
-        perl -pe 's/\\t/ \\n/' > {output}
-        ) &> {log}
-        """
+        "bioawk -c fastx '{{ print \">\"$name, length($seq), $seq }}' {input} | sort -k2nr | perl -pe 's/\\t/  L:/' | perl -pe 's/\\t/ \\n/' > {output} 2> {log}"
 
 rule add_prefix:
     input:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
     output:
-        "results/{asmname}/assembly/01.hifiasm/{asmname}.min{minlen}.sorted.renamed.fa"
+        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.renamed.fa"
     log:
         "results/logs/add_prefix/{asmname}.min{minlen}.log"
     benchmark:
@@ -47,9 +40,4 @@ rule add_prefix:
     conda:
         "../../envs/bioawk.yaml"
     shell:
-        """
-        (
-        bioawk -c fastx '{{ print ">{params.prefix}" $name; print $seq }}' {input} | \
-        perl -pe 's/ptg00//' > {output}
-        ) &> {log}
-        """
+        "bioawk -c fastx '{{ print \">{params.prefix}\" $name; print $seq }}' {input} | perl -pe 's/ptg00//' > {output} 2> {log}"

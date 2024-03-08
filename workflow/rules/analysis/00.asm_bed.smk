@@ -1,6 +1,6 @@
 rule asm_bed:
     input:
-        lambda wildcards: config["assemblies"][wildcards.asmname]
+        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa",
     output:
         asm_bed = "results/00.asm_bed/{asmname}/{asmname}.Asm_Len.BED", 
         chr_bed = "results/00.asm_bed/{asmname}/{asmname}.Chr_Len.BED",
@@ -12,7 +12,7 @@ rule asm_bed:
         "results/benchmarks/00.asm_bed/{asmname}.txt"
     conda:
         "../../envs/bioawk.yaml"
-    shell:
+    shell: #TODO: don't hardcode the number of chromosomes
         """
         (
         bioawk -c fastx '{{ print $name, 0, length($seq) }}' {input} > {output.asm_bed} 
