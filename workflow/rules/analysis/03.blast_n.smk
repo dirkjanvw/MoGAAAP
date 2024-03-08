@@ -1,9 +1,9 @@
 rule blast_n:
     input:
         query_file = lambda wildcards: config["nucl_queries"][wildcards.query_name], 
-        blast_db   = "results/01.blastdb/{asmname}/{asmname}.BDB",
+        blast_db = "results/cleaning/{asmname}/01.blastdb/{asmname}.BDB",
     output:
-        "results/03.blast_n/{asmname}/{query_name}.vs.{asmname}.m7" 
+        "results/cleaning/{asmname}/03.blast_n/{query_name}.vs.{asmname}.m7" 
     log:
         "results/logs/03.blast_n/{asmname}/{query_name}.vs.{asmname}.log" 
     benchmark:

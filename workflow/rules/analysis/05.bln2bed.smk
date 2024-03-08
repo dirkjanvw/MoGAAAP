@@ -1,8 +1,8 @@
 rule bln2bed:
     input:
-        "results/03.blast_n/{asmname}/{query_name}.vs.{asmname}.m7" 
+        "results/cleaning/{asmname}/03.blast_n/{query_name}.vs.{asmname}.m7" 
     output: 
-        "results/05.bln2bed/{asmname}/{query_name}.vs.{asmname}.bed"
+        "results/cleaning/{asmname}/05.bln2bed/{query_name}.vs.{asmname}.bed"
     log:
         "results/logs/05.bln2bed/{asmname}/{query_name}.vs.{asmname}.log" 
     benchmark:

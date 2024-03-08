@@ -1,12 +1,9 @@
-def get_blast_db(wildcards): 
-    return ["results/01.blastdb/{asmname}/{asmname}.BDB"]
-
 rule blast_p:
     input:
         query_file = lambda wildcards: config["prot_queries"][wildcards.query_name], 
-        blast_db   = get_blast_db, 
+        blast_db   = "results/cleaning/{asmname}/01.blastdb/{asmname}.BDB", 
     output:
-        "results/02.blast_p/{asmname}/{query_name}.vs.{asmname}.m7" 
+        "results/cleaning/{asmname}/02.blast_p/{query_name}.vs.{asmname}.m7" 
     log:
         "results/logs/02.blast_p/{asmname}/{query_name}.vs.{asmname}.log" 
     benchmark:

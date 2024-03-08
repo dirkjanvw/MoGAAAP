@@ -7,6 +7,12 @@ reads:
     ont:
         accessionA: "/path_to_data/accessionA/ONT/readsA.fasta"
 
+# Here we define all parameters needed for filtering and scaffolding the genome
+ref_genome: "/path_to_data/reference_genome.fa"
+minlen: 10000
+k: 21
+w: 7
+
 # Here we define all protein and nucleotide queries that need to be run for the
 # assembly analysis module
 prot_queries:
@@ -14,5 +20,5 @@ prot_queries:
 nucl_queries:
     chloroplast: "/path_to_data/blast_queries/chloroplast.fasta"
     mitochondrion: "/path_to_data/blast_queries/mitochondrion.fasta"
-    telomere: "/path_to_data/blast_queryies/telomere.fasta"
+    telomere: "/path_to_data/blast_queries/telomere.fasta"
 

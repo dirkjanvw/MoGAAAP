@@ -1,8 +1,8 @@
 rule blastdb:
     input:
-        lambda wildcards: config["assemblies"][wildcards.asmname]
+        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa",
     output:
-        "results/01.blastdb/{asmname}/{asmname}.BDB"
+        "results/cleaning/{asmname}/01.blastdb/{asmname}.BDB"
     log:
         "results/logs/01.blastdb/{asmname}.log"
     benchmark:

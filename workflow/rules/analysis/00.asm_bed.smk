@@ -2,10 +2,10 @@ rule asm_bed:
     input:
         "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa",
     output:
-        asm_bed = "results/00.asm_bed/{asmname}/{asmname}.Asm_Len.BED", 
-        chr_bed = "results/00.asm_bed/{asmname}/{asmname}.Chr_Len.BED",
-        asm_1Mb = "results/00.asm_bed/{asmname}/{asmname}.Asm_Len.1Mb.Range",
-        chr_1Mb = "results/00.asm_bed/{asmname}/{asmname}.Chr_Len.1Mb.Range",
+        asm_bed = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Asm_Len.BED", 
+        chr_bed = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Chr_Len.BED",
+        asm_1Mb = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Asm_Len.1Mb.Range",
+        chr_1Mb = "results/cleaning/{asmname}/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
     log:
         "results/logs/00.asm_bed/{asmname}.log"
     benchmark:

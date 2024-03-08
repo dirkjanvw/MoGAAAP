@@ -1,6 +1,6 @@
 rule mummer:
     input:
-        reference = lambda wildcards: config["ref_genome"][wildcards.reference],
+        reference = config["ref_genome"],
         scaffolds = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
     output:
         "results/{asmname}/2.scaffolding/02.mummer/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.MUMmer.delta",
