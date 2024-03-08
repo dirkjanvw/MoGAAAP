@@ -3,7 +3,7 @@ from snakemake.utils import min_version
 min_version("8")
 
 # Load configuration
-configfile: "config/config.yaml" 
+configfile: "config/config.yaml"
 
 # Include modules
 include: "rules/common.smk"
@@ -18,8 +18,8 @@ wildcard_constraints:
     minlen="\\d+"
 
 # Define output of all modules
-rule all: 
-    input: 
+rule all:
+    input:
         "results/1.assembly/.done",
         "results/2.scaffolding/.done",
         "results/3.analysis/.done",

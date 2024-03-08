@@ -12,7 +12,7 @@ rule blastdb:
     shell:
         """
         makeblastdb -in {input} -out {output} \
-          -dbtype nucl -input_type fasta -max_file_sz 2GB -hash_index -parse_seqids &> {log} 
-        touch {output} 
+          -dbtype nucl -input_type fasta -max_file_sz 2GB -hash_index -parse_seqids &> {log}
+        touch {output}
         date >> {output}
         """
