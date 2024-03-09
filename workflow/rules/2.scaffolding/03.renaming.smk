@@ -14,7 +14,7 @@ rule renaming_sequences:
                 w=config["ntjoin_w"],
                 ),
     output:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa"
+        protected("results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa")
     log:
         "results/logs/2.scaffolding/renaming_sequences/{asmname}.log"
     benchmark:
