@@ -1,3 +1,7 @@
+> [!WARNING]
+> This pipeline is still under development and should not be used for production purposes.
+> See the [TODO](#todo) section for more information.
+
 # Meta pipeline for HiFi assembly and QC
 This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality control of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any organism.
@@ -64,3 +68,11 @@ The pipeline can generate an HTML `report.html` file with the most important res
 ```bash
 snakemake ${MODULE} -c1 --report report.html
 ```
+
+## TODO
+The following tasks are still to be done before the pipeline is finished:
+- [ ] Add the annotation module.
+- [ ] Add the QC module.
+- [ ] Add the renaming of the scaffolds to their proper chromosome names.
+- [ ] Add the generation of a report.
+- [ ] Do a full test of the pipeline.
