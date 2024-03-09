@@ -1,6 +1,6 @@
 rule ntjoin:
     input:
-        reference = "results/{asmname}/2.scaffolding/00.reference/{reference}.fa",
+        reference = lambda wildcards: config["ref_genome"][wildcards.reference],
         contigs = "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.renamed.fa",
     output:
         all = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.fa",
@@ -17,8 +17,9 @@ rule ntjoin:
     shell:
         """
         (
-        ln -s $(realpath {input}) $(dirname {output.all})/
+        ln -s $(realpath {input.contigs}) $(dirname {output.all})/
+        ln -s $(realpath {input.reference}) $(dirname {output.all})/{wildcards.reference}.fa
         cd $(dirname {output.all})
-        ntJoin assemble target=$(basename {input.contigs}) references='$(basename {input.reference})' target_weight='1' reference_weights='2' G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
+        ntJoin assemble target=$(basename {input.contigs}) references='{wildcards.reference}.fa' target_weight='1' reference_weights='2' G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
         ) &> {log}
         """
