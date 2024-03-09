@@ -17,8 +17,8 @@ rule ntjoin:
     shell:
         """
         (
-        ln -s $(realpath {input.contigs}) $(dirname {output.all})/Scaffolds_HiFiasm_{wildcards.asmname}.{wildcards.minlen}
+        ln -s $(realpath {input}) $(dirname {output.all})/
         cd $(dirname {output.all})
-        ntJoin assemble target=Scaffolds_HiFiasm_{wildcards.asmname}.vs.{wildcards.reference}.{wildcards.minlen} references='{input.reference}' target_weight='1' reference_weights='2' G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
+        ntJoin assemble target=$(basename {input.contigs}) references='$(basename {input.reference})' target_weight='1' reference_weights='2' G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
         ) &> {log}
         """
