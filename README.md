@@ -71,7 +71,7 @@ snakemake ${MODULE} -c1 --report report.html
 
 ## TODO
 The following tasks are still to be done before the pipeline is finished:
-- [ ] Add the annotation module.
+- [x] Add the annotation module.
 - [ ] Add the QC module.
 - [ ] Add the renaming of the scaffolds to their proper chromosome names.
 - [ ] Add the generation of a report.
