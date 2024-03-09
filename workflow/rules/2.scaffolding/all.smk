@@ -1,3 +1,4 @@
+include: "00.reference.smk"
 include: "01.ntjoin.smk"
 include: "02.mummer.smk"
 include: "03.renaming.smk"
