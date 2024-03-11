@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
                         help="Configuration file (default: circos.conf)",
                         default="circos.conf")
     parser.add_argument("circos_files", nargs="+",
-                        help="Other input files for circos")
+                        help="Other input files for circos; max for .fract.circos files in 1, for all other files it is 100")
     return parser.parse_args()
 
 
@@ -60,7 +60,7 @@ karyotype = {karyotype}
 chromosomes_units   = 1000000
 chromosomes_display_default = yes
 # CHROMOSOME RULE LABELS #
-<<include Ticks.Circos>>
+<<include ticks.conf>>
 
 <ideogram>
 # CHROMOSOME DISPLAY #
@@ -92,14 +92,15 @@ angle_offset* = -87
 ### PLOTS SECTION ###
 <plots>
 """
-    for i, file in enumerate(circos_files):
+    for i, circos_file in enumerate(circos_files):
         low = round(lower_bound + i * steps, 2)
         high = math.ceil((lower_bound + (i + 1) * steps) * 100) / 100
+        maximum = 1 if circos_file.endswith(".fract.circos") else 100
         plots += f"""
-# {file} #
+# {circos_file} #
 <plot>
 type        = histogram
-file        = {file}
+file        = {circos_file}
 r1          = {high}r
 r0          = {low}r
 orientation = out
@@ -107,7 +108,7 @@ color       = black
 fill_color  = lgrey
 extend_bin  = no
 min         = 0
-max         = 50
+max         = {maximum}
 <backgrounds>
 <background>
 color       = vvlgrey
