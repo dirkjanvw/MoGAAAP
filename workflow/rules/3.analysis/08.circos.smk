@@ -1,8 +1,8 @@
 rule circos_ticks:
     output:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.ticks.conf",
+        "results/{asmname}/3.analysis/08.circos/ticks.conf",
     log:
-        "results/logs/3.analysis/3.analysis/circos_ticks/{asmname}.log"
+        "results/logs/3.analysis/circos_ticks/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_ticks/{asmname}.txt"
     shell:
@@ -47,34 +47,42 @@ rule circos_karyotype:
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
     log:
-        "results/logs/3.analysis/3.analysis/circos_karyotype/{asmname}.log"
+        "results/logs/3.analysis/circos_karyotype/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_karyotype/{asmname}.txt"
     shell:
-        "awk 'FNR%3==0{{col=\"grey\";}} FNR%3==1{{col=\"dgrey\";}} FNR%3==2{{col=\"black\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col}}' {input} > {output} 2> {log}"
+        "awk '$1!~/Chr[0-9]+/{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
 rule circos_configuration:
     input:
-        prot_queries = expand("results/{{asmname}}/3.analysis/06.bcovblp/{query_name}.vs.{{asmname}}.items.circos", query_name=config["prot_queries"]),  ### CIRCOS ITEMS ###
-        nucl_queries = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.fract.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
+        counts = expand("results/{{asmname}}/3.analysis/06.bcovblp/{query_name}.vs.{{asmname}}.items.circos", query_name=config["prot_queries"]),  ### CIRCOS ITEMS ###
+        fractions = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.fract.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
+        ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     log:
-        "results/logs/3.analysis/3.analysis/circos_configuration/{asmname}.log"
+        "results/logs/3.analysis/circos_configuration/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_configuration/{asmname}.txt"
     shell:
-        "python3 workflow/scripts/create_circos_config.py -k {input.karyotype} -o {output} {input.prot_queries} {input.nucl_queries} &> {log}"
+        """
+        (
+        ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output})/
+        SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
+        cd $(dirname {output})
+        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
+        ) &> {log}
+        """
 
 rule circos:
     input:
-        config = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
-        ticks = "results/{asmname}/3.analysis/08.circos/{asmname}.ticks.conf",
+        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     output:
         report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"assembly": "{asmname}"}),
+        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
     log:
-        "results/logs/3.analysis/3.analysis/circos/{asmname}.log"
+        "results/logs/3.analysis/circos/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos/{asmname}.txt"
     conda:
@@ -83,6 +91,6 @@ rule circos:
         """
         (
         cd $(dirname {output})
-        circos -conf $(basename {input.config}) -outputfile $(basename {output} | rev | cut -d"." -f2- | rev)
+        circos -conf $(basename {input}) -outputfile $(basename {output} | rev | cut -d"." -f2- | rev)
         ) &> {log}
         """
