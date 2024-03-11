@@ -72,7 +72,7 @@ rule circos:
         config = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
         ticks = "results/{asmname}/3.analysis/08.circos/{asmname}.ticks.conf",
     output:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.png",
+        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"assembly": "{asmname}"}),
     log:
         "results/logs/3.analysis/3.analysis/circos/{asmname}.log"
     benchmark:
