@@ -4,7 +4,7 @@ rule liftoff:
         ref_genome = get_ref_genome,
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
-        refgff = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),
+        ref_annotation = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),
         gff = protected("results/{asmname}/4.annotation/01.liftoff/liftoff.gff"),
         polished = protected("results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished"),
     log:
@@ -18,7 +18,7 @@ rule liftoff:
     shell:
         """
         (
-        ln -s $(realpath {input.gff}) {output.refgff}
-        liftoff -p {threads} -copies -cds -polish -u $(dirname {output.polished})/unmapped_features.txt -dir $(dirname {output.polished})/intermediate_files -o {output.gff} -g {output.refgff} {input.query} {input.ref}
+        ln -s $(realpath {input.ref_annotation}) {output.ref_annotation}
+        liftoff -p {threads} -copies -cds -polish -u $(dirname {output.polished})/unmapped_features.txt -dir $(dirname {output.polished})/intermediate_files -o {output.gff} -g {output.ref_annotation} {input.assembly} {input.ref_genome}
         ) &> {log}
         """
