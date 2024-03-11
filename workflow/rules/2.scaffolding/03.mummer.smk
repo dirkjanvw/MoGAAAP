@@ -1,6 +1,18 @@
+rule get_reference:
+    input:
+        lambda wildcards: config["ref_genome"][wildcards.reference],
+    output:
+        temporary("results/{asmname}/2.scaffolding/03.mummer/{reference}.fa"),
+    log:
+        "results/logs/2.scaffolding/get_reference/{asmname}/{reference}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/get_reference/{asmname}/{reference}.txt"
+    shell:
+        "cp {input} {output} &> {log}"
+
 rule mummer:
     input:
-        reference = lambda wildcards: config["ref_genome"][wildcards.reference],
+        reference = "results/{asmname}/2.scaffolding/03.mummer/{reference}.fa",
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
         "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
