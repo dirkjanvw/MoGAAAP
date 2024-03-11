@@ -42,8 +42,10 @@ rule renaming_sequences:
         "results/logs/2.scaffolding/renaming_sequences/{asmname}.log"
     benchmark:
         "results/benchmarks/2.scaffolding/renaming_sequences/{asmname}.txt"
-    shell:
-        "awk 'BEGIN{{OFS = \"\\t\";}} FNR==NR{{chr[$1]=$2; next;}} $1~/^>/{{printf \">%s\\n\",chr[$1]; next;}} {{print;}}' {input.table} {input.fasta} > {output} 2> {log}"
+    params:
+        chroms = config["ref_chr"],
+    script:
+        "scripts/renaming_sequences.py"
 
 rule index_sequences:
     input:
