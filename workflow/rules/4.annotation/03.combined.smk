@@ -2,7 +2,7 @@ rule combine_liftoff_helixer:
     input:
         liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
         helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
-        config = "results/agat_config.yaml",
+        config = "results/{asmname}/agat_config.yaml",
     output:
         protected("results/{asmname}/4.annotation/03.combined/{asmname}.gff"),
     log:
