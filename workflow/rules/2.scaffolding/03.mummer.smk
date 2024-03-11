@@ -29,7 +29,8 @@ rule mummer:
 
 rule dotplot:
     input:
-        "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
+        delta = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
+        reference = "results/{asmname}/2.scaffolding/03.mummer/{reference}.fa",
     output:
         gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
         png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png"),
@@ -43,6 +44,6 @@ rule dotplot:
         """
         (
         cd $(dirname {output.gp})
-        mummerplot --filter --png --large --prefix=$(basename {output.gp} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input})
+        mummerplot --filter --png --large --prefix=$(basename {output.gp} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input.delta})
         ) &> {log}
         """
