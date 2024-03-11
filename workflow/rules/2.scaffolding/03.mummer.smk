@@ -13,7 +13,7 @@ rule mummer:
     conda:
         "../../envs/mummer.yaml"
     shell:
-        "nucmer -t {threads} -l 1000 -g 1000 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.scaffolds} &> {log}"
+        "nucmer -t {threads} -l 1000 -g 1000 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
 
 rule dotplot:
     input:
