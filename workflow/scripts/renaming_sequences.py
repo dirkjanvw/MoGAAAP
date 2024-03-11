@@ -1,8 +1,11 @@
-def rename_sequences(scaffolds: str, conversion_table: str,
+# THIS SCRIPT SHOULD NOT BE RUN ON ITS OWN
+
+def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
                      chromosome_names: dict, output: str, prefix: str) -> None:
     """
     Rename the sequences in the scaffolds file using the conversion table.
     :param scaffolds: Filename of the scaffolds FASTA file
+    :param unassigned: Filename of the unassigned FASTA file
     :param conversion_table: Filename of the conversion table (first column:
         reference name, second column: scaffolds name)
     :param chromosome_names: Dictionary of new names for the chromosomes (first
@@ -23,15 +26,23 @@ def rename_sequences(scaffolds: str, conversion_table: str,
                     break
 
     # Read the scaffolds file and write the output
-    with open(scaffolds) as f, open(output, 'w') as out:
-        for line in f:
+    with open(scaffolds) as f1, open(unassigned) as f2, open(output, 'w') as out:
+        for line in f1:
             if line.startswith('>'):
                 scaffold = line.strip().lstrip('>')
                 chrom = conversion.get(scaffold, scaffold)
                 out.write(f'>{prefix}_Chr{chrom}\n')
             else:
                 out.write(line)
+        c = 1
+        for line in f2:
+            if line.startswith('>'):
+                out.write(f'>{prefix}_Un{c}\n')
+                c += 1
+            else:
+                out.write(line)
 
 
-rename_sequences(snakemake.input[0], snakemake.input[1], snakemake.params[0],
-                 snakemake.output[0], snakemake.wildcards.asmname)
+rename_sequences(str(snakemake.input.assigned), str(snakemake.input.unassigned),
+        str(snakemake.input.table), snakemake.params.chroms, snakemake.output[0],
+        snakemake.wildcards.asmname)

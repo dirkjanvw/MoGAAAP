@@ -24,7 +24,13 @@ rule create_renaming_table:
 
 rule renaming_sequences:
     input:
-        fasta = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.fa",
+        assigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
+            reference=config["ref_genome"],
+            minlen=config["min_contig_len"],
+            k=config["ntjoin_k"],
+            w=config["ntjoin_w"],
+        ),
+        unassigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.unassigned.scaffolds.fa",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
@@ -45,7 +51,7 @@ rule renaming_sequences:
     params:
         chroms = config["ref_chr"],
     script:
-        "scripts/renaming_sequences.py"
+        "../../scripts/renaming_sequences.py"
 
 rule index_sequences:
     input:
