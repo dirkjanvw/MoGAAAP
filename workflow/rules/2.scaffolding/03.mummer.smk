@@ -19,7 +19,8 @@ rule dotplot:
     input:
         "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
     output:
-        "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
+        gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
+        png = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png",
     log:
         "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
@@ -29,7 +30,7 @@ rule dotplot:
     shell:  #assumes input and output are in same directory
         """
         (
-        cd $(dirname {output})
-        mummerplot --filter --png --large --prefix=$(basename {output} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input})
+        cd $(dirname {output.gp})
+        mummerplot --filter --png --large --prefix=$(basename {output.gp} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input})
         ) &> {log}
         """
