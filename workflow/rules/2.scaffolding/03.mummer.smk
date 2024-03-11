@@ -33,7 +33,7 @@ rule dotplot:
         reference = "results/{asmname}/2.scaffolding/03.mummer/{reference}.fa",
     output:
         gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
-        png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png"),
+        png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png", category="MUMmerplot", labels={"assembly": "{asmname}"}),
     log:
         "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
