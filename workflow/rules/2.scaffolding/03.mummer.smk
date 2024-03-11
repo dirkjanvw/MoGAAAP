@@ -26,11 +26,10 @@ rule dotplot:
         "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.txt"
     conda:
         "../../envs/mummer.yaml"
-    shell:
+    shell:  #assumes input and output are in same directory
         """
         (
-        ln -s $(realpath {input}) $(dirname {output})/
         cd $(dirname {output})
-        mummerplot --filter --png --large --prefix={wildcards.alignment}.MUMmer.plot --title {wildcards.asmname} $(basename {input})
+        mummerplot --filter --png --large --prefix=$(basename {output} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input})
         ) &> {log}
         """
