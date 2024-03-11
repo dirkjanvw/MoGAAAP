@@ -10,7 +10,7 @@ reads:
 # All filtering and scaffolding parameters
 ref_genome:  #reference genome for scaffolding and mummerplots
     accessionX_V0: "resources/reference_genome.fa"
-ref_chr:  #reference chromosome names for renaming scaffolds
+ref_chr:  #reference chromosome names in ref_genome for renaming scaffolds
     1: "Chr1"
     2: "Chr2"
     3: "Chr3"

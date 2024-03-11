@@ -3,7 +3,7 @@ rule create_renaming_table:
         agp= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.agp",
         mxdot= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.mx.dot",
     output:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.conversion.tsv"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.conversion.tsv"
     log:
         "results/logs/2.scaffolding/create_renaming_table/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.log"
     benchmark:
@@ -36,14 +36,14 @@ rule renaming_sequences:
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        table = expand("results/{{asmname}}/2.scaffolding/03.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.conversion.tsv",
+        table = expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.conversion.tsv",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
     output:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     log:
         "results/logs/2.scaffolding/renaming_sequences/{asmname}.log"
     benchmark:
@@ -55,9 +55,9 @@ rule renaming_sequences:
 
 rule index_sequences:
     input:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa.fai"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai"
     log:
         "results/logs/2.scaffolding/index_sequences/{asmname}.log"
     benchmark:

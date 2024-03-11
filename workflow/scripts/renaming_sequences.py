@@ -26,7 +26,9 @@ def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
                     break
 
     # Read the scaffolds file and write the output
-    with open(scaffolds) as f1, open(unassigned) as f2, open(output, 'w') as out:
+    with open(scaffolds) as f1,\
+            open(unassigned) as f2,\
+            open(output, 'w') as out:
         for line in f1:
             if line.startswith('>'):
                 scaffold = line.strip().lstrip('>')
@@ -44,5 +46,6 @@ def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
 
 
 rename_sequences(str(snakemake.input.assigned), str(snakemake.input.unassigned),
-        str(snakemake.input.table), snakemake.params.chroms, snakemake.output[0],
-        snakemake.wildcards.asmname)
+                 str(snakemake.input.table), snakemake.params.chroms,
+                 snakemake.output[0],
+                 snakemake.wildcards.asmname)
