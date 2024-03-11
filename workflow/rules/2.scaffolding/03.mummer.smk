@@ -10,8 +10,8 @@ rule mummer:
         "results/benchmarks/2.scaffolding/mummer/{reference}/{asmname}.vs.{reference}.txt"
     threads:
         24
-    conda:
-        "../../envs/mummer.yaml"
+    container:
+        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
     shell:
         "nucmer -t {threads} -l 1000 -g 1000 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
 
@@ -24,8 +24,8 @@ rule dotplot:
         "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
         "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.txt"
-    conda:
-        "../../envs/mummer.yaml"
+    container:
+        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
     shell:  #assumes input and output are in same directory
         """
         (
