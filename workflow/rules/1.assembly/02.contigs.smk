@@ -2,7 +2,7 @@ rule filter_sequences:
     input:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.fa"
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     log:
         "results/logs/1.assembly/filter_sequences/{asmname}.{minlen}.log"
     benchmark:
@@ -14,9 +14,9 @@ rule filter_sequences:
 
 rule sort_sequences:
     input:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.fa"
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.fa"
     log:
         "results/logs/1.assembly/sort_sequences/{asmname}.min{minlen}.log"
     benchmark:
@@ -28,9 +28,9 @@ rule sort_sequences:
 
 rule add_prefix:
     input:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.fa"
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.fa"
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.min{minlen}.sorted.renamed.fa"
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
     log:
         "results/logs/1.assembly/add_prefix/{asmname}.min{minlen}.log"
     benchmark:

@@ -8,7 +8,7 @@ rule bcovblp:
         chr_coverage = "results/{asmname}/3.analysis/06.bcovblp/{query_name}.vs.{asmname}.chr.coverage",
         circos_file  = "results/{asmname}/3.analysis/06.bcovblp/{query_name}.vs.{asmname}.items.circos"
     log:
-        "results/logs/bcovblp/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/3.analysis/bcovblp/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/bcovblp/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:

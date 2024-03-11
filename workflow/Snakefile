@@ -7,6 +7,7 @@ configfile: "config/config.yaml"
 
 # Include modules
 include: "rules/common.smk"
+include: "rules/agat.smk"
 include: "rules/1.assembly/all.smk"
 include: "rules/2.scaffolding/all.smk"
 include: "rules/3.analysis/all.smk"

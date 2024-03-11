@@ -28,3 +28,11 @@ nucl_queries:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
     mitochondrion: "resources/blast_queries/mitochondrion.fasta"
     telomere: "resources/blast_queries/telomere.fasta"
+
+# Annotation settings
+ref_annotation: "resources/reference_genome.gff"  #TODO: combine with ref_genome
+helixer_model: "resources/land_plant_v0.3_a_0080.h5"
+helixer_max_gene_length: 64152
+species:  #give letter only abbreviation for species for annotation with helixer
+    accessionA: "speciesA"
+    accessionB: "speciesB"

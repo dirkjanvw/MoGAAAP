@@ -7,7 +7,7 @@ rule asm_bed:
         asm_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.1Mb.Range",
         chr_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
     log:
-        "results/logs/asm_bed/{asmname}.log"
+        "results/logs/3.analysis/asm_bed/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/asm_bed/{asmname}.txt"
     conda:
