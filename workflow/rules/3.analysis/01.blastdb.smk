@@ -4,9 +4,9 @@ rule blastdb:
     output:
         "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB"
     log:
-        "results/logs/3.analysis/01.blastdb/{asmname}.log"
+        "results/logs/3.analysis/blastdb/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/01.blastdb/{asmname}.txt"
+        "results/benchmarks/3.analysis/blastdb/{asmname}.txt"
     conda:
         "../../envs/blast.yaml"
     shell:
