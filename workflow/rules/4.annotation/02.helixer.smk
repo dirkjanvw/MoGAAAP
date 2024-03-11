@@ -16,6 +16,6 @@ rule helixer:
     resources:
         helixer = 1
     container:
-        "gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8"
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8"
     shell:
         "Helixer.py --fasta-path {input} --gff-output-path {output} --species {params.species} --subsequence-length {params.subseqlen} --model-filepath {params.helixer_model} &> {log}"
