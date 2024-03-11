@@ -43,7 +43,7 @@ EOL
 
 rule circos_karyotype:
     input:
-        "results/{asmname}/2.scaffolding/03.renaming/{asmname}.fa.fai"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai"
     output:
         "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
     log:
