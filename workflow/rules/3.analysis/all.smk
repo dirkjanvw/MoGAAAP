@@ -12,4 +12,4 @@ rule analyse:
     input:
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
     output:
-        touch("results/3.analysis/.done")
+        touch("results/analysis.done")
