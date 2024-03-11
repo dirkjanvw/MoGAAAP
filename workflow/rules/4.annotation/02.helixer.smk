@@ -11,6 +11,8 @@ rule helixer:
         helixer_model = config["helixer_model"],
         subseqlen = config["helixer_max_gene_length"],
         species = lambda wildcards: config["species"][wildcards.asmname],
+    threads:
+        len(config["ref_chr"]) + 1  #the number of chromosomes plus 1
     resources:
         helixer = 1
     container:
