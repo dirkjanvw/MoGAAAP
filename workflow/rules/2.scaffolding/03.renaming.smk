@@ -24,7 +24,7 @@ rule create_renaming_table:
 
 rule renaming_sequences:
     input:
-        fasta = expand("results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.fa",
+        fasta = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.fa",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
