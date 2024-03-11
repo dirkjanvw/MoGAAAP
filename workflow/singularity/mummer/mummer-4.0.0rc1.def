@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: perl:5.32.1-slim
+
+%post
+    apt-get update && apt-get install -y \
+        wget \
+        gnuplot \
+        libgd-dev \
+        build-essential \
+        libssl-dev \
+        libncurses5-dev \
+        libncursesw5-dev
+
+%post
+    mkdir -p /opt
+    cd /opt
+    wget https://github.com/mummer4/mummer/releases/download/v4.0.0rc1/mummer-4.0.0rc1.tar.gz
+    tar xzvf mummer-4.0.0rc1.tar.gz
+    cd mummer-4.0.0rc1
+    ./configure
+    make
+    make install
+    cd ..
+    rm -rf v4.0.0rc1.tar.gz mummer-4.0.0rc1
+
+%environment
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"

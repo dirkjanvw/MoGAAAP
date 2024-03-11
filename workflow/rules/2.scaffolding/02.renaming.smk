@@ -22,7 +22,7 @@ rule create_renaming_table:
         ) &> {log}
         """
 
-rule renaming_sequences:
+rule renaming_scaffolds:
     input:
         assigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
             reference=config["ref_genome"],
@@ -43,25 +43,39 @@ rule renaming_sequences:
             w=config["ntjoin_w"],
         ),
     output:
-        protected("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa")
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.fa"
     log:
-        "results/logs/2.scaffolding/renaming_sequences/{asmname}.log"
+        "results/logs/2.scaffolding/renaming_scaffolds/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/renaming_sequences/{asmname}.txt"
+        "results/benchmarks/2.scaffolding/renaming_scaffolds/{asmname}.txt"
     params:
         chroms = config["ref_chr"],
     script:
-        "../../scripts/renaming_sequences.py"
+        "../../scripts/renaming_scaffolds.py"
 
-rule index_sequences:
+rule sort_scaffolds:
+    input:
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.fa"
+    output:
+        protected("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa")
+    log:
+        "results/logs/2.scaffolding/sort_scaffolds/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/sort_scaffolds/{asmname}.txt"
+    conda:
+        "../../envs/seqkit.yaml"
+    shell:
+        "seqkit sort -n {input} > {output} 2> {log}"
+
+rule index_scaffolds:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai"
     log:
-        "results/logs/2.scaffolding/index_sequences/{asmname}.log"
+        "results/logs/2.scaffolding/index_scaffolds/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/index_sequences/{asmname}.txt"
+        "results/benchmarks/2.scaffolding/index_scaffolds/{asmname}.txt"
     conda:
         "../../envs/samtools.yaml"
     shell:
