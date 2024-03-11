@@ -8,4 +8,4 @@ rule assemble:
                 minlen=config["min_contig_len"]
                 ),
     output:
-        touch("results/1.assembly/.done")
+        touch("results/assembly.done")

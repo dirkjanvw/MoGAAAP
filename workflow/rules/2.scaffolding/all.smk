@@ -10,4 +10,4 @@ rule scaffold:
             asmname = get_all_accessions(),
             reference = config["ref_genome"]),
     output:
-        touch("results/2.scaffolding/.done")
+        touch("results/scaffolding.done")

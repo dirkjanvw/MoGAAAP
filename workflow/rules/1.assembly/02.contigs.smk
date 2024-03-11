@@ -1,26 +1,26 @@
-rule filter_sequences:
+rule filter_contigs:
     input:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
     output:
         "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     log:
-        "results/logs/1.assembly/filter_sequences/{asmname}.{minlen}.log"
+        "results/logs/1.assembly/filter_contigs/{asmname}.{minlen}.log"
     benchmark:
-        "results/benchmarks/1.assembly/filter_sequences/{asmname}.{minlen}.txt"
+        "results/benchmarks/1.assembly/filter_contigs/{asmname}.{minlen}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell:
         "bioawk -c fastx '{{ if(length($seq) >= {wildcards.minlen}) {{print \">\"$name; print $seq }} }}' {input} > {output} 2> {log}"
 
-rule sort_sequences:
+rule sort_contigs:
     input:
         "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     output:
         "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.fa"
     log:
-        "results/logs/1.assembly/sort_sequences/{asmname}.min{minlen}.log"
+        "results/logs/1.assembly/sort_contigs/{asmname}.min{minlen}.log"
     benchmark:
-        "results/benchmarks/1.assembly/sort_sequences/{asmname}.min{minlen}.txt"
+        "results/benchmarks/1.assembly/sort_contigs/{asmname}.min{minlen}.txt"
     conda:
         "../../envs/bioawk.yaml"
     shell:

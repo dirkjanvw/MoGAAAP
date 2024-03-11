@@ -64,4 +64,4 @@ rule qc:
         expand("results/{asmset}/5.quality_control/0X.multiqc/multiqc_report.html", asmset=config["set"]),  #mapping
         expand("results/{asmset}/5.quality_control/0X.collinearity/karyotype.pdf", asmset=config["set"]),  #jcvi collinearity
     output:
-        touch("results/5.quality_control/.done")
+        touch("results/quality_control.done")

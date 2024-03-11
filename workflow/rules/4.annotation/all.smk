@@ -6,4 +6,4 @@ rule annotate:
     input:
         expand("results/{asmname}/4.annotation/03.combined/{asmname}.gff", asmname=get_all_accessions()),
     output:
-        touch("results/4.annotation/.done")
+        touch("results/annotation.done")

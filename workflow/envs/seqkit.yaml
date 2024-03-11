@@ -2,5 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - mummer4=4.0.0
-  - gnuplot=5.4.8
+  - seqkit=2.7.0
