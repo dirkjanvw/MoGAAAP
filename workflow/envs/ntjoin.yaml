@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - ntjoin=1.1.4
+  - packaging=23.2
