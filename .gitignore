@@ -136,4 +136,5 @@ busco_*
 *.agat.log
 Rplots.pdf
 .wget-hsts
+.keras/
 
