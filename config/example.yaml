@@ -1,11 +1,20 @@
 # All input read sets. Using the same identifier for hifi and ont will result in
-# using both for the same assembly
+# using both for the same assembly. Optionally, Illumina (PE) reads can be added
+# which will be used for quality control only.
 reads:
-    hifi:
+    hifi:  #TODO: decide whether to name the samples specifically
         accessionA: "resources/reads/HiFi/readsA.fasta"
         accessionB: "resources/reads/HiFi/readsB.fasta"
-    ont:
+    ont:  #TODO: decide whether to name the samples specifically
         accessionA: "resources/reads/ONT/readsA.fasta"
+    illumina:
+        accessionA:
+            sampleA1:
+                libraryA1_1: ["resources/reads/sample1/library1_1.fq.gz", "resources/reads/sample1/library1_2.fq.gz"]
+                libraryA1_2: ["resources/reads/sample1/library2_1.fq.gz", "resources/reads/sample1/library2_2.fq.gz"]
+            sampleA2:
+                libraryA2_1: ["resources/reads/sample2/library1_1.fq.gz", "resources/reads/sample2/library1_2.fq.gz"]
+                libraryA2_2: ["resources/reads/sample2/library2_1.fq.gz", "resources/reads/sample2/library2_2.fq.gz"]
 
 # All filtering and scaffolding parameters
 ref_genome:  #reference genome for scaffolding and mummerplots
@@ -36,3 +45,13 @@ helixer_max_gene_length: 64152
 species:  #give letter only abbreviation for species for annotation with helixer
     accessionA: "speciesA"
     accessionB: "speciesB"
+
+# Quality control settings
+k_qv: 21  #optimal k-mer size for quality control
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive.
+set:
+    all:
+        - accessionA
+        - accessionB
