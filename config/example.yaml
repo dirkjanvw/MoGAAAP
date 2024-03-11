@@ -48,6 +48,10 @@ species:  #give letter only abbreviation for species for annotation with helixer
 
 # Quality control settings
 k_qc: 21  #optimal k-mer size for quality control
+gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
+taxid:  #taxid for the species for fcs-gx
+    accessionA: 12345
+    accessionB: 67890
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive.
