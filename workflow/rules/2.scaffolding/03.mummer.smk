@@ -32,7 +32,7 @@ rule dotplot:
         "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
     output:
         gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
-        png = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png",
+        png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png"),
     log:
         "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
