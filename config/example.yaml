@@ -47,7 +47,7 @@ species:  #give letter only abbreviation for species for annotation with helixer
     accessionB: "speciesB"
 
 # Quality control settings
-k_qv: 21  #optimal k-mer size for quality control
+k_qc: 21  #optimal k-mer size for quality control
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive.
