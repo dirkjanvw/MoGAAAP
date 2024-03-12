@@ -11,9 +11,11 @@ rule helixer:
         helixer_model = config["helixer_model"],
         subseqlen = config["helixer_max_gene_length"],
         species = lambda wildcards: config["species"][wildcards.asmname],
+    threads:
+        len(config["ref_chr"]) + 1  #the number of chromosomes plus 1
     resources:
         helixer = 1
     container:
-        "gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8"
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8"
     shell:
         "Helixer.py --fasta-path {input} --gff-output-path {output} --species {params.species} --subsequence-length {params.subseqlen} --model-filepath {params.helixer_model} &> {log}"
