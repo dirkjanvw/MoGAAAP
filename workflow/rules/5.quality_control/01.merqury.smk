@@ -1,9 +1,9 @@
 def get_wgs_input(wildcards):
     if wildcards.sample in config["reads"]["hifi"][wildcards.asmname]:
         return config["reads"]["hifi"][wildcards.asmname][wildcards.sample]
-    elif wildcards.sample in config["reads"]["ont"][wildcards.asmname]:
+    elif "ont" in config["reads"] and wildcards.sample in config["reads"]["ont"][wildcards.asmname]:
         return config["reads"]["ont"][wildcards.asmname][wildcards.sample]
-    else:
+    elif "illumina" in config["reads"] and wildcards.sample in config["reads"]["illumina"][wildcards.asmname]:
         filelist = []
         for library in config["reads"]["illumina"][wildcards.asmname][wildcards.sample]:
             filelist.append(config["reads"]["illumina"][wildcards.asmname][wildcards.sample][library][0])
