@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - busco=5.4.7
-  - compleasm=0.2.5
+  - ntsynt=1.0.0
+  - mash=2.3

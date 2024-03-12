@@ -55,7 +55,7 @@ def write_circos_config(karyotype: str, circos_files: list, output: str,
     # Add header
     header = f"""# circos.conf
 
-# LIST OF CHROMOSOMES AND THEIR LENGTH # 
+# LIST OF CHROMOSOMES AND THEIR LENGTH #
 karyotype = {karyotype}
 chromosomes_units   = 1000000
 chromosomes_display_default = yes
@@ -66,7 +66,7 @@ chromosomes_display_default = yes
 # CHROMOSOME DISPLAY #
 <spacing>
 default = 10u
-<pairwise {sequences[0]}, {sequences[-1]}>
+<pairwise {sequences[0]},{sequences[-1]}>
 spacing = 60u
 </pairwise>
 </spacing>
@@ -121,11 +121,11 @@ color       = vvlgrey
     # Add footer
     footer = f"""
 ################################################################
-# The remaining content is standard and required. It is imported 
+# The remaining content is standard and required. It is imported
 # from default files in the Circos distribution.
 #
 # These should be present in every Circos configuration file and
-# overridden as required. To see the content of these files, 
+# overridden as required. To see the content of these files,
 # look in etc/ in the Circos distribution.
 
 <image>

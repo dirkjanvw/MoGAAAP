@@ -1,11 +1,24 @@
 # All input read sets. Using the same identifier for hifi and ont will result in
-# using both for the same assembly
+# using both for the same assembly. Optionally, Illumina (PE) reads can be added
+# which will be used for quality control only.
 reads:
-    hifi:
-        accessionA: "resources/reads/HiFi/readsA.fasta"
-        accessionB: "resources/reads/HiFi/readsB.fasta"
-    ont:
-        accessionA: "resources/reads/ONT/readsA.fasta"
+    hifi:  #required
+        accessionA:
+            sampleA1: "resources/reads/HiFi/readsA1.fasta"
+            sampleA2: "resources/reads/HiFi/readsA2.fasta"
+        accessionB:
+            sampleB: "resources/reads/HiFi/readsB.fasta"
+    ont:  #optional
+        accessionB:
+            sampleB: "resources/reads/ONT/readsB.fasta"
+    illumina:  #optional
+        accessionA:
+            sampleA1:
+                libraryA1_1: ["resources/reads/sample1/library1_1.fq.gz", "resources/reads/sample1/library1_2.fq.gz"]
+                libraryA1_2: ["resources/reads/sample1/library2_1.fq.gz", "resources/reads/sample1/library2_2.fq.gz"]
+            sampleA2:
+                libraryA2_1: ["resources/reads/sample2/library1_1.fq.gz", "resources/reads/sample2/library1_2.fq.gz"]
+                libraryA2_2: ["resources/reads/sample2/library2_1.fq.gz", "resources/reads/sample2/library2_2.fq.gz"]
 
 # All filtering and scaffolding parameters
 ref_genome:  #reference genome for scaffolding and mummerplots
@@ -36,3 +49,25 @@ helixer_max_gene_length: 64152
 species:  #give letter only abbreviation for species for annotation with helixer
     accessionA: "speciesA"
     accessionB: "speciesB"
+
+# Quality control settings
+k_qc: 21  #optimal k-mer size for quality control
+gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
+taxid:  #taxid for the species for fcs-gx
+    accessionA: 12345
+    accessionB: 67890
+pantools_grouping: 3  #grouping relaxation setting for pantools
+odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
+kraken2_nt: "resources/kraken/"  #kraken2 database
+OMAdb: "resources/OMAmerDB.h5"  #OMA database for orthologs
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive and will only be used for QC.
+set:
+    all:
+        - accessionA
+        - accessionB
+
+# General settings
+jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
+tmpdir: "/dev/shm/"  #temporary directory for fast IO

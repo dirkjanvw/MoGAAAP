@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: python:3.9-slim-bookworm
+
+%post
+   apt-get update
+   apt-get install -y git make gcc g++ zlib1g-dev
+
+%post
+   pip install argparse pandas matplotlib numpy seaborn scipy
+
+%post
+   cd /opt
+   git clone https://gitlab.ub.uni-bielefeld.de/gi/pangrowth.git
+   cd pangrowth
+   git checkout 71d67bde89326644f6718c82ec2ee7b751f3080b
+   make
+
+%post
+   sed -i '1i#!/usr/bin/env python3' scripts/*.py
+   chmod +x scripts/*.py
+
+%environment
+   export PATH=$PATH:/opt/pangrowth:/opt/pangrowth/scripts

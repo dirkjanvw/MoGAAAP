@@ -50,17 +50,18 @@ Several important `snakemake` parameters are important when running this pipelin
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
 - `mem_mb`: The amount of memory in MB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
-- `gpus`: The number of GPUs that GPU-based jobs in the pipeline can use; will be referred to as `${GPU}`.
+- `helixer`: The number of Helixer jobs in the pipeline can run to at the same time; will be referred to as `${HELIXER}`.
+- `pantools`: The number of PanTools jobs in the pipeline can run to at the same time; will be referred to as `${PANTOOLS}`.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
+snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} --resources gpus=${GPU}
+snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
 ```
 
 ### Reporting
@@ -72,7 +73,7 @@ snakemake ${MODULE} -c1 --report report.html
 ## TODO
 The following tasks are still to be done before the pipeline is finished:
 - [x] Add the annotation module.
-- [ ] Add the QC module.
+- [x] Add the QC module.
 - [x] Add the renaming of the scaffolds to their proper chromosome names.
-- [ ] Add the generation of a report.
+- [x] Add the generation of a report.
 - [ ] Do a full test of the pipeline.

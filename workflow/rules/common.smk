@@ -1,11 +1,11 @@
 def get_all_accessions():
-    all_accessions = []
+    all_accessions = set()
     for accession in config["reads"]["hifi"].keys():
-        all_accessions.append(accession)
+        all_accessions.add(accession)
     if "ont" in config["reads"]:
         if config["reads"]["ont"]:
             for accession in config["reads"]["ont"].keys():
-                all_accessions.append(accession)
+                all_accessions.add(accession)
     return all_accessions
 
 def get_ref_genome(wildcards):
