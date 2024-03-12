@@ -9,8 +9,7 @@ include: "08.mash.smk"
 include: "09.ntsynt.smk"
 include: "10.sans.smk"
 include: "11.pangrowth.smk"
-include: "12.collinearity.smk"
-include: "13.mapping.smk"
+include: "12.mapping.smk"
 
 def get_merqury_output(wildcards):
     k = config["k"]
@@ -61,7 +60,8 @@ rule qc:
         expand("results/{asmset}/5.quality_control/09.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
         expand("results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
         expand("results/{asmset}/5.quality_control/11.pangrowth/{k}/{figure}.pdf", asmset=config["set"], k=config["k"], figure=["hist", "growth", "core"]),  #pangrowth
-        expand("results/{asmset}/5.quality_control/12.collinearity/karyotype.pdf", asmset=config["set"]),  #jcvi collinearity
-        expand("results/{asmset}/5.quality_control/13.multiqc/multiqc_report.html", asmset=config["set"]),  #mapping
+
+        # individual output
+        expand("results/{asmname}/5.quality_control/12.multiqc/multiqc_report.html", asmname=get_all_accessions()),  #mapping
     output:
         touch("results/quality_control.done")
