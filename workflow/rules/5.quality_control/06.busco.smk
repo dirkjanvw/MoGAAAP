@@ -77,8 +77,8 @@ rule compleasm_summary_reformat:
 
 rule busco_plot:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_control/06.compleasm/{asmname}/short_summary.specific.{{odb}}.{asmname}_genome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
-        lambda wildcards: expand("results/{asmname}/5.quality_control/06.busco_proteome/{asmname}_proteome/short_summary.specific.{{odb}}.{asmname}_proteome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
+        lambda wildcards: expand("results/{asmname}/5.quality_control/06.compleasm/{asmname}/short_summary.specific.{odb}.{asmname}_genome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
+        lambda wildcards: expand("results/{asmname}/5.quality_control/06.busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
     output:
         report("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", category="Gene completeness", labels={"type": "busco", "set": "{asmset}"}),
     log:
