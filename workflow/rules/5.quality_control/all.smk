@@ -1,3 +1,4 @@
+include: "00.proteome.smk"
 include: "01.merqury.smk"
 include: "02.kraken.smk"
 include: "03.fcs.smk"
