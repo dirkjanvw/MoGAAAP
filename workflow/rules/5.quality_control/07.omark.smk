@@ -19,7 +19,7 @@ rule omamer_search:
 rule omark:
     input:
         omamer = "results/{asmname}/5.quality_control/07.omamer/{asmname}.omamer",
-        splice = "results/{asmname}/5.quality_control/transcriptome.splice",
+        splice = "results/{asmname}/5.quality_control/proteome.splice",
     output:
         omamer_omq = "results/{asmname}/5.quality_control/07.omark/{asmname}.omq",
         omamer_pdf = "results/{asmname}/5.quality_control/07.omark/{asmname}.pdf",
