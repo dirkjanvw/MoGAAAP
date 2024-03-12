@@ -53,8 +53,6 @@ rule merqury:
         "results/logs/5.quality_control/01.merqury/{k}/{asmname}/{sample}.log"
     benchmark:
         "results/benchmarks/5.quality_control/01.merqury/{k}/{asmname}/{sample}.txt"
-    params:
-        k = config["k_qc"],
     conda:
         "../../envs/merqury.yaml"
     shell:
