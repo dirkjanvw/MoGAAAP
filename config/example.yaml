@@ -54,9 +54,10 @@ taxid:  #taxid for the species for fcs-gx
     accessionB: 67890
 pantools_grouping: 3  #grouping relaxation setting for pantools
 odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
+OMAdb: "resources/OMAmerDB.h5"  #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
-# list is order sensitive.
+# list is order sensitive and will only be used for QC.
 set:
     all:
         - accessionA
