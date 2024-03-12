@@ -1,6 +1,6 @@
 rule sample_illumina:
     input:
-        lambda wildcards: config["reads"][wildcards.asmname][wildcards.sample][wildcards.library][int(wildcards.direction)],
+        lambda wildcards: config["reads"]["illumina"][wildcards.asmname][wildcards.sample][wildcards.library][int(wildcards.direction)],
     output:
         "results/{asmname}/5.quality_control/04.mapping/input/illumina/{sample}/{library}_{direction}.fq.gz",
     log:
@@ -41,7 +41,7 @@ rule map_illumina:
 
 rule sample_tgs:
     input:
-        lambda wildcards: config["reads"][wildcards.asmname][wildcards.tgstype][wildcards.sample]
+        lambda wildcards: config["reads"][wildcards.tgstype][wildcards.asmname][wildcards.sample]
     output:
         "results/{asmname}/5.quality_control/04.mapping/input/{tgstype}/{sample}/{sample}.fq.gz"
     log:
@@ -109,12 +109,15 @@ rule flagstat_bam:
 
 def get_wgs_flagstat(wildcards):
     all_output = []
-    for tgstype in ["hifi", "ont"]:
-        for sample in config["reads"][wildcards.asmname][tgstype]:
-            all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/{tgstype}/{sample}/{sample}.sorted.flagstat.txt")
-    for sample in config["reads"]["illumina"][wildcards.asmname]:
-        for library in config["reads"]["illumina"][wildcards.asmname][sample]:
-            all_output.append(f"results/{{asmname}}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt")
+    for sample in config["reads"]["hifi"][wildcards.asmname]:
+        all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/hifi/{sample}/{sample}.sorted.flagstat.txt")
+    if "ont" in config["reads"]:
+        for sample in config["reads"]["ont"][wildcards.asmname]:
+            all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/ont/{sample}/{sample}.sorted.flagstat.txt")
+    if "illumina" in config["reads"]:
+        for sample in config["reads"]["illumina"][wildcards.asmname]:
+            for library in config["reads"]["illumina"][wildcards.asmname][sample]:
+                all_output.append(f"results/{{asmname}}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt")
     return all_output
 
 rule multiqc:

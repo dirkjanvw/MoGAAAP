@@ -20,16 +20,18 @@ def get_merqury_output(wildcards):
         all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.qv")  #merqury
         all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #merqury
 
-    # ONT
-    for asmname in config["reads"]["ont"]:
-        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.qv")  #merqury
-        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #merqury
+    # ONT (optional)
+    if "ont" in config["reads"]:
+        for asmname in config["reads"]["ont"]:
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.qv")  #merqury
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #merqury
 
-    # Illumina
-    for asmname in config["reads"]["illumina"]:
-        for sample in config["reads"]["illumina"]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
+    # Illumina (optional)
+    if "illumina" in config["reads"]:
+        for asmname in config["reads"]["illumina"]:
+            for sample in config["reads"]["illumina"]:
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
     return all_output
 

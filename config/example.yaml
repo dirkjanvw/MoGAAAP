@@ -2,12 +2,12 @@
 # using both for the same assembly. Optionally, Illumina (PE) reads can be added
 # which will be used for quality control only.
 reads:
-    hifi:  #TODO: decide whether to name the samples specifically
+    hifi:  #required
         accessionA: "resources/reads/HiFi/readsA.fasta"
         accessionB: "resources/reads/HiFi/readsB.fasta"
-    ont:  #TODO: decide whether to name the samples specifically
+    ont:  #optional
         accessionA: "resources/reads/ONT/readsA.fasta"
-    illumina:
+    illumina:  #optional
         accessionA:
             sampleA1:
                 libraryA1_1: ["resources/reads/sample1/library1_1.fq.gz", "resources/reads/sample1/library1_2.fq.gz"]
