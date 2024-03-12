@@ -2,3 +2,4 @@ channels:
   - conda-forge
 dependencies:
   - r-upsetr=1.4.0
+  - r-pheatmap=1.0.12
