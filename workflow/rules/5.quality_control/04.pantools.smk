@@ -102,7 +102,7 @@ rule panproteome_plot_upset:
     input:
         "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R",
     output:
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf", category="PanTools", labels={"type": "upset plot", "assembly": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf", category="PanTools", labels={"type": "upset plot", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/pantools/upset_plot/{asmset}.log"
     benchmark:
@@ -137,9 +137,9 @@ rule panproteome_plot_pangenome_growth:
     input:
         "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
     output:
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_accessory_unique_growth.png", category="PanTools", labels={"type": "growth (core, accessory, unique)", "assembly": "{asmset}"}),
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png", category="PanTools", labels={"type": "growth (core, dispensable)", "assembly": "{asmset}"}),
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_total_growth.png", category="PanTools", labels={"type": "growth (core, dispensable, total)", "assembly": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_accessory_unique_growth.png", category="PanTools", labels={"type": "growth (core, accessory, unique)", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png", category="PanTools", labels={"type": "growth (core, dispensable)", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_total_growth.png", category="PanTools", labels={"type": "growth (core, dispensable, total)", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/pantools/pangenome_growth/{asmset}.log"
     benchmark:

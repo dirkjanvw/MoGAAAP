@@ -53,6 +53,7 @@ taxid:  #taxid for the species for fcs-gx
     accessionA: 12345
     accessionB: 67890
 pantools_grouping: 3  #grouping relaxation setting for pantools
+odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive.
