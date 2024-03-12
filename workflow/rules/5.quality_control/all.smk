@@ -1,15 +1,15 @@
 include: "01.merqury.smk"
 include: "02.kraken.smk"
 include: "03.fcs.smk"
-include: "04.pantools.smk"
-include: "05.busco.smk"
-include: "06.omark.smk"
-include: "07.kmer-db.smk"
-include: "08.mash.smk"
-include: "09.ntsynt.smk"
-include: "10.sans.smk"
-include: "11.pangrowth.smk"
-include: "12.mapping.smk"
+include: "04.mapping.smk"
+include: "05.pantools.smk"
+include: "06.busco.smk"
+include: "07.omark.smk"
+include: "08.kmer-db.smk"
+include: "09.mash.smk"
+include: "10.ntsynt.smk"
+include: "11.sans.smk"
+include: "12.pangrowth.smk"
 
 def get_merqury_output(wildcards):
     k = config["k"]
@@ -36,11 +36,11 @@ def get_merqury_output(wildcards):
 def get_pantools_output(wildcards):
     all_output = []
     for asmset in config["set"]:
-        all_output.append(f"results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pantools_homology_groups.txt")  #pantools homology grouping
+        all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt")  #pantools homology grouping
         if len(get_all_accessions()) >= 3:
-            all_output.append(f"results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
+            all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
             if len(get_all_accessions()) <= 10:
-                    all_output.append(f"results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
+                    all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
     return all_output
 
 rule qc:
@@ -50,18 +50,16 @@ rule qc:
         expand("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
         expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", asmname=get_all_accessions()),  #fcs-gx
         expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt", asmname=get_all_accessions()),  #fcs-adaptor
+        expand("results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html", asmname=get_all_accessions()),  #mapping
 
         # grouped outputs
         get_pantools_output,  #pantools
-        expand("results/{asmset}/5.quality_control/05.busco_plot/busco_figure.png", asmset=config["set"]),  #busco (proteome) and compleasm (genome)
-        expand("results/{asmset}/5.quality_control/06.omark_plot.png", asmset=config["set"]),  #omark
-        expand("results/{asmset}/5.quality_control/07.kmer-db/k{k}.csv.mash.pdf", asmset=config["set"], k=config["k"]),  #kmer distances
-        expand("results/{asmset}/5.quality_control/08.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
-        expand("results/{asmset}/5.quality_control/09.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
-        expand("results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
-        expand("results/{asmset}/5.quality_control/11.pangrowth/{k}/{figure}.pdf", asmset=config["set"], k=config["k"], figure=["hist", "growth", "core"]),  #pangrowth
-
-        # individual output
-        expand("results/{asmname}/5.quality_control/12.multiqc/multiqc_report.html", asmname=get_all_accessions()),  #mapping
+        expand("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", asmset=config["set"]),  #busco (proteome) and compleasm (genome)
+        expand("results/{asmset}/5.quality_control/07.omark_plot.png", asmset=config["set"]),  #omark
+        expand("results/{asmset}/5.quality_control/08.kmer-db/k{k}.csv.mash.pdf", asmset=config["set"], k=config["k"]),  #kmer distances
+        expand("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
+        expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
+        expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
+        expand("results/{asmset}/5.quality_control/12.pangrowth/{k}/{figure}.pdf", asmset=config["set"], k=config["k"], figure=["hist", "growth", "core"]),  #pangrowth
     output:
         touch("results/quality_control.done")

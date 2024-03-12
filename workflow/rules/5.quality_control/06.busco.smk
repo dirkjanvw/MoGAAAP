@@ -31,7 +31,7 @@ rule busco_proteome:
         proteome = "results/{asmname}/5.quality_control/proteome.pep.fa",
         download = rules.busco_download.output,
     output:
-        "results/{asmname}/5.quality_control/busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt",
+        "results/{asmname}/5.quality_control/06.busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt",
     log:
         "results/logs/5.quality_control/busco_proteome/{odb}/{asmname}.log"
     benchmark:
@@ -48,8 +48,8 @@ rule compleasm:
         genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
         downloaddir = rules.compleasm_download.output,
     output:
-        summary = "results/{asmname}/5.quality_control/compleasm/{asmname}/summary.txt",
-        hmmer_output = temporary(directory(expand("results/{{asmname}}/5.quality_control/compleasm/{{asmname}}/{odb}/hmmer_output", odb=config["odb"]))), #needed because compleasm doesn't compress this
+        summary = "results/{asmname}/5.quality_control/06.compleasm/{asmname}/summary.txt",
+        hmmer_output = temporary(directory(expand("results/{{asmname}}/5.quality_control/06.compleasm/{{asmname}}/{odb}/hmmer_output", odb=config["odb"]))), #needed because compleasm doesn't compress this
     log:
         "results/logs/5.quality_control/compleasm/{asmname}.log"
     benchmark:
@@ -65,9 +65,9 @@ rule compleasm:
 
 rule compleasm_summary_reformat:
     input:
-        "results/{asmname}/5.quality_control/compleasm/{asmname}/summary.txt"
+        "results/{asmname}/5.quality_control/06.compleasm/{asmname}/summary.txt"
     output:
-        "results/{asmname}/5.quality_control/compleasm/{asmname}/short_summary.specific.{odb}.{asmname}_genome.txt",
+        "results/{asmname}/5.quality_control/06.compleasm/{asmname}/short_summary.specific.{odb}.{asmname}_genome.txt",
     log:
         "results/logs/5.quality_control/compleasm_summary_reformat/{odb}/{asmname}.log"
     benchmark:
@@ -77,10 +77,10 @@ rule compleasm_summary_reformat:
 
 rule busco_plot:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_control/compleasm/{asmname}/short_summary.specific.{{odb}}.{asmname}_genome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
-        lambda wildcards: expand("results/{asmname}/5.quality_control/busco_proteome/{asmname}_proteome/short_summary.specific.{{odb}}.{asmname}_proteome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
+        lambda wildcards: expand("results/{asmname}/5.quality_control/06.compleasm/{asmname}/short_summary.specific.{{odb}}.{asmname}_genome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
+        lambda wildcards: expand("results/{asmname}/5.quality_control/06.busco_proteome/{asmname}_proteome/short_summary.specific.{{odb}}.{asmname}_proteome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
     output:
-        report("results/{asmset}/5.quality_control/05.busco_plot/busco_figure.png", category="Gene completeness", labels={"type": "busco", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", category="Gene completeness", labels={"type": "busco", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/busco_plot/{asmset}.log"
     benchmark:

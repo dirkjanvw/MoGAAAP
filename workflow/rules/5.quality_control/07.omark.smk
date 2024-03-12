@@ -2,7 +2,7 @@ rule omamer_search:
     input:
         "results/{asmname}/5.quality_control/proteome.pep.fa",
     output:
-        "results/{asmname}/5.quality_control/omamer/{asmname}.omamer",
+        "results/{asmname}/5.quality_control/07.omamer/{asmname}.omamer",
     log:
         "results/logs/5.quality_control/omamer/{asmname}.log"
     benchmark:
@@ -18,17 +18,17 @@ rule omamer_search:
 
 rule omark:
     input:
-        omamer = "results/{asmname}/5.quality_control/omamer/{asmname}.omamer",
+        omamer = "results/{asmname}/5.quality_control/07.omamer/{asmname}.omamer",
         splice = "results/{asmname}/5.quality_control/transcriptome.splice",
     output:
-        omamer_omq = "results/{asmname}/5.quality_control/omark/{asmname}.omq",
-        omamer_pdf = "results/{asmname}/5.quality_control/omark/{asmname}.pdf",
-        omamer_png = "results/{asmname}/5.quality_control/omark/{asmname}.png",
-        omamer_sum = "results/{asmname}/5.quality_control/omark/{asmname}.sum",
-        omamer_tax = "results/{asmname}/5.quality_control/omark/{asmname}.tax",
-        omamer_ump = "results/{asmname}/5.quality_control/omark/{asmname}.ump",
-        omamer_sumtxt = "results/{asmname}/5.quality_control/omark/{asmname}_detailed_summary.txt",
-        omamer_isotxt = "results/{asmname}/5.quality_control/omark/{asmname}_selected_isoforms.txt",
+        omamer_omq = "results/{asmname}/5.quality_control/07.omark/{asmname}.omq",
+        omamer_pdf = "results/{asmname}/5.quality_control/07.omark/{asmname}.pdf",
+        omamer_png = "results/{asmname}/5.quality_control/07.omark/{asmname}.png",
+        omamer_sum = "results/{asmname}/5.quality_control/07.omark/{asmname}.sum",
+        omamer_tax = "results/{asmname}/5.quality_control/07.omark/{asmname}.tax",
+        omamer_ump = "results/{asmname}/5.quality_control/07.omark/{asmname}.ump",
+        omamer_sumtxt = "results/{asmname}/5.quality_control/07.omark/{asmname}_detailed_summary.txt",
+        omamer_isotxt = "results/{asmname}/5.quality_control/07.omark/{asmname}_selected_isoforms.txt",
     log:
         "results/logs/5.quality_control/omark/{asmname}.log"
     benchmark:
@@ -42,9 +42,9 @@ rule omark:
 
 rule omark_plot:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_control/omark/{asmname}.sum", asmname=config["set"][wildcards.asmset]),
+        lambda wildcards: expand("results/{asmname}/5.quality_control/07.omark/{asmname}.sum", asmname=config["set"][wildcards.asmset]),
     output:
-        report("results/{asmset}/5.quality_control/06.omark_plot.png", category="Gene completeness", labels={"type": "omark", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/07.omark_plot.png", category="Gene completeness", labels={"type": "omark", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/omark_plot/{asmset}.log"
     benchmark:

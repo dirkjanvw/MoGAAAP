@@ -2,7 +2,7 @@ rule list_pantools_proteomes:
     input:
         expand("results/{asmname}/5.quality_control/proteome.pep.fa", asmname=get_all_accessions()),
     output:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome.list"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome.list"
     log:
         "results/logs/5.quality_control/pantools/list_proteomes/{asmset}.log"
     benchmark:
@@ -12,9 +12,9 @@ rule list_pantools_proteomes:
 
 rule table_pantools_proteomes:
     input:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome.list"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome.list"
     output:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome.tsv"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome.tsv"
     log:
         "results/logs/5.quality_control/pantools/table_proteomes/{asmset}.log"
     benchmark:
@@ -24,9 +24,9 @@ rule table_pantools_proteomes:
 
 rule panproteome_build:
     input:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome.list"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome.list"
     output:
-        directory("results/{asmset}/5.quality_control/04.pantools/panproteome_DB/databases")
+        directory("results/{asmset}/5.quality_control/05.pantools/panproteome_DB/databases")
     log:
         "results/logs/5.quality_control/pantools/build_panproteome/{asmset}.log"
     benchmark:
@@ -50,7 +50,7 @@ rule panproteome_group:
     input:
         rules.panproteome_build.output
     output:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pantools_homology_groups.txt"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt"
     log:
         "results/logs/5.quality_control/pantools/group/{asmset}.log"
     benchmark:
@@ -76,10 +76,10 @@ rule panproteome_group:
 
 rule panproteome_gene_classification:
     input:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pantools_homology_groups.txt"
+        "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt"
     output:
-        groups = "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/classified_groups.csv",
-        rscript = "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R", #will only be an Rscript if less than 11 genomes
+        groups = "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/classified_groups.csv",
+        rscript = "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R", #will only be an Rscript if less than 11 genomes
     log:
         "results/logs/5.quality_control/pantools/gene_classification/{asmset}.log"
     benchmark:
@@ -100,9 +100,9 @@ rule panproteome_gene_classification:
 
 rule panproteome_plot_upset:
     input:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R",
+        "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R",
     output:
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf", category="PanTools", labels={"type": "upset plot", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf", category="PanTools", labels={"type": "upset plot", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/pantools/upset_plot/{asmset}.log"
     benchmark:
@@ -114,10 +114,10 @@ rule panproteome_plot_upset:
 
 rule panproteome_pangenome_structure:
     input:
-        hm = "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pantools_homology_groups.txt",
-        gc = "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/gene_classification/classified_groups.csv",  #put this here to prevent parallel pantools execution
+        hm = "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt",
+        gc = "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/classified_groups.csv",  #put this here to prevent parallel pantools execution
     output:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
+        "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
     log:
         "results/logs/5.quality_control/pantools/pangenome_structure/{asmset}.log"
     benchmark:
@@ -135,11 +135,11 @@ rule panproteome_pangenome_structure:
 
 rule panproteome_plot_pangenome_growth:
     input:
-        "results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
+        "results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
     output:
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_accessory_unique_growth.png", category="PanTools", labels={"type": "growth (core, accessory, unique)", "set": "{asmset}"}),
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png", category="PanTools", labels={"type": "growth (core, dispensable)", "set": "{asmset}"}),
-        report("results/{asmset}/5.quality_control/04.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_total_growth.png", category="PanTools", labels={"type": "growth (core, dispensable, total)", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_accessory_unique_growth.png", category="PanTools", labels={"type": "growth (core, accessory, unique)", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png", category="PanTools", labels={"type": "growth (core, dispensable)", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_total_growth.png", category="PanTools", labels={"type": "growth (core, dispensable, total)", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/pantools/pangenome_growth/{asmset}.log"
     benchmark:

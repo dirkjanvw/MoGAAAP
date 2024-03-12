@@ -2,7 +2,7 @@ rule sans_prepare_genome:
     input:
         genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
     output:
-        "results/{asmset}/5.quality_control/sans.list",
+        "results/{asmset}/5.quality_control/11.sans.list",
     log:
         "results/logs/5.quality_control/sans_prepare_genome/{asmset}.log"
     benchmark:
@@ -20,10 +20,10 @@ rule sans_prepare_genome:
 
 rule sans:
     input:
-        "results/{asmset}/5.quality_control/sans.list",
+        "results/{asmset}/5.quality_control/11.sans.list",
     output:
-        splits = "results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        splits = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits",
+        bootstrap = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
     log:
         "results/logs/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.log"
     benchmark:
@@ -37,11 +37,11 @@ rule sans:
 
 rule sans_to_nexus:
     input:
-        filelist = "results/{asmset}/5.quality_control/sans.list",
-        splits = "results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        filelist = "results/{asmset}/5.quality_control/11.sans.list",
+        splits = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits",
+        bootstrap = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
     output:
-        report("results/{asmset}/5.quality_control/10.sans/{k}/{asmset}_b{bootstrap}.nexus", category="General", labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
+        report("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", category="General", labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
         "results/logs/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.nexus.log"
     benchmark:

@@ -14,7 +14,7 @@ rule meryl:
     input:
         get_wgs_input
     output:
-        temporary(directory("results/{asmname}/5.quality_control/meryl_databases/{k}/{sample}.meryl")),  #relatively fast to compute and takes up a lot of space
+        temporary(directory("results/{asmname}/5.quality_control/01.meryl_databases/{k}/{sample}.meryl")),  #relatively fast to compute and takes up a lot of space
     log:
         "results/logs/5.quality_control/meryl/{k}/{asmname}/{sample}.log"
     benchmark:
@@ -28,7 +28,7 @@ rule meryl:
 
 rule merqury:
     input:
-        meryl = "results/{asmname}/5.quality_control/meryl_databases/{k}/{sample}.meryl",
+        meryl = "results/{asmname}/5.quality_control/01.meryl_databases/{k}/{sample}.meryl",
         genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
         temporary(directory("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}.meryl")), #relatively fast to compute and takes up a lot of space

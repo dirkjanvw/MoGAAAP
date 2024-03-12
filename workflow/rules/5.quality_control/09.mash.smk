@@ -2,8 +2,8 @@ rule mash_distance:
     input:
         lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
     output:
-        tsv = "results/{asmset}/5.quality_control/mash/{asmset}.tsv",
-        csv = "results/{asmset}/5.quality_control/mash/{asmset}.csv",
+        tsv = "results/{asmset}/5.quality_control/09.mash/{asmset}.tsv",
+        csv = "results/{asmset}/5.quality_control/09.mash/{asmset}.csv",
     log:
         "results/logs/5.quality_control/mash_distance/{asmset}.log"
     benchmark:
@@ -23,9 +23,9 @@ rule mash_distance:
 
 rule mash_heatmap:
     input:
-        "results/{asmset}/5.quality_control/mash/{asmset}.csv",
+        "results/{asmset}/5.quality_control/09.mash/{asmset}.csv",
     output:
-        report("results/{asmset}/5.quality_control/08.mash/{asmset}.pdf", category="General", labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
+        report("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", category="General", labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
     log:
         "results/logs/5.quality_control/mash_heatmap/{asmset}.log"
     benchmark:
