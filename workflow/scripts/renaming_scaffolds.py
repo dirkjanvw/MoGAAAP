@@ -33,13 +33,13 @@ def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
             if line.startswith('>'):
                 scaffold = line.strip().lstrip('>')
                 chrom = conversion.get(scaffold, scaffold)
-                out.write(f'>{prefix}_Chr{chrom}\n')
+                out.write(f'>{prefix}_Chr{chrom}\n')  #TODO: Add leading zeroes
             else:
                 out.write(line)
         c = 1
         for line in f2:
             if line.startswith('>'):
-                out.write(f'>{prefix}_Un{c}\n')
+                out.write(f'>{prefix}_Un{c}\n')  #TODO: Add leading zeroes
                 c += 1
             else:
                 out.write(line)

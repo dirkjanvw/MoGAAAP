@@ -4,11 +4,13 @@
 reads:
     hifi:  #required
         accessionA:
-            sampleA: "resources/reads/HiFi/readsA.fasta"
+            sampleA1: "resources/reads/HiFi/readsA1.fasta"
+            sampleA2: "resources/reads/HiFi/readsA2.fasta"
         accessionB:
             sampleB: "resources/reads/HiFi/readsB.fasta"
     ont:  #optional
-        accessionA: "resources/reads/ONT/readsA.fasta"
+        accessionB:
+            sampleB: "resources/reads/ONT/readsB.fasta"
     illumina:  #optional
         accessionA:
             sampleA1:

@@ -66,7 +66,7 @@ chromosomes_display_default = yes
 # CHROMOSOME DISPLAY #
 <spacing>
 default = 10u
-<pairwise {sequences[0]}, {sequences[-1]}>
+<pairwise {sequences[0]},{sequences[-1]}>
 spacing = 60u
 </pairwise>
 </spacing>
