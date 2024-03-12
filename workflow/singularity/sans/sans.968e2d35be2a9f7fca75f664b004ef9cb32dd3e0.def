@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: python:3.9-slim-bookworm
+
+%post
+   apt-get update
+   apt-get install -y git make gcc g++ zlib1g-dev wget
+
+%post
+   pip install dendropy
+
+%post
+   cd /opt
+   git clone https://gitlab.ub.uni-bielefeld.de/gi/sans.git
+   cd sans
+   git checkout 968e2d35be2a9f7fca75f664b004ef9cb32dd3e0
+   make
+   sed -i '57s/^ //' scripts/sans2conf_nexus.py
+   chmod +x scripts/*.py
+
+%environment
+   export PATH=$PATH:/opt/sans:/opt/sans/scripts
