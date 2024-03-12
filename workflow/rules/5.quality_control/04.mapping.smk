@@ -66,7 +66,7 @@ rule map_tgs:
     benchmark:
         "results/benchmarks/5.quality_control/map_tgs/{asmname}/{tgstype}/{sample}.txt"
     params:
-        readtag = lambda wildcards: f"'@RG\\tID:{wildcards.tgs}\\tSM:{wildcards.tgs}'"
+        readtag = lambda wildcards: f"'@RG\\tID:{wildcards.sample}\\tSM:{wildcards.sample}'"
     threads:
         10
     conda:
