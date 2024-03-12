@@ -52,6 +52,7 @@ gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
 taxid:  #taxid for the species for fcs-gx
     accessionA: 12345
     accessionB: 67890
+pantools_grouping: 3  #grouping relaxation setting for pantools
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive.
@@ -59,3 +60,7 @@ set:
     all:
         - accessionA
         - accessionB
+
+# General settings
+jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
+tmpdir: "/dev/shm/"  #temporary directory for fast IO
