@@ -33,7 +33,7 @@ rule hifiasm_with_ont:
 
 rule gfa2fasta:
     input:
-        lambda wildcards: branch(config["reads"]["ont"] and wildcards.asmname in config["reads"]["ont"],  #with `--primary -l0` option
+        lambda wildcards: branch("ont" in config["reads"] and wildcards.asmname in config["reads"]["ont"],  #with `--primary -l0` option
             then = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.p_ctg.gfa",
             otherwise = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.p_ctg.gfa"),
     output:
