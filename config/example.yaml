@@ -3,8 +3,10 @@
 # which will be used for quality control only.
 reads:
     hifi:  #required
-        accessionA: "resources/reads/HiFi/readsA.fasta"
-        accessionB: "resources/reads/HiFi/readsB.fasta"
+        accessionA:
+            sampleA: "resources/reads/HiFi/readsA.fasta"
+        accessionB:
+            sampleB: "resources/reads/HiFi/readsB.fasta"
     ont:  #optional
         accessionA: "resources/reads/ONT/readsA.fasta"
     illumina:  #optional

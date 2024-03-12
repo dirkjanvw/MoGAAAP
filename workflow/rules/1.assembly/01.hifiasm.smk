@@ -1,6 +1,6 @@
 rule hifiasm:
     input:
-        hifi = lambda wildcards: config["reads"]["hifi"][wildcards.asmname],
+        hifi = lambda wildcards: [config["reads"]["hifi"][wildcards.asmname][sample] for sample in config["reads"]["hifi"][wildcards.asmname]],
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.p_ctg.gfa", #with `--primary -l0` option
     log:
@@ -16,8 +16,8 @@ rule hifiasm:
 
 rule hifiasm_with_ont:
     input:
-        hifi = lambda wildcards: config["reads"]["hifi"][wildcards.asmname],
-        ont = lambda wildcards: config["reads"]["ont"][wildcards.asmname],
+        hifi = lambda wildcards: [config["reads"]["hifi"][wildcards.asmname][sample] for sample in config["reads"]["hifi"][wildcards.asmname]],
+        ont = lambda wildcards: [config["reads"]["ont"][wildcards.asmname][sample] for sample in config["reads"]["ont"][wildcards.asmname]],
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.p_ctg.gfa", #with `--primary -l0` option
     log:
