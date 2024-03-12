@@ -41,7 +41,7 @@ rule busco_proteome:
     conda:
         "../../envs/busco.yaml"
     shell:
-        "busco -f -i {input.proteome} -l {wildcards.odb} -o {wildcards.name}_proteome --out_path $(dirname $(dirname {output})) -m proteome -c {threads} --tar --offline &> {log}"
+        "busco -f -i {input.proteome} -l {wildcards.odb} -o {wildcards.asmname}_proteome --out_path $(dirname $(dirname {output})) -m proteome -c {threads} --tar --offline &> {log}"
 
 rule compleasm:
     input:
