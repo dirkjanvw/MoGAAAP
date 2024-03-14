@@ -25,14 +25,14 @@ def get_merqury_output(wildcards):
     # ONT (optional)
     if "ont" in config["reads"]:
         for asmname in config["reads"]["ont"]:
-            for sample in config["reads"]["ont"]:
+            for sample in config["reads"]["ont"][asmname]:
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
     # Illumina (optional)
     if "illumina" in config["reads"]:
         for asmname in config["reads"]["illumina"]:
-            for sample in config["reads"]["illumina"]:
+            for sample in config["reads"]["illumina"][asmname]:
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
