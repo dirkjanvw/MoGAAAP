@@ -79,8 +79,8 @@ rule circos:
     input:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     output:
-        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"assembly": "{asmname}"}),
-        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
+        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"assembly": "{asmname}"}),
+        svg = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
     log:
         "results/logs/3.analysis/circos/{asmname}.log"
     benchmark:
@@ -90,7 +90,7 @@ rule circos:
     shell:
         """
         (
-        cd $(dirname {output})
-        circos -conf $(basename {input}) -outputfile $(basename {output} | rev | cut -d"." -f2- | rev)
+        cd $(dirname {output.png})
+        circos -conf $(basename {input}) -outputfile $(basename {output.png} | rev | cut -d"." -f2- | rev)
         ) &> {log}
         """
