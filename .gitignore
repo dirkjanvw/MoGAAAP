@@ -121,7 +121,7 @@ fabric.properties
 
 # Specific for snakemake
 .snakemake/
-dag.svg
+*.svg
 resources/
 results/
 report.html
