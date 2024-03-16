@@ -31,7 +31,7 @@ ref_chr:  #reference chromosome names in ref_genome for renaming scaffolds
     5: "Chr5"
 min_contig_len: 10000
 ntjoin_k: 52
-ntjoin_w: 10000
+ntjoin_w: 16000
 
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module
