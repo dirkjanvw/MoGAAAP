@@ -34,8 +34,8 @@ ntjoin_k: 52
 ntjoin_w: 16000
 
 # All protein and nucleotide queries that need to be run for the assembly
-# analysis module
-prot_queries:
+# analysis module (circos plot)
+prot_queries: #should be single exon only!
     NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
@@ -43,7 +43,7 @@ nucl_queries:
     telomere: "resources/blast_queries/telomere.fasta"
 
 # Annotation settings
-ref_annotation: "resources/reference_genome.gff"  #TODO: combine with ref_genome
+ref_annotation: "resources/reference_genome.gff"
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"
 helixer_max_gene_length: 64152
 species:  #give letter only abbreviation for species for annotation with helixer
@@ -58,7 +58,7 @@ taxid:  #taxid for the species for fcs-gx
     accessionB: 67890
 pantools_grouping: 3  #grouping relaxation setting for pantools
 odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
-kraken2_nt: "resources/kraken/"  #kraken2 database
+kraken2_nt: "resources/kraken/nt"  #kraken2 database
 OMAdb: "resources/OMAmerDB.h5"  #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
