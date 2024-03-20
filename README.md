@@ -76,5 +76,5 @@ The following tasks are still to be done before the pipeline is finished:
 - [x] Add the QC module.
 - [x] Add the renaming of the scaffolds to their proper chromosome names.
 - [x] Add the generation of a report.
-- [ ] Replace compleasm by BUSCO v5.7.0
+- [x] Replace compleasm by BUSCO v5.7.0
 - [ ] Do a full test of the pipeline.
