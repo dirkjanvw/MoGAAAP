@@ -1,7 +1,7 @@
 rule create_renaming_table:
     input:
-        agp= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.agp",
-        mxdot= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.mx.dot",
+        agp= "results/{asmname}/2.scaffolding/01.ntjoin/k{k}/w{w}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.agp",
+        mxdot= "results/{asmname}/2.scaffolding/01.ntjoin/k{k}/w{w}/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.mx.dot",
     output:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.all.scaffolds.conversion.tsv"
     log:
@@ -24,13 +24,13 @@ rule create_renaming_table:
 
 rule renaming_scaffolds:
     input:
-        assigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
+        assigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/k{k}/w{w}/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.assigned.scaffolds.fa",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        unassigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.unassigned.scaffolds.fa",
+        unassigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/k{k}/w{w}/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n1.unassigned.scaffolds.fa",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
