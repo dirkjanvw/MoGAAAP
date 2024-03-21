@@ -137,4 +137,5 @@ busco_*
 Rplots.pdf
 .wget-hsts
 .keras/
+tests/
 
