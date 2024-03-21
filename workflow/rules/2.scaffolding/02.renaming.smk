@@ -24,13 +24,7 @@ rule create_renaming_table:
 
 rule renaming_scaffolds:
     input:
-        assigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
-            reference=config["ref_genome"],
-            minlen=config["min_contig_len"],
-            k=config["ntjoin_k"],
-            w=config["ntjoin_w"],
-        ),
-        unassigned = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa",
+        all = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
             reference=config["ref_genome"],
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
