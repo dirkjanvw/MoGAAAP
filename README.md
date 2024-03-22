@@ -56,12 +56,12 @@ The following resources (apart from CPUs) might be heavily used by the pipeline:
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
 ```
 
 ### Reporting
