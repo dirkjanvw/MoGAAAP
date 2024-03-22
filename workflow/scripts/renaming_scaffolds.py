@@ -1,11 +1,10 @@
 # THIS SCRIPT SHOULD NOT BE RUN ON ITS OWN
 
-def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
+def rename_sequences(sequences: str, conversion_table: str,
                      chromosome_names: dict, output: str, prefix: str) -> None:
     """
-    Rename the sequences in the scaffolds file using the conversion table.
-    :param scaffolds: Filename of the scaffolds FASTA file
-    :param unassigned: Filename of the unassigned FASTA file
+    Rename the sequences in the input file using the conversion table.
+    :param sequences: Filename of the sequences to be renamed
     :param conversion_table: Filename of the conversion table (first column:
         reference name, second column: scaffolds name)
     :param chromosome_names: Dictionary of new names for the chromosomes (first
@@ -25,27 +24,23 @@ def rename_sequences(scaffolds: str, unassigned: str, conversion_table: str,
                     conversion[scaffold] = k
                     break
 
-    # Read the scaffolds file and write the output
-    with open(scaffolds) as f1,\
-            open(unassigned) as f2,\
+    # Read the input file and write the output
+    c = 1  #for counting unnamed sequences
+    with open(sequences) as f,\
             open(output, 'w') as out:
-        for line in f1:
+        for line in f:
             if line.startswith('>'):
-                scaffold = line.strip().lstrip('>')
-                chrom = conversion.get(scaffold, scaffold)
-                out.write(f'>{prefix}_Chr{chrom}\n')  #TODO: Add leading zeroes
-            else:
-                out.write(line)
-        c = 1
-        for line in f2:
-            if line.startswith('>'):
-                out.write(f'>{prefix}_Un{c}\n')  #TODO: Add leading zeroes
-                c += 1
+                sequence = line.strip().lstrip('>')
+                if sequence in conversion:
+                    out.write(f'>{prefix}_Chr{conversion.get(sequence, sequence)}\n')  #TODO: Add leading zeroes
+                else:
+                    out.write(f'>{prefix}_Un{c}\n')  #TODO: Add leading zeroes
+                    c += 1
             else:
                 out.write(line)
 
 
-rename_sequences(str(snakemake.input.assigned), str(snakemake.input.unassigned),
+rename_sequences(str(snakemake.input.all),
                  str(snakemake.input.table), snakemake.params.chroms,
                  snakemake.output[0],
                  snakemake.wildcards.asmname)

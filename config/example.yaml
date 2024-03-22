@@ -1,6 +1,8 @@
 # All input read sets. Using the same identifier for hifi and ont will result in
 # using both for the same assembly. Optionally, Illumina (PE) reads can be added
 # which will be used for quality control only.
+# NB: Please don't use 'Chr' as part of any key in this YAML as it will mess up
+# the scaffolding!
 reads:
     hifi:  #required
         accessionA:
