@@ -22,7 +22,7 @@ rule fcs_adaptor:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        cleaned = "results/{asmname}/5.quality_control/03.fcs/{asmname}/cleaned_sequences/{asmname}.fasta",
+        cleaned = "results/{asmname}/5.quality_control/03.fcs/{asmname}/cleaned_sequences/{asmname}.fa",
         calls = "results/{asmname}/5.quality_control/03.fcs/{asmname}/combined.calls.jsonl",
         fcslog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs.log",
         fcsadaptorlog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor.log",

@@ -46,9 +46,9 @@ rule merqury:
         asmhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.spectra-asm.hist",
         asmlnplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.spectra-asm.ln.png",
         asmstplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.spectra-asm.st.png",
-        filt = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}.filt",
-        hist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}.hist",
-        ploidy = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}.hist.ploidy",
+        filt = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.filt",
+        hist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist",
+        ploidy = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist.ploidy",
     log:
         "results/logs/5.quality_control/01.merqury/{k}/{asmname}/{sample}.log"
     benchmark:
