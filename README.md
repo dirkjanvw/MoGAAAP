@@ -49,19 +49,19 @@ Several important `snakemake` parameters are important when running this pipelin
 
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
-- `mem_mb`: The amount of memory in MB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
+- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
 - `helixer`: The number of Helixer jobs in the pipeline can run to at the same time; will be referred to as `${HELIXER}`.
 - `pantools`: The number of PanTools jobs in the pipeline can run to at the same time; will be referred to as `${PANTOOLS}`.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources mem_mb=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} gpus=${HELIXER} pantools=${PANTOOLS}
 ```
 
 ### Reporting
@@ -77,4 +77,4 @@ The following tasks are still to be done before the pipeline is finished:
 - [x] Add the renaming of the scaffolds to their proper chromosome names.
 - [x] Add the generation of a report.
 - [ ] Replace compleasm by BUSCO v5.7.0
-- [ ] Do a full test of the pipeline.
+- [x] Do a full test of the pipeline.
