@@ -42,10 +42,20 @@ def get_pantools_output(wildcards):
     all_output = []
     for asmset in config["set"]:
         all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt")  #pantools homology grouping
-        if len(get_all_accessions()) >= 3:
+        if len(config["set"][asmset]) >= 3:
             all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
-            if len(get_all_accessions()) <= 10:
+            if len(config["set"][asmset]) >= 10:
                     all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
+    return all_output
+
+def get_pangrowth_output(wildcards):
+    all_output = []
+    k = config["k_qc"]
+    for asmset in config["set"]:
+        if len(config["set"][asmset]) >= 3:
+            all_output.append(f"results/{asmset}/5.quality_control/12.pangrowth/{k}/hist.pdf"),  #pangrowth hist
+            all_output.append(f"results/{asmset}/5.quality_control/12.pangrowth/{k}/growth.pdf"),  #pangrowth growth
+            all_output.append(f"results/{asmset}/5.quality_control/12.pangrowth/{k}/core.pdf"),  #pangrowth core
     return all_output
 
 rule qc:
@@ -65,6 +75,6 @@ rule qc:
         expand("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
         expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
         expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k_qc"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
-        expand("results/{asmset}/5.quality_control/12.pangrowth/{k}/{figure}.pdf", asmset=config["set"], k=config["k_qc"], figure=["hist", "growth", "core"]),  #pangrowth
+        get_pangrowth_output,  #pangrowth
     output:
         touch("results/quality_control.done")

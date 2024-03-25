@@ -112,12 +112,14 @@ def get_wgs_flagstat(wildcards):
     for sample in config["reads"]["hifi"][wildcards.asmname]:
         all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/hifi/{sample}/{sample}.sorted.flagstat.txt")
     if "ont" in config["reads"]:
-        for sample in config["reads"]["ont"][wildcards.asmname]:
-            all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/ont/{sample}/{sample}.sorted.flagstat.txt")
+        if wildcards.asmname in config["reads"]["ont"]:
+            for sample in config["reads"]["ont"][wildcards.asmname]:
+                all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/ont/{sample}/{sample}.sorted.flagstat.txt")
     if "illumina" in config["reads"]:
-        for sample in config["reads"]["illumina"][wildcards.asmname]:
-            for library in config["reads"]["illumina"][wildcards.asmname][sample]:
-                all_output.append(f"results/{{asmname}}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt")
+        if wildcards.asmname in config["reads"]["illumina"]:
+            for sample in config["reads"]["illumina"][wildcards.asmname]:
+                for library in config["reads"]["illumina"][wildcards.asmname][sample]:
+                    all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt")
     return all_output
 
 rule multiqc:

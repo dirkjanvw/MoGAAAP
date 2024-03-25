@@ -44,7 +44,8 @@ rule omark_plot:
     input:
         lambda wildcards: expand("results/{asmname}/5.quality_control/07.omark/{asmname}.sum", asmname=config["set"][wildcards.asmset]),
     output:
-        report("results/{asmset}/5.quality_control/07.omark_plot.png", category="Gene completeness", labels={"type": "omark", "set": "{asmset}"}),
+        tmpdir = temporary(directory("results/{asmset}/5.quality_control/07.omark_plot")),
+        png = report("results/{asmset}/5.quality_control/07.omark_plot.png", category="Gene completeness", labels={"type": "omark", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/omark_plot/{asmset}.log"
     benchmark:
@@ -52,4 +53,10 @@ rule omark_plot:
     conda:
         "../../envs/oma.yaml"
     shell:
-        "workflow/scripts/OMArk.a3c75ad/plot_all_results.py -i $(dirname $(dirname {input}) | uniq) -o {output} &> {log}"
+        """
+        (
+        mkdir {output.tmpdir}
+        cp {input} {output.tmpdir}
+        workflow/scripts/OMArk.a3c75ad/plot_all_results.py -i $(dirname {output.tmpdir}) -o {output.png}
+        ) &> {log}
+        """

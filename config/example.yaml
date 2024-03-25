@@ -1,6 +1,12 @@
-# All input read sets. Using the same identifier for hifi and ont will result in
+# This file contains the full configuration for the pipeline in YAML format.
+# Make sure to fill out at least everything that is not labelled as optional.
+# All strings that start with "resources" should be relative or absolute paths
+# on your machine that are readable by Snakemake.
+
+# All input read sets. Using the same identifier for HiFi and ONT will result in
 # using both for the same assembly. Optionally, Illumina (PE) reads can be added
-# which will be used for quality control only.
+# which will be used for quality control only. It is important to note here that
+# the key provided under `hifi` will be used as assembly name!
 # NB: Please don't use 'Chr' as part of any key in this YAML as it will mess up
 # the scaffolding!
 reads:
@@ -24,9 +30,9 @@ reads:
 
 # All filtering and scaffolding parameters
 ref_genome:  #reference genome for scaffolding and mummerplots
-    accessionX_V0: "resources/reference_genome.fa"
-ref_chr:  #reference chromosome names in ref_genome for renaming scaffolds
-    1: "Chr1"
+    accessionX_V0: "resources/reference_genome.fa"  #key is reference name
+ref_chr:  #key is chromosome number, value is the name of the chromosome in the ref_genome fasta file
+    1: "Chr1"  
     2: "Chr2"
     3: "Chr3"
     4: "Chr4"
@@ -37,7 +43,7 @@ ntjoin_w: 16000
 
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module (circos plot)
-prot_queries: #should be single exon only!
+prot_queries: #should be single exon domains only!
     NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
@@ -57,7 +63,7 @@ k_qc: 21  #optimal k-mer size for quality control
 gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
 taxid:  #taxid for the species for fcs-gx
     accessionA: 12345
-    accessionB: 67890
+    accessionB: 12345
 pantools_grouping: 3  #grouping relaxation setting for pantools
 odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
 kraken2_nt: "resources/kraken/nt"  #kraken2 database

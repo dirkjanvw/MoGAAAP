@@ -2,4 +2,6 @@
 set -o pipefail
 
 # Update taxonomy for krona
-ktUpdateTaxonomy.sh
+cd $CONDA_PREFIX/opt/krona/taxonomy
+wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+ktUpdateTaxonomy.sh --only-build
