@@ -84,3 +84,23 @@ These can be found at the following location (where `${assembly}` is a wildcard 
 results/${assembly}/2.scaffolding/02.renaming/${assembly}.fa
 results/${assembly}/4.annotation/03.combined/${assembly}.gff
 ```
+
+## TODO
+- [ ] Add general page to the report.
+- [ ] Add captions to all figures in the report.
+- [ ] Add text file explaing what the tracks in the circos plot are.
+- [ ] Try re-ordering ntSynt plot to be alphabetical.
+- [ ] Try to remove the scale for the ntSynt plot.
+- [ ] Add qv file to merqury report.
+- [ ] Don't run HiFi and ONT for mapping statistics (only Illumina).
+- [ ] Create one new rule for collected statistics:
+  - [ ] Number of contigs.
+  - [ ] Number of scaffolds.
+      - [ ] Number of placed contigs.
+      - [ ] Number of unplaced contigs.
+  - [ ] QV.
+  - [ ] Number of input HiFi(+ONT) reads.
+  - [ ] N50 of input HiFi(+ONT) reads.
+  - [ ] Number of genes, transcripts.
+  - [ ] Number of hits for custom queries.
+  - [ ] Length of custom query hits.
