@@ -2,8 +2,8 @@ rule fcs_gx:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-    report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", category="Contamination", labels={"type": "fcs-gx", "assembly": "{asmname}"}),
-    taxonomy = "results/{asmname}/5.quality_control/03.fcs/{asmname}.taxonomy.rpt",
+        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", category="Contamination", labels={"type": "fcs-gx", "assembly": "{asmname}"}),
+        taxonomy = "results/{asmname}/5.quality_control/03.fcs/{asmname}.taxonomy.rpt",
     log:
         "results/logs/5.quality_control/fcs-gx/{asmname}.log"
     benchmark:
