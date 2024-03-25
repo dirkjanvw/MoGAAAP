@@ -8,7 +8,7 @@ rule get_proteome:
     log:
         "results/logs/5.quality_control/proteome/{asmname}.log",
     benchmark:
-        "results/benchmark/5.quality_control/proteome/{asmname}.txt",
+        "results/benchmarks/5.quality_control/proteome/{asmname}.txt",
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -22,6 +22,6 @@ rule extract_isoforms:
     log:
         "results/logs/5.quality_control/isoforms/{asmname}.log",
     benchmark:
-        "results/benchmark/5.quality_control/isoforms/{asmname}.txt",
+        "results/benchmarks/5.quality_control/isoforms/{asmname}.txt",
     shell:
         "awk '/^>/{{split($2,a,\"=\"); i[a[2]] = i[a[2]]substr($1,2)\";\";}} END{{for (g in i){{print i[g];}}}}' {input} | sed 's/;$//g' > {output} 2> {log}"
