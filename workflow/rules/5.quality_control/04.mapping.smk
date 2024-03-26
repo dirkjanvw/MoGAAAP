@@ -85,7 +85,10 @@ rule multiqc:
     input:
         get_wgs_flagstat
     output:
-        report("results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html", category="Mapping", labels={"type": "multiqc", "assembly": "{asmname}"}),
+        report("results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html",
+            category="Mapping",
+            caption="../../report/mapping.rst",
+            labels={"type": "multiqc", "assembly": "{asmname}"}),
     log:
         "results/logs/5.quality_control/multiqc/{asmname}.log"
     benchmark:
