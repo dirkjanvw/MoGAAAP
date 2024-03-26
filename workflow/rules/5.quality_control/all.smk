@@ -79,7 +79,7 @@ rule qc:
         get_pantools_output,  #pantools
         expand("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", asmset=config["set"]),  #busco (proteome) and compleasm (genome)
         expand("results/{asmset}/5.quality_control/07.omark_plot.png", asmset=config["set"]),  #omark
-        expand("results/{asmset}/5.quality_control/08.kmer-db/k{k}.csv.mash.pdf", asmset=config["set"], k=config["k_qc"]),  #kmer distances
+        expand("results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash.pdf", asmset=config["set"], k=config["k_qc"]),  #kmer distances
         expand("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
         expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
         expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k_qc"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
