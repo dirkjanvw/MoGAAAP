@@ -13,7 +13,7 @@ present 2x in the assembly.
 
 It is important to realise the type of WGS data used for the plot:
 
-- **HiFi**: These high-quality long reads are used for assembling the genome and
+- **HiFi**: These high-quality long-reads are used for assembling the genome and
   should therefore show a "perfect" picture described above.
 - **ONT**: As these long-reads are generally of lower quality than HiFi reads,
   ONT reads are generally only informative of a good quality genome when they
@@ -23,5 +23,5 @@ It is important to realise the type of WGS data used for the plot:
   any point and are therefore a good independent measure of the quality of the
   assembly. A peak of read-only k-mers at the heterozygous peak indicates a poor
   assembly or a mismatch between the assembly and the WGS data (mislabelled
-  sample or contamination). In the case of a mismatch, there should also be a
-  high number of k-mers at multiplicity 0 that are present (>0) in the assembly.
+  sample or contamination). This should be accompanied by a high number of
+  k-mers at multiplicity 0 that are present (>0) in the assembly.
