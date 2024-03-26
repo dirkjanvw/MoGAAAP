@@ -41,7 +41,10 @@ rule sans_to_nexus:
         splits = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits",
         bootstrap = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
     output:
-        report("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", category="General", labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
+        report("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
+            category="General",
+            caption="../../report/sans.rst",
+            labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
         "results/logs/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.nexus.log"
     benchmark:

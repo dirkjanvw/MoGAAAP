@@ -59,7 +59,10 @@ rule kmerdb_heatmap:
     input:
         "results/{asmset}/5.quality_control/08.kmer-db/k{k}.csv.mash",
     output:
-        report("results/{asmset}/5.quality_control/08.kmer-db/k{k}.csv.mash.pdf", category="General", labels={"type": "kmer-db", "set": "{asmset}", "k": "{k}", "distance": "mash"}),
+        report("results/{asmset}/5.quality_control/08.kmer-db/k{k}.csv.mash.pdf",
+            category="General",
+            caption="../../report/kmer-db.rst",
+            labels={"type": "kmer-db", "set": "{asmset}", "k": "{k}", "distance": "mash"}),
     log:
         "results/logs/5.quality_control/kmer-db_heatmap/{k}/{asmset}.log"
     benchmark:
