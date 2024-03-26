@@ -71,11 +71,12 @@ rule circos_configuration:
         (
         printf "filename\\tfiletype\\tmin\\tmax\\n" > {output.overview}
         for file in {input.counts}; do
-            printf "${{file}}\\tcounts\\t0\\t100\\n" >> {output.overview}
+            printf "${{file}}\\tcount\\t0\\t100\\n" >> {output.overview}
         done
         for file in {input.fractions}; do
-            printf "${{file}}\\tcounts\\t0\\t1.0\\n" >> {output.overview}
+            printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
         done
+        printf "${{input.karyotype}}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
         ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
