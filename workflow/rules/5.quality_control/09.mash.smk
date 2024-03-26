@@ -26,7 +26,7 @@ rule mash_heatmap:
         "results/{asmset}/5.quality_control/09.mash/{asmset}.csv",
     output:
         report("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf",
-            category="General",
+            category="Phylogeny",
             caption="../../report/mash.rst",
             labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
     log:
