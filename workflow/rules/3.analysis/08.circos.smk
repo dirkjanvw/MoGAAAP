@@ -60,7 +60,8 @@ rule circos_configuration:
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
+        conf = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
+        overview = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv", category="Circos", labels={"file": "overview", "assembly": "{asmname}"}),
     log:
         "results/logs/3.analysis/circos_configuration/{asmname}.log"
     benchmark:
@@ -68,10 +69,17 @@ rule circos_configuration:
     shell:
         """
         (
-        ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output})/
+        printf "filename\\tfiletype\\tmin\\tmax\\n" > {output.overview}
+        for file in {input.counts}; do
+            printf "${{file}}\\tcounts\\t0\\t100\\n" >> {output.overview}
+        done
+        for file in {input.fractions}; do
+            printf "${{file}}\\tcounts\\t0\\t1.0\\n" >> {output.overview}
+        done
+        ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
-        cd $(dirname {output})
-        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
+        cd $(dirname {output.conf})
+        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
         ) &> {log}
         """
 
@@ -79,7 +87,7 @@ rule circos:
     input:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     output:
-        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"assembly": "{asmname}"}),
+        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"file": "plot", "assembly": "{asmname}"}),
         svg = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
     log:
         "results/logs/3.analysis/circos/{asmname}.log"
