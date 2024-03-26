@@ -2,7 +2,10 @@ rule fcs_gx:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", category="Contamination", labels={"type": "fcs-gx", "assembly": "{asmname}"}),
+        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt",
+            category="Contamination",
+            caption="../../report/fcs-gx.rst",
+            labels={"type": "fcs-gx", "assembly": "{asmname}"}),
         taxonomy = "results/{asmname}/5.quality_control/03.fcs/{asmname}.taxonomy.rpt",
     log:
         "results/logs/5.quality_control/fcs-gx/{asmname}.log"
@@ -26,7 +29,10 @@ rule fcs_adaptor:
         calls = "results/{asmname}/5.quality_control/03.fcs/{asmname}/combined.calls.jsonl",
         fcslog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs.log",
         fcsadaptorlog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor.log",
-        fcsadaptorrpt = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt", category="Contamination", labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
+        fcsadaptorrpt = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt",
+            category="Contamination",
+            caption="../../report/fcs-adaptor.rst",
+            labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
         logs = "results/{asmname}/5.quality_control/03.fcs/{asmname}/logs.jsonl",
         pipeline = "results/{asmname}/5.quality_control/03.fcs/{asmname}/pipeline_args.yaml",
         skipped = "results/{asmname}/5.quality_control/03.fcs/{asmname}/skipped_trims.jsonl",
