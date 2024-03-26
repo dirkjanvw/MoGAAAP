@@ -73,7 +73,7 @@ rule qc:
         expand("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
         expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", asmname=get_all_accessions()),  #fcs-gx
         expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt", asmname=get_all_accessions()),  #fcs-adaptor
-        expand("results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html", asmname=get_all_accessions()),  #mapping
+        get_multiqc_output,  #mapping
 
         # grouped outputs
         get_pantools_output,  #pantools
