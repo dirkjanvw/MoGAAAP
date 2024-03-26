@@ -38,6 +38,14 @@ def get_merqury_output(wildcards):
 
     return all_output
 
+def get_multiqc_output(wildcards):
+    all_output = []
+    if "illumina" in config["reads"]:
+        for asmname in get_all_accessions():
+            if asmname in config["reads"]["illumina"]:
+                all_output.append(f"results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html")  #mapping
+    return all_output
+
 def get_pantools_output(wildcards):
     all_output = []
     for asmset in config["set"]:
