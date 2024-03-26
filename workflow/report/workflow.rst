@@ -1,9 +1,6 @@
-Meta pipeline HiFi
-~~~~~~~~~~~~~~~~~~
+This report has been created by the `meta pipeline HiFi
+<https://github.com/dirkjanvw/meta_pipeline_hifi>`_
 
-Test test test.
+Some guides on interpreting this report:
 
-What can be found in this report:
-
-- **Collinearity**: Collinearity between sets of assemblies as calculated by
-  ntSynt: Collinearity_
+- **Asdf**: test test.
