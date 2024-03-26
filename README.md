@@ -91,7 +91,7 @@ results/${assembly}/4.annotation/03.combined/${assembly}.gff
 - [ ] Add text file explaing what the tracks in the circos plot are.
 - [ ] Try re-ordering ntSynt plot to be alphabetical.
 - [ ] Try to remove the scale for the ntSynt plot.
-- [ ] Add qv file to merqury report.
+- [x] Add qv file to merqury report.
 - [ ] Don't run HiFi and ONT for mapping statistics (only Illumina).
 - [ ] Create one new rule for collected statistics:
   - [ ] Number of contigs.

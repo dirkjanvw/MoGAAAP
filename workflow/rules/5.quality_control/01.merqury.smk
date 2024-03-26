@@ -37,8 +37,8 @@ rule merqury:
         stats = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.completeness.stats",
         distonlyhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.dist_only.hist",
         allqv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv",
-        qv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv",
-        cnflplot = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png", category="K-mer completeness", labels={"type": "merqury", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
+        qv = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv", category="K-mer completeness", labels={"type": "QV", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
+        cnflplot = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png", category="K-mer completeness", labels={"type": "spectra-cn", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
         cnhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.hist",
         cnlnplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.ln.png",
         cnstplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.st.png",
@@ -50,9 +50,9 @@ rule merqury:
         hist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist",
         ploidy = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist.ploidy",
     log:
-        "results/logs/5.quality_control/01.merqury/{k}/{asmname}/{sample}.log"
+        "results/logs/5.quality_control/merqury/{k}/{asmname}/{sample}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/01.merqury/{k}/{asmname}/{sample}.txt"
+        "results/benchmarks/5.quality_control/merqury/{k}/{asmname}/{sample}.txt"
     conda:
         "../../envs/merqury.yaml"
     shell:
