@@ -25,9 +25,11 @@ This report contains the following pages:
     each assembly.
   - `K-mer completeness`_: K-mer completeness assessments by BUSCO and OMArk for
     each assembly.
-  - `Mapping`_: Mapping of Illumina reads to the assembly.
+  - `Mapping`_: Mapping of Illumina reads to the assembly (if available).
   - MUMmerplot_: A MUMmerplot per assembly, aligned to the defined reference
     genome.
-  - Pangrowth_: K-mer based pangenome analysis of sets of assemblies.
-  - PanTools_: Gene based pangenome analysis of sets of assemblies.
+  - Pangrowth_: K-mer based pangenome analysis of sets of assemblies (if more
+    than two assemblies are present).
+  - PanTools_: Gene based pangenome analysis of sets of assemblies (if more
+    than two assemblies are present).
   - Phylogeny_: Several phylogenetic trees for sets of assemblies.
