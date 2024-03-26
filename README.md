@@ -88,9 +88,9 @@ results/${assembly}/4.annotation/03.combined/${assembly}.gff
 ## TODO
 - [ ] Add general page to the report.
 - [ ] Add captions to all figures in the report.
-- [ ] Add text file explaing what the tracks in the circos plot are.
-- [ ] Try re-ordering ntSynt plot to be alphabetical.
-- [ ] Try to remove the scale for the ntSynt plot.
+- [ ] Add text file explaining what the tracks in the circos plot are.
+- [x] Try re-ordering ntSynt plot to be alphabetical.
+- [x] Try to remove the scale for the ntSynt plot.
 - [x] Add qv file to merqury report.
 - [ ] Don't run HiFi and ONT for mapping statistics (only Illumina).
 - [ ] Create one new rule for collected statistics:
