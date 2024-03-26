@@ -61,7 +61,10 @@ rule circos_configuration:
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
         conf = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
-        overview = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv", category="Circos", labels={"file": "overview", "assembly": "{asmname}"}),
+        overview = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv",
+            category="Circos",
+            caption="../../report/circos_overview.rst",
+            labels={"file": "overview", "assembly": "{asmname}"}),
     log:
         "results/logs/3.analysis/circos_configuration/{asmname}.log"
     benchmark:
@@ -88,7 +91,10 @@ rule circos:
     input:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
     output:
-        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", category="Circos", labels={"file": "plot", "assembly": "{asmname}"}),
+        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png",
+            category="Circos",
+            caption="../../report/circos_plot.rst",
+            labels={"file": "plot", "assembly": "{asmname}"}),
         svg = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
     log:
         "results/logs/3.analysis/circos/{asmname}.log"
