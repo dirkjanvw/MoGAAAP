@@ -1,6 +1,6 @@
 This file contains the QV scores for each sequence in the scaffolded assembly as
 calculated by `merqury`. The value is a
-:math:`QV = -10 \log_{10}(\text{{error rate}})` score, where an error means: a
+:math:`QV = -10 \log_{10}(\text{error rate})` score, where an error means: a
 k-mer in the assembly which cannot be found in the WGS data.
 
 It is important to realise the type of WGS data used to calculate the QV scores:
