@@ -76,7 +76,7 @@ rule circos_configuration:
         for file in {input.fractions}; do
             printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
         done
-        printf "${{input.karyotype}}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
+        printf "{input.karyotype}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
         ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
