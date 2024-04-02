@@ -11,6 +11,7 @@ include: "09.mash.smk"
 include: "10.ntsynt.smk"
 include: "11.sans.smk"
 include: "12.pangrowth.smk"
+include: "13.statistics.smk"
 
 def get_merqury_output(wildcards):
     k = config["k_qc"]
