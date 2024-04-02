@@ -19,21 +19,21 @@ def get_merqury_output(wildcards):
     # HiFi
     for asmname in config["reads"]["hifi"]:
         for sample in config["reads"]["hifi"][asmname]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
             all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
     # ONT (optional)
     if "ont" in config["reads"]:
         for asmname in config["reads"]["ont"]:
             for sample in config["reads"]["ont"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
     # Illumina (optional)
     if "illumina" in config["reads"]:
         for asmname in config["reads"]["illumina"]:
             for sample in config["reads"]["illumina"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv")  #merqury
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
 
     return all_output
@@ -71,8 +71,8 @@ rule qc:
         # individual outputs
         get_merqury_output,  #merqury
         expand("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
-        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", asmname=get_all_accessions()),  #fcs-gx
-        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt", asmname=get_all_accessions()),  #fcs-adaptor
+        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.pdf", asmname=get_all_accessions()),  #fcs-gx
+        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.pdf", asmname=get_all_accessions()),  #fcs-adaptor
         get_multiqc_output,  #mapping
 
         # grouped outputs
