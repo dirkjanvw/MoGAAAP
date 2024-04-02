@@ -37,10 +37,7 @@ rule merqury:
         stats = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.completeness.stats",
         distonlyhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.dist_only.hist",
         allqv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv",
-        qv = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv",
-            category="K-mer completeness",
-            caption="../../report/merqury_qv.rst",
-            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
+        qv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv",
         cnflplot = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png",
             category="K-mer completeness",
             caption="../../report/merqury_plot.rst",
@@ -70,3 +67,21 @@ rule merqury:
         merqury.sh ${{curr_dir}}/{input.meryl} ${{curr_dir}}/{input.genome} ${{prefix}}
         ) &> {log}
         """
+
+rule visualise_qv:
+    input:
+        "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv"
+    output:
+        report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf",
+            category="K-mer completeness",
+            caption="../../report/merqury_qv.rst",
+            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
+                    "wgs": "{sample}", "k": "{k}"}),
+    log:
+        "results/logs/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.txt"
+    conda:
+        "../../envs/pandoc.yaml"
+    shell:
+        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"

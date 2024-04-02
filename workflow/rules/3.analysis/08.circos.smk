@@ -61,10 +61,7 @@ rule circos_configuration:
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
         conf = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
-        overview = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv",
-            category="Circos",
-            caption="../../report/circos_overview.rst",
-            labels={"file": "overview", "assembly": "{asmname}"}),
+        overview = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv",
     log:
         "results/logs/3.analysis/circos_configuration/{asmname}.log"
     benchmark:
@@ -86,6 +83,23 @@ rule circos_configuration:
         python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
         ) &> {log}
         """
+
+rule visualise_circos_configuration:
+    input:
+        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv"
+    output:
+        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.pdf",
+            category="Circos",
+            caption="../../report/circos_overview.rst",
+            labels={"file": "overview", "assembly": "{asmname}"}),
+    log:
+        "results/logs/3.analysis/visualise_circos_configuration/{asmname}.log"
+    benchmark:
+        "results/benchmarks/3.analysis/visualise_circos_configuration/{asmname}.txt"
+    conda:
+        "../../envs/pandoc.yaml"
+    shell:
+        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
 
 rule circos:
     input:
