@@ -72,8 +72,8 @@ rule visualise_qv:
     input:
         "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv"
     output:
-              #"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf"
-        report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf",
+        tsv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.tsv",
+        pdf = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf",
             category="K-mer completeness",
             caption="../../report/merqury_qv.rst",
             labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
@@ -85,4 +85,9 @@ rule visualise_qv:
     container:
         "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
-        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
+        """
+        (
+        awk 'BEGIN{{FS = OFS = "\\t"; print "Sequence", "K-mers unique for assembly", "K-mers in both assembly and read set", "QV", "Error rate";}} {{print;}}' {input} > {output.tsv}
+        pandoc -s {output.tsv} -o {output.pdf} -f tsv -V geometry:landscape
+        ) &> {log}
+        """

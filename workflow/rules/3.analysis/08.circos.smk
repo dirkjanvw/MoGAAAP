@@ -99,7 +99,7 @@ rule visualise_circos_configuration:
     container:
         "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
-        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
+        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
 
 rule circos:
     input:

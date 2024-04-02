@@ -33,7 +33,7 @@ rule visualise_fcs_gx:
     container:
         "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
-        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
+        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
 
 rule fcs_adaptor:
     input:
@@ -72,4 +72,4 @@ rule visualise_fcs_adaptor:
     container:
         "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
-        "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
+        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
