@@ -97,7 +97,7 @@ rule visualise_circos_configuration:
     benchmark:
         "results/benchmarks/3.analysis/visualise_circos_configuration/{asmname}.txt"
     container:
-        "pandoc/core:3.1.1.0"
+        "docker://pandoc/core:3.1.1.0"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
 
