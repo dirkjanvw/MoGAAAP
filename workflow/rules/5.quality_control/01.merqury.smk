@@ -72,6 +72,7 @@ rule visualise_qv:
     input:
         "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv"
     output:
+              #"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf"
         report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf",
             category="K-mer completeness",
             caption="../../report/merqury_qv.rst",

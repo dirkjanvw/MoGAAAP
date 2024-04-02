@@ -19,22 +19,22 @@ def get_merqury_output(wildcards):
     # HiFi
     for asmname in config["reads"]["hifi"]:
         for sample in config["reads"]["hifi"][asmname]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
     if "ont" in config["reads"]:
         for asmname in config["reads"]["ont"]:
             for sample in config["reads"]["ont"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
     if "illumina" in config["reads"]:
         for asmname in config["reads"]["illumina"]:
             for sample in config["reads"]["illumina"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv.pdf")  #merqury
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #merqury
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     return all_output
 
