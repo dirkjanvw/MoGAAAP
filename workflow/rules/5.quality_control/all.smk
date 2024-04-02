@@ -20,21 +20,21 @@ def get_merqury_output(wildcards):
     # HiFi
     for asmname in config["reads"]["hifi"]:
         for sample in config["reads"]["hifi"][asmname]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
             all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
     if "ont" in config["reads"]:
         for asmname in config["reads"]["ont"]:
             for sample in config["reads"]["ont"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
     if "illumina" in config["reads"]:
         for asmname in config["reads"]["illumina"]:
             for sample in config["reads"]["illumina"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.pdf")  #per sequence qv
+                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
                 all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     return all_output
@@ -72,8 +72,8 @@ rule qc:
         # individual outputs
         get_merqury_output,  #merqury
         expand("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
-        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.pdf", asmname=get_all_accessions()),  #fcs-gx
-        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.pdf", asmname=get_all_accessions()),  #fcs-adaptor
+        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html", asmname=get_all_accessions()),  #fcs-gx
+        expand("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.html", asmname=get_all_accessions()),  #fcs-adaptor
         get_multiqc_output,  #mapping
 
         # grouped outputs
@@ -85,6 +85,6 @@ rule qc:
         expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
         expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k_qc"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
         get_pangrowth_output,  #pangrowth
-        expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.pdf", asmset=config["set"]),  #statistics
+        expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.html", asmset=config["set"]),  #statistics
     output:
         touch("results/quality_control.done")

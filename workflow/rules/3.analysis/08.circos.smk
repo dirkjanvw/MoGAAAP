@@ -88,7 +88,7 @@ rule visualise_circos_configuration:
     input:
         "results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv"
     output:
-        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.pdf",
+        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.html",
             category="Circos",
             caption="../../report/circos_overview.rst",
             labels={"file": "overview", "assembly": "{asmname}"}),
@@ -96,10 +96,10 @@ rule visualise_circos_configuration:
         "results/logs/3.analysis/visualise_circos_configuration/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/visualise_circos_configuration/{asmname}.txt"
-    container:
-        "docker://pandoc/latex:3.1.1.0-ubuntu"
+    conda:
+        "../../envs/csvtotable.yaml"
     shell:
-        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
+        "csvtotable -t $'\\t' {input} {output} &> {log}"
 
 rule circos:
     input:

@@ -22,7 +22,7 @@ rule visualise_fcs_gx:
     input:
         "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.pdf",
+        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
             category="Contamination",
             caption="../../report/fcs-gx.rst",
             labels={"type": "fcs-gx", "assembly": "{asmname}"}),
@@ -30,10 +30,10 @@ rule visualise_fcs_gx:
         "results/logs/5.quality_control/visualise_fcs_gx/{asmname}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_gx/{asmname}.txt"
-    container:
-        "docker://pandoc/latex:3.1.1.0-ubuntu"
+    conda:
+        "../../envs/csvtotable.yaml"
     shell:
-        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
+        "csvtotable -t $'\\t' {input} {output} &> {log}"
 
 rule fcs_adaptor:
     input:
@@ -61,7 +61,7 @@ rule visualise_fcs_adaptor:
     input:
         "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.pdf",
+        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.html",
             category="Contamination",
             caption="../../report/fcs-adaptor.rst",
             labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
@@ -69,7 +69,7 @@ rule visualise_fcs_adaptor:
         "results/logs/5.quality_control/visualise_fcs_adaptor/{asmname}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_adaptor/{asmname}.txt"
-    container:
-        "docker://pandoc/latex:3.1.1.0-ubuntu"
+    conda:
+        "../../envs/csvtotable.yaml"
     shell:
-        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
+        "csvtotable -t $'\\t' {input} {output} &> {log}"

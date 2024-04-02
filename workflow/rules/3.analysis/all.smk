@@ -10,7 +10,7 @@ include: "08.circos.smk"
 
 rule analyse:
     input:
-        expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.pdf", asmname = get_all_accessions()), ### CIRCOS configuration ###
+        expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.html", asmname = get_all_accessions()), ### CIRCOS configuration ###
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
     output:
         touch("results/analysis.done")

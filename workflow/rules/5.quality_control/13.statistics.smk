@@ -60,7 +60,7 @@ rule visualise_overall_statistics:
     input:
         "results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv",
     output:
-        report("results/{asmset}/5.quality_control/13.statistics/{asmset}.pdf",
+        report("results/{asmset}/5.quality_control/13.statistics/{asmset}.html",
             category="General statistics",
             caption="../../report/statistics.rst",
             labels={"set": "{asmset}"}),
@@ -68,7 +68,7 @@ rule visualise_overall_statistics:
         "results/logs/5.quality_control/visualise_overall_statistics/{asmset}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_overall_statistics/{asmset}.txt"
-    container:
-        "docker://pandoc/latex:3.1.1.0-ubuntu"
+    conda:
+        "../../envs/csvtotable.yaml"
     shell:
-        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"
+        "csvtotable -t $'\\t' {input} {output} &> {log}"
