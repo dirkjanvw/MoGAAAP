@@ -1,7 +1,7 @@
 rule individual_statistics:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
-        contigs = expand("results/{{asmname}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
+        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
         assigned_sequences = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa", reference=config["ref_genome"], minlen=config["min_contig_len"], k=config["ntjoin_k"], w=config["ntjoin_w"]),
         unassigned_sequences = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa", reference=config["ref_genome"], minlen=config["min_contig_len"], k=config["ntjoin_k"], w=config["ntjoin_w"]),
         qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/{sample}/{{asmname}}_vs_{sample}.{{asmname}}.qv", k=config["k_qc"], sample=config["reads"]["hifi"][wildcards.asmname]),
