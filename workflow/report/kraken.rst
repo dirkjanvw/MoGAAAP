@@ -6,5 +6,5 @@ in the assembly.
 This plot is very useful for identifying contamination in the assembly. When
 a taxonomic group is selected, you can see the sequences that belong to that
 group in the very top right when clicking on the "Count". Please also check
-the {{ snakemake.wildcards.asmname }}.fcs_gx_report.txt_ as an independent
+the {{ snakemake.wildcards.asmname }}.fcs_gx_report.pdf_ as an independent
 analysis of contamination.
