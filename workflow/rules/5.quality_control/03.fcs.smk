@@ -22,7 +22,7 @@ rule visualise_fcs_gx:
     input:
         "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
+        report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
             category="Contamination",
             caption="../../report/fcs-gx.rst",
             labels={"type": "fcs-gx", "assembly": "{asmname}"}),
@@ -61,7 +61,7 @@ rule visualise_fcs_adaptor:
     input:
         "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.html",
+        report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.html",
             category="Contamination",
             caption="../../report/fcs-adaptor.rst",
             labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),

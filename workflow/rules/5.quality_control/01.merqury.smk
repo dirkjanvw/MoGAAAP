@@ -73,7 +73,7 @@ rule visualise_qv:
         "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv"
     output:
         tsv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.tsv",
-        pdf = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html",
+        html = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html",
             category="K-mer completeness",
             caption="../../report/merqury_qv.rst",
             labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
@@ -88,6 +88,6 @@ rule visualise_qv:
         """
         (
         awk 'BEGIN{{FS = OFS = "\\t"; print "Sequence", "K-mers unique for assembly", "K-mers in both assembly and read set", "QV", "Error rate";}} {{print;}}' {input} > {output.tsv}
-        csvtotable -d $'\\t' {input} {output}
+        csvtotable -d $'\\t' {output.tsv} {output.html}
         ) &> {log}
         """
