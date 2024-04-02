@@ -23,6 +23,7 @@ This report contains the following pages:
   - Contamination_: Several contamination assessments for each assembly.
   - `Gene completeness`_: Gene completeness assessments by BUSCO and OMArk for
     each assembly.
+  - `General statistics`_: General statistics for sets of assemblies.
   - `K-mer completeness`_: K-mer completeness assessments by BUSCO and OMArk for
     each assembly.
   - Mapping_: Mapping of Illumina reads to the assembly (if available).
@@ -33,4 +34,3 @@ This report contains the following pages:
   - PanTools_: Gene based pangenome analysis of sets of assemblies (if more
     than two assemblies are present).
   - Phylogeny_: Several phylogenetic trees for sets of assemblies.
-  - Statistics_: General statistics for sets of assemblies.

@@ -61,7 +61,7 @@ rule visualise_overall_statistics:
         "results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv",
     output:
         report("results/{asmset}/5.quality_control/13.statistics/{asmset}.pdf",
-            category="Statistics",
+            category="General statistics",
             caption="../../report/statistics.rst",
             labels={"set": "{asmset}"}),
     log:
