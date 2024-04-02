@@ -96,8 +96,8 @@ rule visualise_circos_configuration:
         "results/logs/3.analysis/visualise_circos_configuration/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/visualise_circos_configuration/{asmname}.txt"
-    conda:
-        "../../envs/pandoc.yaml"
+    container:
+        "pandoc/core:3.1.1.0"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
 

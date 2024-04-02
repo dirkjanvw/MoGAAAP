@@ -82,7 +82,7 @@ rule visualise_qv:
         "results/logs/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.txt"
-    conda:
-        "../../envs/pandoc.yaml"
+    container:
+        "pandoc/core:3.1.1.0"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"

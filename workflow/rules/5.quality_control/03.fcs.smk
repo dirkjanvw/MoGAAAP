@@ -30,8 +30,8 @@ rule visualise_fcs_gx:
         "results/logs/5.quality_control/visualise_fcs_gx/{asmname}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_gx/{asmname}.txt"
-    conda:
-        "../../envs/pandoc.yaml"
+    container:
+        "pandoc/core:3.1.1.0"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
 
@@ -69,7 +69,7 @@ rule visualise_fcs_adaptor:
         "results/logs/5.quality_control/visualise_fcs_adaptor/{asmname}.log"
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_adaptor/{asmname}.txt"
-    conda:
-        "../../envs/pandoc.yaml"
+    container:
+        "pandoc/core:3.1.1.0"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
