@@ -31,7 +31,7 @@ rule visualise_fcs_gx:
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_gx/{asmname}.txt"
     container:
-        "docker://pandoc/core:3.1.1.0"
+        "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
 
@@ -70,6 +70,6 @@ rule visualise_fcs_adaptor:
     benchmark:
         "results/benchmarks/5.quality_control/visualise_fcs_adaptor/{asmname}.txt"
     container:
-        "docker://pandoc/core:3.1.1.0"
+        "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"

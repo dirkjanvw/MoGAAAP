@@ -83,6 +83,6 @@ rule visualise_qv:
     benchmark:
         "results/benchmarks/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.txt"
     container:
-        "docker://pandoc/core:3.1.1.0"
+        "docker://pandoc/latex:3.1.1.0-ubuntu"
     shell:
         "pandoc -s {input} -o {output} -V geometry:landscape &> {log}"
