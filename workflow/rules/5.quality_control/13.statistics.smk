@@ -30,7 +30,7 @@ rule individual_statistics:
         seqkit stats -abTj1 {input.assigned_sequences} > {output.assigned_sequences}
         seqkit stats -abTj1 {input.unassigned_sequences} > {output.unassigned_sequences}
         seqkit stats -abTj1 {input.reads} > {output.reads}
-        printf "Name\\tTotal length\\t#sequences\\tOverall N50\\t#contigs\\tContig N50\\t#assigned sequences\\t#unassigned sequences\\tTotal length (assigned sequences)\\tTotal length (unassigned sequences)\\tTotal QV (HiF)\\t#HiFi reads\\tN50 HiFi reads\\t#genes\\t#transcripts\\t#queries\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tOverall N50\\t#contigs\\tContig N50\\t#assigned sequences\\t#unassigned sequences\\tTotal length (assigned sequences)\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#HiFi reads\\tN50 HiFi reads\\t#genes\\t#transcripts\\t#queries\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$13;}}' {output.contigs} >> {output.tsv}
@@ -55,3 +55,20 @@ rule overall_statistics:
         "results/benchmarks/5.quality_control/overall_statistics/{asmset}.txt"
     shell:
         "awk 'NR==1 || FNR>1' {input} > {output} 2> {log}"
+
+rule visualise_overall_statistics:
+    input:
+        "results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv",
+    output:
+        report("results/{asmset}/5.quality_control/13.statistics/{asmset}.pdf",
+            category="Statistics",
+            caption="../../report/statistics.rst",
+            labels={"set": "{asmset}"}),
+    log:
+        "results/logs/5.quality_control/visualise_overall_statistics/{asmset}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/visualise_overall_statistics/{asmset}.txt"
+    container:
+        "docker://pandoc/latex:3.1.1.0-ubuntu"
+    shell:
+        "pandoc -s {input} -o {output} -f tsv -V geometry:landscape &> {log}"

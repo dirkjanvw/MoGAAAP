@@ -85,6 +85,6 @@ rule qc:
         expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
         expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k_qc"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
         get_pangrowth_output,  #pangrowth
-        expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv", asmset=config["set"]),  #statistics
+        expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.pdf", asmset=config["set"]),  #statistics
     output:
         touch("results/quality_control.done")
