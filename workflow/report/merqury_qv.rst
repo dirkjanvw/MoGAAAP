@@ -15,5 +15,4 @@ It is important to realise the type of WGS data used to calculate the QV scores:
   assembly. A low QV score here indicates a poor assembly or a mismatch between
   the assembly and the WGS data (mislabelled sample or contamination).
 
-For the overall QV score, please see the {{ snakemake.wildcards.asmname }}.pdf_
-file.
+For the overall QV score, please see `General statistics`_.
