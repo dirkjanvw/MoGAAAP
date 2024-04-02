@@ -71,4 +71,4 @@ rule visualise_overall_statistics:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -t $'\\t' {input} {output} &> {log}"
+        "csvtotable -d $'\\t' {input} {output} &> {log}"

@@ -88,6 +88,6 @@ rule visualise_qv:
         """
         (
         awk 'BEGIN{{FS = OFS = "\\t"; print "Sequence", "K-mers unique for assembly", "K-mers in both assembly and read set", "QV", "Error rate";}} {{print;}}' {input} > {output.tsv}
-        csvtotable -t $'\\t' {input} {output}
+        csvtotable -d $'\\t' {input} {output}
         ) &> {log}
         """

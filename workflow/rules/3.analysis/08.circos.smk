@@ -99,7 +99,7 @@ rule visualise_circos_configuration:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -t $'\\t' {input} {output} &> {log}"
+        "csvtotable -d $'\\t' {input} {output} &> {log}"
 
 rule circos:
     input:

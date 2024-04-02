@@ -33,7 +33,7 @@ rule visualise_fcs_gx:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -t $'\\t' {input} {output} &> {log}"
+        "csvtotable -d $'\\t' {input} {output} &> {log}"
 
 rule fcs_adaptor:
     input:
@@ -72,4 +72,4 @@ rule visualise_fcs_adaptor:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -t $'\\t' {input} {output} &> {log}"
+        "csvtotable -d $'\\t' {input} {output} &> {log}"
