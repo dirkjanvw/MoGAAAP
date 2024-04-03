@@ -22,7 +22,8 @@ rule visualise_fcs_gx:
     input:
         "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt"
     output:
-        report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
+        tsv = "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.tsv",
+        html = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
             category="Contamination",
             caption="../../report/fcs-gx.rst",
             labels={"type": "fcs-gx", "assembly": "{asmname}"}),
@@ -33,7 +34,12 @@ rule visualise_fcs_gx:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -d $'\\t' {input} {output} &> {log}"
+        """
+        (
+        tail -n+2 {input} > {output.tsv}
+        csvtotable -d $'\\t' {output.tsv} {output.html}
+        ) &> {log}
+        """
 
 rule fcs_adaptor:
     input:
