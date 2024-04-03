@@ -21,7 +21,7 @@ rule individual_statistics:
     shell:
         """
         (
-        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes\\t#transcripts\\t#assigned sequences\\tTotal length (assigned sequences)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#contigs\\tContig N50\\tInput data\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes\\t#transcripts\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#contigs\\tContig N50\\tInput data\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         seqkit stats -abTj1 {input.assembly} > {output.assembly}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
