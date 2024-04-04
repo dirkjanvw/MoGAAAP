@@ -23,7 +23,10 @@ rule krona:
     input:
         "results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.out",
     output:
-        report("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html", category="Contamination", labels={"type": "kraken2", "assembly": "{asmname}"}),
+        report("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html",
+            category="Contamination",
+            caption="../../report/kraken.rst",
+            labels={"type": "kraken2", "assembly": "{asmname}"}),
     log:
         "results/logs/5.quality_control/krona/{asmname}.log"
     benchmark:

@@ -25,7 +25,10 @@ rule mash_heatmap:
     input:
         "results/{asmset}/5.quality_control/09.mash/{asmset}.csv",
     output:
-        report("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", category="General", labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
+        report("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf",
+            category="Phylogeny",
+            caption="../../report/mash.rst",
+            labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
     log:
         "results/logs/5.quality_control/mash_heatmap/{asmset}.log"
     benchmark:

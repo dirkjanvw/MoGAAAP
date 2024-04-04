@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip=23.3
+  - pip:
+    - csvtotable==2.1.1

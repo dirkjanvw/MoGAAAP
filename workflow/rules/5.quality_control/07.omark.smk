@@ -45,7 +45,10 @@ rule omark_plot:
         lambda wildcards: expand("results/{asmname}/5.quality_control/07.omark/{asmname}.sum", asmname=config["set"][wildcards.asmset]),
     output:
         tmpdir = temporary(directory("results/{asmset}/5.quality_control/07.omark_plot")),
-        png = report("results/{asmset}/5.quality_control/07.omark_plot.png", category="Gene completeness", labels={"type": "omark", "set": "{asmset}"}),
+        png = report("results/{asmset}/5.quality_control/07.omark_plot.png",
+            category="Gene completeness",
+            caption="../../report/omark.rst",
+            labels={"type": "omark", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/omark_plot/{asmset}.log"
     benchmark:

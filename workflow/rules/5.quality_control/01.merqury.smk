@@ -38,7 +38,10 @@ rule merqury:
         distonlyhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.dist_only.hist",
         allqv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.qv",
         qv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv",
-        cnflplot = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png", category="K-mer completeness", labels={"type": "merqury", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
+        cnflplot = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png",
+            category="K-mer completeness",
+            caption="../../report/merqury_plot.rst",
+            labels={"type": "spectra-cn", "scope": "all sequences", "assembly": "{asmname}", "wgs": "{sample}", "k": "{k}"}),
         cnhist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.hist",
         cnlnplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.ln.png",
         cnstplot = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.st.png",
@@ -50,9 +53,9 @@ rule merqury:
         hist = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist",
         ploidy = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{sample}.hist.ploidy",
     log:
-        "results/logs/5.quality_control/01.merqury/{k}/{asmname}/{sample}.log"
+        "results/logs/5.quality_control/merqury/{k}/{asmname}/{sample}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/01.merqury/{k}/{asmname}/{sample}.txt"
+        "results/benchmarks/5.quality_control/merqury/{k}/{asmname}/{sample}.txt"
     conda:
         "../../envs/merqury.yaml"
     shell:
@@ -62,5 +65,29 @@ rule merqury:
         prefix=$(basename {output.allqv} | rev | cut -d '.' -f 2- | rev)
         cd $(dirname {output.allqv})
         merqury.sh ${{curr_dir}}/{input.meryl} ${{curr_dir}}/{input.genome} ${{prefix}}
+        ) &> {log}
+        """
+
+rule visualise_qv:
+    input:
+        "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv"
+    output:
+        tsv = "results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.tsv",
+        html = report("results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html",
+            category="K-mer completeness",
+            caption="../../report/merqury_qv.rst",
+            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
+                    "wgs": "{sample}", "k": "{k}"}),
+    log:
+        "results/logs/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/visualise_qv/{k}/{asmname}/{sample}.txt"
+    conda:
+        "../../envs/csvtotable.yaml"
+    shell:
+        """
+        (
+        awk 'BEGIN{{FS = OFS = "\\t"; print "Sequence", "K-mers unique for assembly", "K-mers in both assembly and read set", "QV", "Error rate";}} {{print;}}' {input} > {output.tsv}
+        csvtotable -d $'\\t' {output.tsv} {output.html}
         ) &> {log}
         """

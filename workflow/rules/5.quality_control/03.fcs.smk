@@ -2,7 +2,7 @@ rule fcs_gx:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        report = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt", category="Contamination", labels={"type": "fcs-gx", "assembly": "{asmname}"}),
+        report = "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt",
         taxonomy = "results/{asmname}/5.quality_control/03.fcs/{asmname}.taxonomy.rpt",
     log:
         "results/logs/5.quality_control/fcs-gx/{asmname}.log"
@@ -18,6 +18,29 @@ rule fcs_gx:
     shell:
         "run_gx --fasta {input} --tax-id {params.taxid} --gx-db {params.gxdb} --out-basename {wildcards.asmname} --out-dir $(dirname {output.taxonomy}) &> {log}"
 
+rule visualise_fcs_gx:
+    input:
+        "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.txt"
+    output:
+        tsv = "results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.tsv",
+        html = report("results/{asmname}/5.quality_control/03.fcs/{asmname}.fcs_gx_report.html",
+            category="Contamination",
+            caption="../../report/fcs-gx.rst",
+            labels={"type": "fcs-gx", "assembly": "{asmname}"}),
+    log:
+        "results/logs/5.quality_control/visualise_fcs_gx/{asmname}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/visualise_fcs_gx/{asmname}.txt"
+    conda:
+        "../../envs/csvtotable.yaml"
+    shell:
+        """
+        (
+        tail -n+2 {input} > {output.tsv}
+        csvtotable -d $'\\t' {output.tsv} {output.html}
+        ) &> {log}
+        """
+
 rule fcs_adaptor:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
@@ -26,7 +49,7 @@ rule fcs_adaptor:
         calls = "results/{asmname}/5.quality_control/03.fcs/{asmname}/combined.calls.jsonl",
         fcslog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs.log",
         fcsadaptorlog = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor.log",
-        fcsadaptorrpt = report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt", category="Contamination", labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
+        fcsadaptorrpt = "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt",
         logs = "results/{asmname}/5.quality_control/03.fcs/{asmname}/logs.jsonl",
         pipeline = "results/{asmname}/5.quality_control/03.fcs/{asmname}/pipeline_args.yaml",
         skipped = "results/{asmname}/5.quality_control/03.fcs/{asmname}/skipped_trims.jsonl",
@@ -39,3 +62,20 @@ rule fcs_adaptor:
         "docker://ncbi/fcs-adaptor:0.5.0"
     shell:
         "av_screen_x -o $(dirname {output.fcsadaptorrpt}) --euk {input} &> {log}"
+
+rule visualise_fcs_adaptor:
+    input:
+        "results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.txt"
+    output:
+        report("results/{asmname}/5.quality_control/03.fcs/{asmname}/fcs_adaptor_report.html",
+            category="Contamination",
+            caption="../../report/fcs-adaptor.rst",
+            labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
+    log:
+        "results/logs/5.quality_control/visualise_fcs_adaptor/{asmname}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/visualise_fcs_adaptor/{asmname}.txt"
+    conda:
+        "../../envs/csvtotable.yaml"
+    shell:
+        "csvtotable -d $'\\t' {input} {output} &> {log}"

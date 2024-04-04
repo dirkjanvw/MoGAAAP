@@ -48,7 +48,10 @@ rule visualise_ntsynt:
         links = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
         sequence_lengths = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
     output:
-        report("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", category="Collinearity", labels={"type": "ntSynt", "set": "{asmset}", "k": "{mink}", "w": "{minw}"}),
+        report("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
+            category="Collinearity",
+            caption="../../report/ntsynt.rst",
+            labels={"type": "ntSynt", "set": "{asmset}", "k": "{mink}", "w": "{minw}"}),
     log:
         "results/logs/5.quality_control/visualise_ntsynt/{asmset}.k{mink}.w{minw}.log"
     benchmark:

@@ -29,8 +29,6 @@ sequences <- sequences[which(sequences$length > args$minlen),]
 # https://stackoverflow.com/questions/32378108/using-gtoolsmixedsort-or-alternatives-with-dplyrarrange
 mixedrank <- function(x) order(gtools::mixedorder(x))
 sequences <- sequences %>%
-  arrange(desc(length))
-sequences <- sequences %>%
   arrange(mixedrank(bin_id))
 
 
@@ -43,20 +41,6 @@ links_ntsynt <- links_ntsynt[mixedorder(links_ntsynt$seq_id), ]
 links_ntsynt$seq_id2 <- as.character(links_ntsynt$seq_id2)
 links_ntsynt$colour_block <- as.factor(links_ntsynt$colour_block)
 
-# Prepare scale bar data frame
-scale_bar <- tibble(x = c(0), xend = c(args$scale),
-                    y = c(0), yend = c(0))
-
-# Infer best units for scale bar
-label <- paste(args$scale, "bp", sep = " ")
-if (args$scale %% 1e9 == 0) {
-  label <- paste(args$scale / 1e9, "Gbp", sep = " ")
-} else if (args$scale %% 1e6 == 0) {
-  label <- paste(args$scale / 1e6, "Mbp", sep = " ")
-} else if (args$scale %% 1e3 == 0) {
-  label <- paste(args$scale / 1e3, "kbp", sep = " ")
-}
-
 # Make the ribbon plot - these layers can be fully customized as needed!
 make_plot <- function(links, sequences, add_scale_bar = FALSE) {
   p <- gggenomes(seqs = sequences, links = links)
@@ -65,8 +49,7 @@ make_plot <- function(links, sequences, add_scale_bar = FALSE) {
     geom_seq(size = 2, colour = "grey") + # draw contig/chromosome lines
     geom_bin_label(aes(label = bin_id), size = 6, hjust = 0.9) + # label each bin
     geom_seq_label(aes(label = seq_id), vjust = 1.1, size = 4) + # Can add seq labels if desired
-    theme(axis.text.x = element_text(size = 25),
-          legend.position = "bottom") +
+    theme(axis.line.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) + # Remove x axis
     theme(legend.position="none")
   return(plot)
 }
@@ -75,6 +58,6 @@ synteny_plot <- make_plot(links_ntsynt, sequences, add_scale_bar = FALSE)
 
 # Save the ribbon plot
 ggsave(paste(args$prefix, ".png", sep = ""), synteny_plot,
-       units = "cm", widt = 50, height = 20, bg = "white")
+       units = "cm", width = 50, height = 20, bg = "white")
 
 cat(paste("Plot saved:", paste(args$prefix, ".png", sep = ""), "\n", sep = " "))

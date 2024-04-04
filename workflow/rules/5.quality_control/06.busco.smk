@@ -51,7 +51,10 @@ rule busco_plot:
         lambda wildcards: expand("results/{asmname}/5.quality_control/06.busco_genome/{asmname}_genome/short_summary.specific.{odb}.{asmname}_genome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
         lambda wildcards: expand("results/{asmname}/5.quality_control/06.busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt", asmname=config["set"][wildcards.asmset], odb=config["odb"]),
     output:
-        report("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", category="Gene completeness", labels={"type": "busco", "set": "{asmset}"}),
+        report("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png",
+            category="Gene completeness",
+            caption="../../report/busco.rst",
+            labels={"type": "busco", "set": "{asmset}"}),
     log:
         "results/logs/5.quality_control/busco_plot/{asmset}.log"
     benchmark:
