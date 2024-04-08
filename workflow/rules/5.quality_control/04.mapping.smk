@@ -1,6 +1,6 @@
 rule sample_illumina:
     input:
-        lambda wildcards: config["reads"]["illumina"][wildcards.asmname][wildcards.sample][wildcards.library][int(wildcards.direction)],
+        lambda wildcards: config["reads"]["illumina"][wildcards.asmname][wildcards.sample][wildcards.library][int(wildcards.direction) - 1],
     output:
         "results/{asmname}/5.quality_control/04.mapping/input/illumina/{sample}/{library}_{direction}.fq.gz",
     log:
@@ -13,6 +13,24 @@ rule sample_illumina:
         "../../envs/seqkit.yaml"
     shell:
         "seqkit head -n {params.subset} {input} -o {output} &> {log}"
+
+rule bwa_index_genome:
+    input:
+        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+    output:
+        index1 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.0123",
+        index2 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.amb",
+        index3 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.ann",
+        index4 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.bwt.2bit.64",
+        index5 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.pac",
+    log:
+        "results/logs/5.quality_control/bwa_index_genome/{asmname}.log"
+    benchmark:
+        "results/benchmarks/5.quality_control/bwa_index_genome/{asmname}.txt"
+    conda:
+        "../../envs/mapping.yaml"
+    shell:
+        "bwa-mem2 index {input} &> {log}"
 
 rule map_illumina:
     input:

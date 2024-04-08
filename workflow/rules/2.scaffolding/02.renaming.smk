@@ -81,7 +81,7 @@ rule rough_mashmap:
     shell:
         """
         (
-        ln -s {input.reference} {output.reference}
+        ln -s $(realpath {input.reference}) {output.reference}
         samtools faidx {output.reference}
         samtools faidx {input.assembly}
         mashmap -t {threads} -s {params.segment} -r {output.reference} -q {input.assembly} -o {output.out}
