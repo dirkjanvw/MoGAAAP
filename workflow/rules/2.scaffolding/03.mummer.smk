@@ -36,7 +36,8 @@ rule dotplot:
         png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png",
             category="MUMmerplot",
             caption="../../report/mummerplot.rst",
-            labels={"assembly": "{asmname}"}),
+            labels={"assembly": "{asmname}",
+                    "stage": "scaffolds"}),
     log:
         "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
