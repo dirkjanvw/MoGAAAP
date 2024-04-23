@@ -39,7 +39,7 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 
 ## Configuration
 First, the configuration file `config/config.yaml` must be created.
-Please use the provided `config/example.yaml` as a template and carefully follow the instructions.
+Please use the provided `config/example.yaml` as a template and carefully follow the instructions in the file.
 
 ## Running the pipeline
 
@@ -51,6 +51,9 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
 - `qc`: This module will perform quality control of the scaffolded assembly and the quick-and-dirty annotation.
 - `all`: This module will run all the above modules.
+
+It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
+All modules except for `annotate` have visual output that can be inspected in an HTML report file (see at [Reporting](#reporting)).
 
 ### Important parameters
 Several important `snakemake` parameters are important when running this pipeline:
