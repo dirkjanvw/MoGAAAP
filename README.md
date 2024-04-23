@@ -1,9 +1,22 @@
 # Meta pipeline for HiFi assembly and QC
 This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality control of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any organism.
-The pipeline will work with both HiFi and ONT data, although the former is preferred.
+The pipeline will work with both HiFi and ONT data, although the former is required.
 
-## Setup
+## Downloading pipeline
+The pipeline can be obtained via:
+```bash
+git clone https://github.com/dirkjanvw/meta_pipeline_hifi.git
+cd meta_pipeline_hifi/
+```
+
+### (Optional) updating pipeline
+Should you notice that bugs have been fixed on GitHub or a new feature implemented in the pipeline, updating the pipeline is as simple as running the following in the `meta_pipeline_hifi/` directory:
+```bash
+git pull
+```
+
+## Installing dependencies
 The pipeline will work on any Linux system where `conda`/`mamba` and `singularity`/`apptainer` are installed.
 Please run the following to install `snakemake`:
 ```bash
