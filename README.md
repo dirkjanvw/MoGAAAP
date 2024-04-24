@@ -4,14 +4,14 @@ Although developed for a project in lettuce, the pipeline is designed to work wi
 The pipeline will work with both HiFi and ONT data, although the former is required.
 
 ## Index
-- [Downloading the pipeline](downloading-pipeline)
-- [Installing dependencies](installing-dependencies)
-- [Required databases](databases)
-- [Configuring the pipeline](configuration)
-- [Running the pipeline](running-the-pipeline)
-- [Output](output)
-- [Breaking down the pipeline](breaking-down-the-pipeline)
-- [Contact](questions-or-issues)
+- [Downloading the pipeline](#downloading-pipeline)
+- [Installing dependencies](#installing-dependencies)
+- [Required databases](#databases)
+- [Configuring the pipeline](#configuration)
+- [Running the pipeline](#running-the-pipeline)
+- [Output](#output)
+- [Breaking down the pipeline](#breaking-down-the-pipeline)
+- [Contact](#questions-or-issues)
 
 ## Downloading pipeline
 The pipeline can be obtained via:
