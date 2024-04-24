@@ -100,3 +100,33 @@ These can be found at the following location (where `${assembly}` is a wildcard 
 results/${assembly}/2.scaffolding/02.renaming/${assembly}.fa
 results/${assembly}/4.annotation/03.combined/${assembly}.gff
 ```
+
+## Breaking down the pipeline
+
+### Assemble module
+
+#### Overview
+In the assemble module, HiFi reads are assembled using `hifiasm`.
+If ONT reads are given, these are used in the assembly process using the `--ul` parameter of `hifiasm`.
+Since the output of `hifiasm` is a GFA file, we next convert this to a FASTA file.
+Finally, we produce an alignment of the assembly against the provided reference genome using `nucmer`.
+To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
+
+#### Conclusions
+Since the next step after assembly is the scaffolding process, there has to be good collinearity between the assembly and the reference genome.
+This can be checked in the dotplot created from the `nucmer` alignment.
+If there is no sign of collinearity between the two, reference-guided scaffolding will be impossible.
+The only solution in that case would be to choose another (more closely related) reference genome.
+
+### Scaffold module
+Asdf
+
+### Analyse module
+Asdf
+
+### Annotate module
+Asdf
+
+### QC module
+Asdf
+
