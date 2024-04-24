@@ -64,6 +64,7 @@ Several modules are available in this pipeline (will be referred to later as `${
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
 All modules except for `annotate` have visual output that can be inspected in an HTML report file (see at [Reporting](#reporting)).
+For more information about these modules, see [Explaining the pipeline](#explaining-the-pipeline).
 
 ### Important parameters
 Several important `snakemake` parameters are important when running this pipeline:
