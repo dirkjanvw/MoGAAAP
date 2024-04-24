@@ -186,10 +186,17 @@ This GFF3 file, together with the FASTA file from the scaffold module are the on
 
 #### Overview
 This final quality control module is the most important for human curation of the genome.
-TODO
+The quality control steps in this module can be roughly divided into two categories: individual and grouped.
+Individual quality control steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
+Grouped quality control steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
+These groups are meant to give a comparative overview of the assembly and annotation.
+Any groups can be defined in the configuration file and a genome may occur in multiple groups.
 
 #### Next steps
-TODO
+The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
+It contains visual output for each of the quality control steps performed in this module including a description on how to interpret the results.
+Importantly, the qc module does not do any filtering of the assembly or annotation, only reporting.
+Next steps could include (but are not limited to) removal of contaminants, completeness checks, phylogenetic analyses, etc.
 
 ## Questions or issues
 In case of any questions or issues with the pipeline, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl
