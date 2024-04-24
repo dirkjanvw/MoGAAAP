@@ -196,7 +196,7 @@ Any groups can be defined in the configuration file and a genome may occur in mu
 The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
 It contains visual output for each of the quality control steps performed in this module including a description on how to interpret the results.
 Importantly, the qc module does not do any filtering of the assembly or annotation, only reporting.
-Next steps could include (but are not limited to) removal of contaminants, completeness checks, phylogenetic analyses, etc.
+Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
 
 ## Questions or issues
 In case of any questions or issues with the pipeline, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl
