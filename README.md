@@ -157,10 +157,14 @@ Feel free to copy the config files produced by this pipeline and adjust to your 
 ### Annotate module
 
 #### Overview
-Asdf
+Proper structural genome annotation would take too long and is not a problem that is solved for automation yet.
+Therefore, we implemented a "quick-and-dirty" annotation in this pipeline by combing the results of `liftoff` and `helixer`.
+`helixer` will run on the GPU if it's available, otherwise it will run on CPU (which is known to be a lot slower).
+In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
 
 #### Next steps
-Asdf
+Although this module generally runs for the longest time, no visual output is produced; only a final GFF3 file.
+This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QC.
 
 ### QC module
 
