@@ -113,13 +113,25 @@ Finally, we produce an alignment of the assembly against the provided reference 
 To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
 
 #### Conclusions
-Since the next step after assembly is the scaffolding process, there has to be good collinearity between the assembly and the reference genome.
+Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.
 This can be checked in the dotplot created from the `nucmer` alignment.
 If there is no sign of collinearity between the two, reference-guided scaffolding will be impossible.
 The only solution in that case would be to choose another (more closely related) reference genome.
 
 ### Scaffold module
-Asdf
+
+#### Overview
+Scaffolding is performed using `ntJoin`, which uses a minimizer-based reference-guided scaffolding method.
+If by visual inspection collinearity between the assembly and reference genome was found, the scaffolding module generally runs without issues.
+Should any error occur, please read the corresponding log file of the step that produced the error.
+In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the config file.
+
+After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
+Finally, `nucmer` is run again using the same parameters to produce an alignment plot for visual inspection of the scaffolding process.
+
+#### Conclusions
+As the assembly as outputted by this module is used as starting point for the analyse, annotate and qc module, it is crucial it matches the expectations in terms of size and chromosome number.
+Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
 ### Analyse module
 Asdf
