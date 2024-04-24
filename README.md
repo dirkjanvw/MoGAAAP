@@ -10,7 +10,7 @@ The pipeline will work with both HiFi and ONT data, although the former is requi
 - [Configuring the pipeline](#configuration)
 - [Running the pipeline](#running-the-pipeline)
 - [Output](#output)
-- [Breaking down the pipeline](#breaking-down-the-pipeline)
+- [Explaining the pipeline](#explaining-the-pipeline)
 - [Contact](#questions-or-issues)
 
 ## Downloading pipeline
@@ -111,7 +111,22 @@ results/${assembly}/2.scaffolding/02.renaming/${assembly}.fa
 results/${assembly}/4.annotation/03.combined/${assembly}.gff
 ```
 
-## Breaking down the pipeline
+## Explaining the pipeline
+Assembling a genome from raw data to a final usable resource is a process that is hard to automate.
+We believe that this process always necessesitates human curation.
+However, large parts can easily be automated, which is why we created this pipeline.
+This pipeline performs the assembly, scaffolding and renaming of genomic data as well as an initial quick-and-dirty structural annotation.
+Importantly, both genome assembly and annotation are subjected to quality control, providing a direct starting point for the curation of the assembly.
+Furthermore, each part of the process (module) can be run separately after which its output can be inspected before continuing to the next step.
+
+```mermaid
+graph TD;
+    assemble-->scaffold;
+    scaffold-->analyse;
+    scaffold-->annotate;
+    scaffold-->qc;
+    annotation-->qc;
+```
 
 ### Assemble module
 
@@ -169,10 +184,12 @@ This GFF3 file, together with the FASTA file from the scaffold module are the on
 ### QC module
 
 #### Overview
-Asdf
+This final quality control module is the most important for human curation of the genome.
+TODO
 
 #### Next steps
-Asdf
+TODO
 
 ## Questions or issues
 In case of any questions or issues with the pipeline, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl
+
