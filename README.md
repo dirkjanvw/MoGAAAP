@@ -125,7 +125,7 @@ graph TD;
     scaffold-->analyse;
     scaffold-->annotate;
     scaffold-->qc;
-    annotation-->qc;
+    annotate-->qc;
 ```
 
 ### Assemble module
