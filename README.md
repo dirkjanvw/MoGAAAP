@@ -112,7 +112,7 @@ Since the output of `hifiasm` is a GFA file, we next convert this to a FASTA fil
 Finally, we produce an alignment of the assembly against the provided reference genome using `nucmer`.
 To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
 
-#### Conclusions
+#### Next steps
 Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.
 This can be checked in the dotplot created from the `nucmer` alignment.
 If there is no sign of collinearity between the two, reference-guided scaffolding will be impossible.
@@ -127,18 +127,38 @@ Should any error occur, please read the corresponding log file of the step that 
 In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the config file.
 
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
-Finally, `nucmer` is run again using the same parameters to produce an alignment plot for visual inspection of the scaffolding process.
+Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 
-#### Conclusions
-As the assembly as outputted by this module is used as starting point for the analyse, annotate and qc module, it is crucial it matches the expectations in terms of size and chromosome number.
+#### Next steps
+As the assembly as outputted by this module is used as starting point for the analyse, annotate and qc modules, it is crucial it matches the expectations in terms of size and chromosome number.
 Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
 ### Analyse module
-Asdf
+
+#### Overview
+The purpose of the analyse module is to create a genome-wide overview of the newly created assembly.
+It does this by running several user-defined queries against the assembly using BLAST and creating a `circos` plot.
+
+#### Next steps
+Circos plots are notoriously hard to automate and that is no different for this pipeline.
+Although a `circos` plot should always be produced, it typically doesn't look quite right yet.
+Feel free to copy the config files produced by this pipeline and adjust to your own plotting needs.
 
 ### Annotate module
+
+#### Overview
+Asdf
+
+#### Next steps
 Asdf
 
 ### QC module
+
+#### Overview
 Asdf
 
+#### Next steps
+Asdf
+
+## Questions or issues
+In case of any questions or issues with the pipeline, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl
