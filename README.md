@@ -11,7 +11,7 @@ The pipeline will work with both HiFi and ONT data, although the former is requi
 - [Running the pipeline](#running-the-pipeline)
 - [Output](#output)
 - [Explaining the pipeline](#explaining-the-pipeline)
-- [Contact](#questions-or-issues)
+- [FAQ](#faq)
 
 ## Downloading pipeline
 The pipeline can be obtained via:
@@ -28,11 +28,45 @@ git pull
 
 ## Installing dependencies
 The pipeline will work on any Linux system where `conda`/`mamba` and `singularity`/`apptainer` are installed.
-Please run the following to install `snakemake`:
+
+### Conda/mamba
+If not installed already, `conda`/`mamba` can be installed by following these instructions:
+```bash
+# install miniforge
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
+# follow instructions and let it run `conda init`
+
+# set default channels
+source ~/.bashrc
+conda config --set auto_activate_base false
+source ~/.bashrc
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+```
+
+### Singularity/Apptainer
+This installation process requires root access, but typically a server admin can install it for you if it is not already installed.
+If not installed already, Singularity/Apptainer can be installed by following the instructions on their website: [apptainer.org](https://apptainer.org/docs/user/latest/quick_start.html).
+Make sure to install either Singularity version 3.7 or higher or Apptainer version 1.0 or higher.
+
+**NB**: For running the pipeline, no root access or special permissions are required.
+However, the pipeline needs some SIF files that are not included in the repository.
+These need to be built using the provided DEF files, which requires `sudo` permissions.
+Building these SIF files can be done locally on a personal laptop (or on a server if you happen to have `sudo` permissions).
+Navigate to the `workflow/singularity` directory and run the following command for each DEF file (file ending in `.def`):
+```bash
+sudo singularity build ${NAME}.sif ${NAME}.def
+```
+
+### Snakemake
+Snakemake can be installed using `conda`/`mamba`:
 ```bash
 mamba create -c conda-forge -c bioconda -n snakemake snakemake=8
 ```
-Then activate the environment:
+
+Then activate the environment before running the pipeline:
 ```bash
 conda activate snakemake
 ```
@@ -198,6 +232,25 @@ It contains visual output for each of the quality control steps performed in thi
 Importantly, the qc module does not do any filtering of the assembly or annotation, only reporting.
 Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
 
-## Questions or issues
-In case of any questions or issues with the pipeline, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl
+## FAQ
+
+### Q: Pipeline crashes at renaming the chromosomes
+A: This issue typically arises when the assembly and reference genome are not collinear because of an evolutionary distance that is too large.
+In this case, the pipeline is not able to accurately discern which reference chromosome corresponds to which assembly scaffold.
+This lack of collinearity should also be visible in the MUMmerplots created by the `assemble` module.
+The only solution in this case would be to choose another (more closely related) reference genome and re-run the `assemble` module to check if this new reference genome is collinear with the assembly before continuing with the `scaffold` module.
+
+### Q: Pipeline crashes mid-run
+A: This is intended Snakemake behaviour: if any job fails, the pipeline will only finish current running jobs and then exit.
+As for the reason of stopping, please check the log file of the job that failed.
+The name of the log file will be printed in the terminal output of the pipeline.
+If the error is not clear, please open an issue on this GitHub page.
+
+### Q: The pipeline cannot find software X
+A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularity-apptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
+All dependencies are included in either a `conda` environment or a `singularity` container.
+
+### Contact
+If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
+
 
