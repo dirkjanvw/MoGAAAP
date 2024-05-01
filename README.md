@@ -82,8 +82,9 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
 
 ## Configuration
-First, the configuration file `config/config.yaml` must be created.
-Please use the provided `config/example.yaml` as a template and carefully follow the instructions in the file.
+All configuration of the pipeline is done in the `config/config.yaml` file.
+All fields to fill in are well-documented in the provided `config/config.yaml` file and should be self-explanatory.
+This is the file where _e.g._ the paths to the input HiFi reads, reference genome and databases are defined.
 
 ## Running the pipeline
 
