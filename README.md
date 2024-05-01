@@ -247,7 +247,7 @@ The name of the log file will be printed in the terminal output of the pipeline.
 If the error is not clear, please open an issue on this GitHub page.
 
 ### Q: The pipeline cannot find software X
-A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularity-apptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
+A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
 All dependencies are included in either a `conda` environment or a `singularity` container.
 
 ### Contact
