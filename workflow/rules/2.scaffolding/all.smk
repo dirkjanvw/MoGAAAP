@@ -6,8 +6,7 @@ rule scaffold:
     input:
         expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
             asmname = get_all_accessions()),
-        expand("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
-            asmname = get_all_accessions(),
-            reference = config["ref_genome"]),
+        expand("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.reference.plot.gp",
+            asmname = get_all_accessions()),
     output:
         touch("results/scaffolding.done")

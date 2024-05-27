@@ -1,6 +1,6 @@
 rule liftoff:
     input:
-        ref_annotation = config["ref_annotation"],
+        ref_annotation = get_ref_annotation,
         ref_genome = get_ref_genome,
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:

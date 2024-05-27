@@ -8,10 +8,9 @@ rule assemble:
             asmname=get_all_accessions(),
             minlen=config["min_contig_len"]
         ),
-        expand("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp",
+        expand("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.reference.plot.gp",
             asmname = get_all_accessions(),
-            minlen=config["min_contig_len"],
-            reference = config["ref_genome"]
+            minlen=config["min_contig_len"]
         ),
     output:
         touch("results/assembly.done")

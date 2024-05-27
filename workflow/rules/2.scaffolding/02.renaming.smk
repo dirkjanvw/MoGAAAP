@@ -1,20 +1,20 @@
 rule create_renaming_table:
     input:
-        agp= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
-        mxdot= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
+        agp= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        mxdot= "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv"
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv"
     log:
-        "results/logs/2.scaffolding/create_renaming_table/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.log"
+        "results/logs/2.scaffolding/create_renaming_table/{asmname}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/create_renaming_table/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.txt"
+        "results/benchmarks/2.scaffolding/create_renaming_table/{asmname}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.txt"
     params:
-        num_chr = len(config["ref_chr"]),
+        num_chr = lambda wildcards: len(get_ref_chr(wildcards)),
     shell: # I found the following awk commands to get a quick list of what chromosomes belong together (based on https://github.com/bcgsc/ntJoin/issues/63):
         """
         (
         awk 'BEGIN{{OFS = "'\\''";}} {{print $1,$6;}}' {input.agp} | \
-            awk -vasm="{wildcards.asmname}" -vref="{wildcards.reference}" 'BEGIN{{FS = "'\\''"; OFS = "\\t";}} FNR==NR{{chr[$2]=$1; next;}} $1~"^"ref{{printf "%s\\t",$2;}} $1~"^"asm{{printf "%s\\n",chr[$2];}}' - {input.mxdot} | \
+            awk -vasm="{wildcards.asmname}" -vref="reference" 'BEGIN{{FS = "'\\''"; OFS = "\\t";}} FNR==NR{{chr[$2]=$1; next;}} $1~"^"ref{{printf "%s\\t",$2;}} $1~"^"asm{{printf "%s\\n",chr[$2];}}' - {input.mxdot} | \
             sort | \
             uniq -c | \
             sort -nr | \
@@ -24,14 +24,12 @@ rule create_renaming_table:
 
 rule renaming_scaffolds:
     input:
-        all = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
-            reference=config["ref_genome"],
+        all = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        table = expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
-            reference=config["ref_genome"],
+        table = expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.reference.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
@@ -43,7 +41,7 @@ rule renaming_scaffolds:
     benchmark:
         "results/benchmarks/2.scaffolding/renaming_scaffolds/{asmname}.txt"
     params:
-        chroms = config["ref_chr"],
+        chroms = lambda wildcards: get_ref_chr(wildcards),
     script:
         "../../scripts/renaming_scaffolds.py"
 
@@ -66,7 +64,7 @@ rule rough_mashmap:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.fa",
         reference = get_ref_genome,
     output:
-        reference = temporary(expand("results/{{asmname}}/2.scaffolding/02.renaming/{reference}.fa", reference=config["ref_genome"])),
+        reference = temporary("results/{asmname}/2.scaffolding/02.renaming/reference.fa"),
         out = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out",
     log:
         "results/logs/2.scaffolding/rough_mashmap/{asmname}.log"
@@ -75,7 +73,7 @@ rule rough_mashmap:
     params:
         segment = 100000,
     threads:
-        len(config["ref_chr"])  #the number of chromosomes
+        lambda wildcards: len(get_ref_chr(wildcards)),  # the number of chromosomes
     conda:
         "../../envs/mashmap.yaml"
     shell:
