@@ -3,7 +3,10 @@
 # All strings that start with "resources" should be relative or absolute paths
 # on your machine that are readable by Snakemake.
 
-# All samples should be defined in a TSV file
+# All samples should be defined in a TSV file. In this file, a unique
+# accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
+# paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
+# ID should be defined.
 samples: "config/samples.tsv"
 
 # All filtering and scaffolding parameters
@@ -11,7 +14,8 @@ min_contig_len: 10000
 ntjoin_k: 52
 ntjoin_w: 16000
 
-# All reference genomes and chromosomes
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
 reference_genomes:
     referenceA:
         genome: "resources/reference_genome_A.fa"
@@ -50,7 +54,7 @@ helixer_max_gene_length: 64152
 k_qc: 21  #optimal k-mer size for quality control
 gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
 pantools_grouping: 3  #grouping relaxation setting for pantools
-odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
+odb: "viridiplantae_odb10"  #ODB database for busco
 kraken2_nt: "resources/kraken/nt"  #kraken2 database
 OMAdb: "resources/OMAmerDB.h5"  #OMA database for orthologs
 
