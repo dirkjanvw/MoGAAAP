@@ -17,7 +17,7 @@ def get_illumina_2(wildcards):
 def get_species_name(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["speciesName"].values.item()
 
-def get_tax_id(wildcards):
+def get_taxid(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["taxId"].values.item()
 
 def get_reference_id(wildcards):
