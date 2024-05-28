@@ -1,7 +1,7 @@
 rule liftoff:
     input:
-        ref_annotation = get_ref_annotation,
-        ref_genome = get_ref_genome,
+        ref_annotation = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["annotation"],
+        ref_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
         ref_annotation = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),  #to prevent write permission issues

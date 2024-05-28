@@ -19,17 +19,5 @@ def get_species_name(wildcards):
 def get_taxid(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["taxId"].values.item()
 
-def get_reference_id(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["referenceId"].values.item()
-
-def get_ref_genome(wildcards):
-    referenceId = SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["referenceId"].values.item()
-    return config["reference_genomes"][referenceId]["genome"]
-
-def get_ref_annotation(wildcards):
-    referenceId = SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["referenceId"].values.item()
-    return config["reference_genomes"][referenceId]["annotation"]
-
-def get_ref_chr(wildcards):
-    referenceId = SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["referenceId"].values.item()
-    return config["reference_genomes"][referenceId]["chromosomes"]
+def get_reference_id(asmname):
+    return SAMPLES[SAMPLES["accessionId"] == asmname]["referenceId"].values.item()
