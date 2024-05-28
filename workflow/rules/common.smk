@@ -1,4 +1,3 @@
-#accessionId	hifi	ont	illumina_1	illumina_2	speciesName	taxId	referenceId
 def get_all_accessions():
     return SAMPLES["accessionId"].values
 
