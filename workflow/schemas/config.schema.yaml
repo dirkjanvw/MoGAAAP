@@ -42,7 +42,7 @@ properties:
           description: chromosomes of the reference genome
           additionalProperties:
             type: string
-            pattern: "^[a-zA-Z0-9_-]+$"
+            pattern: "^[a-zA-Z0-9_\\-\\.\\*:]+$"
 
   prot_queries:
     type: object
