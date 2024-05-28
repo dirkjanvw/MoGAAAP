@@ -10,9 +10,9 @@ rule helixer:
     params:
         helixer_model = config["helixer_model"],
         subseqlen = config["helixer_max_gene_length"],
-        species = lambda wildcards: config["species"][wildcards.asmname],
+        species = lambda wildcards: get_species_name(wildcards),
     threads:
-        lambda wildcards: len(get_ref_chr(wildcards.asmname)) + 1  #the number of chromosomes plus 1
+        lambda wildcards: len(get_ref_chr(wildcards)) + 1  #the number of chromosomes plus 1
     resources:
         helixer = 1
     container:
