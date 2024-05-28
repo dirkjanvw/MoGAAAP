@@ -1,6 +1,6 @@
 rule get_reference_contigs:
     input:
-        lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"]
+        lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
     output:
         temporary("results/{asmname}/1.assembly/03.mummer/{reference}.fa"),
     log:
