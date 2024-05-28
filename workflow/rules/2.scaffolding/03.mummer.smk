@@ -1,6 +1,6 @@
 rule get_reference:
     input:
-        lambda wildcards: config["ref_genome"][wildcards.reference],
+        lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
     output:
         temporary("results/{asmname}/2.scaffolding/03.mummer/{reference}.fa"),
     log:

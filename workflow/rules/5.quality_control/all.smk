@@ -18,33 +18,29 @@ def get_merqury_output(wildcards):
     all_output = []
 
     # HiFi
-    for asmname in config["reads"]["hifi"]:
-        for sample in config["reads"]["hifi"][asmname]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.qv.html")  #per sequence qv
+        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
-    if "ont" in config["reads"]:
-        for asmname in config["reads"]["ont"]:
-            for sample in config["reads"]["ont"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["ont"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
-    if "illumina" in config["reads"]:
-        for asmname in config["reads"]["illumina"]:
-            for sample in config["reads"]["illumina"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     return all_output
 
 def get_multiqc_output(wildcards):
     all_output = []
-    if "illumina" in config["reads"]:
-        for asmname in get_all_accessions():
-            if asmname in config["reads"]["illumina"]:
-                all_output.append(f"results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html")  #mapping
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html")  #mapping
     return all_output
 
 def get_pantools_output(wildcards):
