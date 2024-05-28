@@ -94,7 +94,7 @@ rule panproteome_gene_classification:
         """
         (
         pantools {params.jvm} gene_classification $(dirname {input})
-        [ ! -f {output.rscript} ] && touch {output.rscript}
+        if [ ! -f {output.rscript} ]; then touch {output.rscript}; fi
         ) &> {log}
         """
 
