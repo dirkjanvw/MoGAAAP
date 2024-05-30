@@ -12,7 +12,7 @@ rule helixer:
         subseqlen = config["helixer_max_gene_length"],
         species = lambda wildcards: get_species_name(wildcards),
     threads:
-        lambda wildcards: len(get_ref_chr(wildcards)) + 1  #the number of chromosomes plus 1
+        lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]) + 1  #the number of chromosomes plus 1
     resources:
         helixer = 1
     container:

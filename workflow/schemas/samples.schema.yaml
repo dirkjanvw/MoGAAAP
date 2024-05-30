@@ -10,19 +10,19 @@ properties:
   hifi:
     type: string
     description: path to the HiFi reads
-    pattern: "^.*\\.f(ast)?[qa](\\.gz)?$"
+    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
   ont:
     type: string
     description: path to the ONT reads
-    pattern: "^.*\\.f(ast)?[qa](\\.gz)?$"
+    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
   illumina_1:
     type: string
     description: path to the forward Illumina reads
-    pattern: "^.*\\.f(ast)?q(\\.gz)?$"
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
   illumina_2:
     type: string
     description: path to the reverse Illumina reads
-    pattern: "^.*\\.f(ast)?q(\\.gz)?$"
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
   speciesName:
     type: string
     description: species name for naming Helixer genes
