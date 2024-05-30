@@ -132,8 +132,11 @@ Several important `snakemake` parameters are important when running this pipelin
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
 - `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
+  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs).
 - `helixer`: The number of Helixer jobs in the pipeline can run to at the same time; will be referred to as `${HELIXER}`.
+  It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
 - `pantools`: The number of PanTools jobs in the pipeline can run to at the same time; will be referred to as `${PANTOOLS}`.
+  It is recommended to always keep this at 1, to prevent file collisions.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
@@ -264,6 +267,10 @@ If the error is not clear, please open an issue on this GitHub page.
 ### Q: The pipeline cannot find software X
 A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
 All dependencies are included in either a `conda` environment or a `singularity` container.
+
+### Q: Writing output at a different location that `results`
+A: For code simplicity, the pipeline always writes output to the `results` directory.
+However, if you have the output in a different location, you can simply move the output to the desired location after the pipeline has finished.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
