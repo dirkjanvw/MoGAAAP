@@ -1,6 +1,6 @@
 rule get_reference:
     input:
-        lambda wildcards: config["ref_genome"][wildcards.reference],
+        lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
     output:
         temporary("results/{asmname}/2.scaffolding/03.mummer/{reference}.fa"),
     log:
@@ -25,7 +25,7 @@ rule mummer:
     container:
         "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
     shell:
-        "nucmer -t {threads} -l 1000 -g 1000 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
+        "nucmer -t {threads} -l 100 -g 100 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
 
 rule dotplot:
     input:

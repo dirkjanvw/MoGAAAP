@@ -1,0 +1,44 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+
+description: an entry in the sample sheet
+
+properties:
+  accessionId:
+    type: string
+    description: a unique ID of the accession
+    pattern: "^[a-zA-Z0-9_]+$"
+  hifi:
+    type: string
+    description: path to the HiFi reads
+    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
+  ont:
+    type: string
+    description: path to the ONT reads
+    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
+  illumina_1:
+    type: string
+    description: path to the forward Illumina reads
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
+  illumina_2:
+    type: string
+    description: path to the reverse Illumina reads
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
+  speciesName:
+    type: string
+    description: species name for naming Helixer genes
+    pattern: "^[a-zA-Z0-9]+$"
+  taxId:
+    type: integer
+    description: NCBI taxonomy ID for the accession
+    minimum: 0
+  referenceId:
+    type: string
+    description: name of the reference genome to use for scaffolding, alignment, and annotation
+    pattern: "^[a-zA-Z0-9_]+$"
+
+required:
+    - accessionId
+    - hifi
+    - speciesName
+    - taxId
+    - referenceId

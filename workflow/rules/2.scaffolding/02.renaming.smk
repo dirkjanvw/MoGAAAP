@@ -9,7 +9,7 @@ rule create_renaming_table:
     benchmark:
         "results/benchmarks/2.scaffolding/create_renaming_table/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.txt"
     params:
-        num_chr = len(config["ref_chr"]),
+        num_chr = lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]),
     shell: # I found the following awk commands to get a quick list of what chromosomes belong together (based on https://github.com/bcgsc/ntJoin/issues/63):
         """
         (
@@ -24,14 +24,14 @@ rule create_renaming_table:
 
 rule renaming_scaffolds:
     input:
-        all = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
-            reference=config["ref_genome"],
+        all = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
+            reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        table = expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
-            reference=config["ref_genome"],
+        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
+            reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
@@ -43,7 +43,7 @@ rule renaming_scaffolds:
     benchmark:
         "results/benchmarks/2.scaffolding/renaming_scaffolds/{asmname}.txt"
     params:
-        chroms = config["ref_chr"],
+        chroms = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"],
     script:
         "../../scripts/renaming_scaffolds.py"
 
@@ -64,9 +64,9 @@ rule obtain_chromosomes:
 rule rough_mashmap:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.fa",
-        reference = get_ref_genome,
+        reference = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
     output:
-        reference = temporary(expand("results/{{asmname}}/2.scaffolding/02.renaming/{reference}.fa", reference=config["ref_genome"])),
+        reference = temporary("results/{asmname}/2.scaffolding/02.renaming/reference.fa"),
         out = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out",
     log:
         "results/logs/2.scaffolding/rough_mashmap/{asmname}.log"
@@ -75,7 +75,7 @@ rule rough_mashmap:
     params:
         segment = 100000,
     threads:
-        len(config["ref_chr"])  #the number of chromosomes
+        lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]),  #the number of chromosomes
     conda:
         "../../envs/mashmap.yaml"
     shell:

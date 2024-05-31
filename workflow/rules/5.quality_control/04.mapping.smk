@@ -1,12 +1,14 @@
 rule sample_illumina:
     input:
-        lambda wildcards: config["reads"]["illumina"][wildcards.asmname][wildcards.sample][wildcards.library][int(wildcards.direction) - 1],
+        lambda wildcards: branch({wildcards.direction} == 1,
+            then = get_illumina_1,
+            otherwise = get_illumina_2),
     output:
-        "results/{asmname}/5.quality_control/04.mapping/input/illumina/{sample}/{library}_{direction}.fq.gz",
+        "results/{asmname}/5.quality_control/04.mapping/input/illumina_{direction}.fq.gz",
     log:
-        "results/logs/5.quality_control/sample_illumina/{asmname}/{sample}/{library}_{direction}.log"
+        "results/logs/5.quality_control/sample_illumina/{asmname}_{direction}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/sample_illumina/{asmname}/{sample}/{library}_{direction}.txt"
+        "results/benchmarks/5.quality_control/sample_illumina/{asmname}_{direction}.txt"
     params:
         subset = 1000000
     conda:
@@ -40,16 +42,16 @@ rule map_illumina:
         index3 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.ann",
         index4 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.bwt.2bit.64",
         index5 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.pac",
-        forward = "results/{asmname}/5.quality_control/04.mapping/input/illumina/{sample}/{library}_1.fq.gz",
-        backward = "results/{asmname}/5.quality_control/04.mapping/input/illumina/{sample}/{library}_2.fq.gz",
+        forward = "results/{asmname}/5.quality_control/04.mapping/input/illumina_1.fq.gz",
+        backward = "results/{asmname}/5.quality_control/04.mapping/input/illumina_2.fq.gz",
     output:
-        "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.bam",
+        "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.bam",
     log:
-        "results/logs/5.quality_control/map_illumina/{asmname}/{sample}/{library}.log"
+        "results/logs/5.quality_control/map_illumina/{asmname}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/map_illumina/{asmname}/{sample}/{library}.txt"
+        "results/benchmarks/5.quality_control/map_illumina/{asmname}.txt"
     params:
-        readtag = lambda wildcards: f"'@RG\\tID:{wildcards.library}\\tSM:{wildcards.library}'"
+        readtag = lambda wildcards: f"'@RG\\tID:illumina\\tSM:{wildcards.asmname}'"
     threads:
         10
     conda:
@@ -59,13 +61,13 @@ rule map_illumina:
 
 rule index_bam:
     input:
-        "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.bam",
+        "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.bam",
     output:
-        "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.bam.csi",
+        "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.bam.csi",
     log:
-        "results/logs/5.quality_control/index_bam/{asmname}/illumina/{sample}/{library}.log"
+        "results/logs/5.quality_control/index_bam/{asmname}/illumina.log"
     benchmark:
-        "results/benchmarks/5.quality_control/index_bam/{asmname}/illumina/{sample}/{library}.txt"
+        "results/benchmarks/5.quality_control/index_bam/{asmname}/illumina.txt"
     threads:
         10
     conda:
@@ -75,14 +77,14 @@ rule index_bam:
 
 rule flagstat_bam:
     input:
-        bam = "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.bam",
-        index = "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.bam.csi",
+        bam = "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.bam",
+        index = "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.bam.csi",
     output:
-        "results/{asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt",
+        "results/{asmname}/5.quality_control/04.mapping/output/illumina.sorted.flagstat.txt",
     log:
-        "results/logs/5.quality_control/flagstat_bam/{asmname}/illumina/{sample}/{library}.log"
+        "results/logs/5.quality_control/flagstat_bam/{asmname}/illumina.log"
     benchmark:
-        "results/benchmarks/5.quality_control/flagstat_bam/{asmname}/illumina/{sample}/{library}.txt"
+        "results/benchmarks/5.quality_control/flagstat_bam/{asmname}/illumina.txt"
     threads:
         10
     conda:
@@ -92,11 +94,8 @@ rule flagstat_bam:
 
 def get_wgs_flagstat(wildcards):
     all_output = []
-    if "illumina" in config["reads"]:
-        if wildcards.asmname in config["reads"]["illumina"]:
-            for sample in config["reads"]["illumina"][wildcards.asmname]:
-                for library in config["reads"]["illumina"][wildcards.asmname][sample]:
-                    all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/illumina/{sample}/{library}.sorted.flagstat.txt")
+    if not SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["illumina_1"].isnull().values.item():
+        all_output.append(f"results/{wildcards.asmname}/5.quality_control/04.mapping/output/illumina.sorted.flagstat.txt")
     return all_output
 
 rule multiqc:

@@ -1,6 +1,6 @@
 rule hifiasm:
     input:
-        hifi = lambda wildcards: [config["reads"]["hifi"][wildcards.asmname][sample] for sample in config["reads"]["hifi"][wildcards.asmname]],
+        hifi = get_hifi,
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa",
     log:
@@ -16,8 +16,8 @@ rule hifiasm:
 
 rule hifiasm_with_ont:
     input:
-        hifi = lambda wildcards: [config["reads"]["hifi"][wildcards.asmname][sample] for sample in config["reads"]["hifi"][wildcards.asmname]],
-        ont = lambda wildcards: [config["reads"]["ont"][wildcards.asmname][sample] for sample in config["reads"]["ont"][wildcards.asmname]],
+        hifi = get_hifi,
+        ont = get_ont,
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa",
     log:
@@ -33,9 +33,9 @@ rule hifiasm_with_ont:
 
 rule gfa2fasta:
     input:
-        lambda wildcards: branch("ont" in config["reads"] and wildcards.asmname in config["reads"]["ont"],
-            then = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa",
-            otherwise = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa"),
+        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(),  #check if ont is null
+            then = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa",
+            otherwise = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa")
     output:
         "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
     log:

@@ -3,43 +3,39 @@
 # All strings that start with "resources" should be relative or absolute paths
 # on your machine that are readable by Snakemake.
 
-# All input read sets. Using the same identifier for HiFi and ONT will result in
-# using both for the same assembly. Optionally, Illumina (PE) reads can be added
-# which will be used for quality control only. It is important to note here that
-# the key provided under `hifi` will be used as assembly name!
-# NB: Please don't use 'Chr' as part of any key in this YAML as it will mess up
-# the scaffolding!
-reads:
-    hifi:  #required
-        accessionA:
-            sampleA1: "resources/reads/HiFi/readsA1.fasta"
-            sampleA2: "resources/reads/HiFi/readsA2.fasta"
-        accessionB:
-            sampleB: "resources/reads/HiFi/readsB.fasta"
-    ont:  #optional
-        accessionB:
-            sampleB: "resources/reads/ONT/readsB.fasta"
-    illumina:  #optional
-        accessionA:
-            sampleA1:
-                libraryA1_1: ["resources/reads/sample1/library1_1.fq.gz", "resources/reads/sample1/library1_2.fq.gz"]
-                libraryA1_2: ["resources/reads/sample1/library2_1.fq.gz", "resources/reads/sample1/library2_2.fq.gz"]
-            sampleA2:
-                libraryA2_1: ["resources/reads/sample2/library1_1.fq.gz", "resources/reads/sample2/library1_2.fq.gz"]
-                libraryA2_2: ["resources/reads/sample2/library2_1.fq.gz", "resources/reads/sample2/library2_2.fq.gz"]
+# All samples should be defined in a TSV file. In this file, a unique
+# accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
+# paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
+# ID should be defined.
+samples: "config/samples.tsv"
 
 # All filtering and scaffolding parameters
-ref_genome:  #reference genome for scaffolding and mummerplots
-    accessionX_V0: "resources/reference_genome.fa"  #key is reference name
-ref_chr:  #key is chromosome number, value is the name of the chromosome in the ref_genome fasta file
-    1: "Chr1"  
-    2: "Chr2"
-    3: "Chr3"
-    4: "Chr4"
-    5: "Chr5"
 min_contig_len: 10000
 ntjoin_k: 52
 ntjoin_w: 16000
+
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
+reference_genomes:
+    referenceA:
+        genome: "resources/reference_genome_A.fa"
+        annotation: "resources/reference_genome_A.gff"
+        chromosomes:
+            1: "Chr1"
+            2: "Chr2"
+            3: "Chr3"
+            4: "Chr4"
+            5: "Chr5"
+    referenceB:
+        genome: "resources/reference_genome_B.fa"
+        annotation: "resources/reference_genome_B.gff"
+        chromosomes:
+            1: "Chr1"
+            2: "Chr2"
+            3: "Chr3"
+            4: "Chr4"
+            5: "Chr5"
+            6: "Chr6"
 
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module (circos plot)
@@ -51,21 +47,14 @@ nucl_queries:
     telomere: "resources/blast_queries/telomere.fasta"
 
 # Annotation settings
-ref_annotation: "resources/reference_genome.gff"
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"
 helixer_max_gene_length: 64152
-species:  #give letter only abbreviation for species for annotation with helixer
-    accessionA: "speciesA"
-    accessionB: "speciesB"
 
 # Quality control settings
 k_qc: 21  #optimal k-mer size for quality control
 gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
-taxid:  #taxid for the species for fcs-gx
-    accessionA: 12345
-    accessionB: 12345
 pantools_grouping: 3  #grouping relaxation setting for pantools
-odb: "viridiplantae_odb10"  #ODB database for busco/compleasm
+odb: "viridiplantae_odb10"  #ODB database for busco
 kraken2_nt: "resources/kraken/nt"  #kraken2 database
 OMAdb: "resources/OMAmerDB.h5"  #OMA database for orthologs
 
@@ -75,6 +64,7 @@ set:
     all:
         - accessionA
         - accessionB
+        - accessionC
 
 # General settings
 jvm: "-Xmx100g -Xms100g"  #java virtual machine settings

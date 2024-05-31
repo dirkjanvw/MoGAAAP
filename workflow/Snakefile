@@ -1,9 +1,19 @@
-# Make sure minimal version is snakemake 8
-from snakemake.utils import min_version
-min_version("8")
+# Import libraries
+import pandas as pd
+from snakemake.utils import validate, min_version
+min_version("8") # Require at least Snakemake 8.0
 
 # Load configuration
 configfile: "config/config.yaml"
+validate(config, schema="schemas/config.schema.yaml")
+
+# Load samples
+SAMPLES = (
+    pd.read_csv(config["samples"], sep="\t", dtype={"accessionId": str})
+        .set_index("accessionId", drop=False)
+        .sort_index()
+)
+validate(SAMPLES, schema="schemas/samples.schema.yaml")
 
 # Include modules
 include: "rules/common.smk"

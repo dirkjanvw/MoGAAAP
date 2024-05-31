@@ -9,7 +9,7 @@ rule fcs_gx:
     benchmark:
         "results/benchmarks/5.quality_control/fcs-gx/{asmname}.txt"
     params:
-        taxid = lambda wildcards: config["taxid"][wildcards.asmname],
+        taxid = lambda wildcards: get_taxid(wildcards),
         gxdb = config["gxdb"],
     resources:
         gbmem = 500

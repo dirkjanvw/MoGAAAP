@@ -18,33 +18,29 @@ def get_merqury_output(wildcards):
     all_output = []
 
     # HiFi
-    for asmname in config["reads"]["hifi"]:
-        for sample in config["reads"]["hifi"][asmname]:
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.qv.html")  #per sequence qv
+        all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
-    if "ont" in config["reads"]:
-        for asmname in config["reads"]["ont"]:
-            for sample in config["reads"]["ont"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["ont"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
-    if "illumina" in config["reads"]:
-        for asmname in config["reads"]["illumina"]:
-            for sample in config["reads"]["illumina"][asmname]:
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.qv.html")  #per sequence qv
-                all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/{sample}/{asmname}_vs_{sample}.{asmname}.spectra-cn.fl.png")  #spectra-cn
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_control/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     return all_output
 
 def get_multiqc_output(wildcards):
     all_output = []
-    if "illumina" in config["reads"]:
-        for asmname in get_all_accessions():
-            if asmname in config["reads"]["illumina"]:
-                all_output.append(f"results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html")  #mapping
+    for asmname in get_all_accessions():
+        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+            all_output.append(f"results/{asmname}/5.quality_control/04.multiqc/multiqc_report.html")  #mapping
     return all_output
 
 def get_pantools_output(wildcards):
@@ -55,6 +51,15 @@ def get_pantools_output(wildcards):
             all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
             if len(config["set"][asmset]) <= 10:
                     all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
+    return all_output
+
+def get_sans_output(wildcards):
+    all_output = []
+    k = config["k_qc"]
+    bootstrap = 1000
+    for asmset in config["set"]:
+        if len(config["set"][asmset]) >= 4:  #phylogenetic networks only makes sense for 4+ genomes
+            all_output.append(f"results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus")
     return all_output
 
 def get_pangrowth_output(wildcards):
@@ -83,7 +88,7 @@ rule qc:
         expand("results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash.pdf", asmset=config["set"], k=config["k_qc"]),  #kmer distances
         expand("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
         expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
-        expand("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus", k=config["k_qc"], asmset=config["set"], bootstrap=1000),  #sans nexus file (genome only with 1000 bootstrap)
+        get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
         get_pangrowth_output,  #pangrowth
         expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.html", asmset=config["set"]),  #statistics
     output:

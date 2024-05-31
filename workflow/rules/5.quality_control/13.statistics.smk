@@ -2,7 +2,7 @@ rule individual_statistics:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
-        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/{sample}/{{asmname}}_vs_{sample}.{{asmname}}.qv", k=config["k_qc"], sample=config["reads"]["hifi"][wildcards.asmname]),
+        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.{{asmname}}.qv", k=config["k_qc"]),
         annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
     output:
         assembly = "results/{asmname}/5.quality_control/13.statistics/{asmname}.assembly.tsv",
@@ -15,7 +15,7 @@ rule individual_statistics:
     benchmark:
         "results/benchmarks/5.quality_control/individual_statistics/{asmname}.txt"
     params:
-        inputdata = lambda wildcards: "HiFi+ONT" if "ont" in config["reads"] and wildcards.asmname in config["reads"]["ont"] else "HiFi only",
+        inputdata = lambda wildcards: "HiFi+ONT" if not SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item() else "HiFi only",
     conda:
         "../../envs/seqkit.yaml"
     shell:

@@ -82,9 +82,23 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
 
 ## Configuration
-All configuration of the pipeline is done in the `config/config.yaml` file.
+All configuration of the pipeline is done in the `config/config.yaml` file, and samples are registered in the `config/samples.tsv` file.
 All fields to fill in are well-documented in the provided `config/config.yaml` file and should be self-explanatory.
-This is the file where _e.g._ the paths to the input HiFi reads, reference genome and databases are defined.
+
+The `config/samples.tsv` has the following columns to fill in (one row per sample):
+
+| Column name     | Description                                                                                                                                                  |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                  |
+| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format.                                                                                                         |
+| `ont`           | The path to the ONT reads in FASTQ or FASTA format.                                                                                                          |
+| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                      |
+| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                      |
+| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                          |
+| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                         |
+| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file. |
+
+Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
 ## Running the pipeline
 
@@ -118,8 +132,11 @@ Several important `snakemake` parameters are important when running this pipelin
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
 - `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
-- `helixer`: The number of Helixer jobs in the pipeline can run to at the same time; will be referred to as `${HELIXER}`.
-- `pantools`: The number of PanTools jobs in the pipeline can run to at the same time; will be referred to as `${PANTOOLS}`.
+  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs).
+- `helixer`: The number of Helixer jobs that can run at the same time; will be referred to as `${HELIXER}`.
+  It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
+- `pantools`: The number of PanTools jobs that can run at the same time; will be referred to as `${PANTOOLS}`.
+  It is recommended to always keep this at 1, to prevent file collisions.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
@@ -250,6 +267,10 @@ If the error is not clear, please open an issue on this GitHub page.
 ### Q: The pipeline cannot find software X
 A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
 All dependencies are included in either a `conda` environment or a `singularity` container.
+
+### Q: Writing output at a different location that `results`
+A: For code simplicity, the pipeline always writes output to the `results` directory.
+However, if you have the output in a different location, you can simply move the output to the desired location after the pipeline has finished.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
