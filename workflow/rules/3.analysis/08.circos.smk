@@ -68,7 +68,7 @@ def get_circos_files(wildcards):
 
 rule circos_configuration:
     input:
-        get_circos_files,  ### CIRCOS ITEMS ###
+        files = get_circos_files,  ### CIRCOS ITEMS ###
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
@@ -82,17 +82,18 @@ rule circos_configuration:
         """
         (
         printf "filename\\tfiletype\\tmin\\tmax\\n" > {output.overview}
-        for file in {input.counts}; do
-            printf "${{file}}\\tcount\\t0\\t100\\n" >> {output.overview}
-        done
-        for file in {input.fractions}; do
-            printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
+        for file in {input.files}; do
+            if [[ "${{file}}" =~ \\.fract\\.circos$ ]]; then
+                printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
+            else
+                printf "${{file}}\\tcount\\t0\\t100\\n" >> {output.overview}
+            fi
         done
         printf "{input.karyotype}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
-        ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output.conf})/
+        ln -s $(realpath {input.files}) $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
-        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
+        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.files} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
         ) &> {log}
         """
 
