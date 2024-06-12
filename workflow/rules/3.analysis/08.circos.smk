@@ -64,7 +64,7 @@ def get_circos_files(wildcards):
         for query in config["nucl_queries"]:
             nucl_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
 
-    return prot_files, nucl_files
+    return prot_files + nucl_files
 
 rule circos_configuration:
     input:
