@@ -20,12 +20,15 @@ rule mummer_contigs:
         "results/logs/1.assembly/mummer/{reference}/{asmname}.min{minlen}.vs.{reference}.log"
     benchmark:
         "results/benchmarks/1.assembly/mummer/{reference}/{asmname}.min{minlen}.vs.{reference}.txt"
+    params:
+        nucmer_maxgap = config["nucmer_maxgap"],
+        nucmer_minmatch = config["nucmer_minmatch"],
     threads:
         24
     container:
         "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
     shell:
-        "nucmer -t {threads} -l 100 -g 100 --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
+        "nucmer -t {threads} -l {params.nucmer_maxgap} -g {params.nucmer_minmatch} --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
 
 rule dotplot_contigs:
     input:

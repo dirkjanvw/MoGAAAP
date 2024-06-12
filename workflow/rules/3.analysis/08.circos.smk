@@ -53,10 +53,22 @@ rule circos_karyotype:
     shell:
         "awk '$1!~/Chr[0-9]+/{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
+def get_circos_files(wildcards):
+    prot_files = []
+    if "prot_queries" in config:
+        for query in config["prot_queries"]:
+            prot_files.append(f"results/{wildcards.asmname}/3.analysis/06.bcovblp/{query}.vs.{wildcards.asmname}.items.circos")
+
+    nucl_files = []
+    if "nucl_queries" in config:
+        for query in config["nucl_queries"]:
+            nucl_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
+
+    return prot_files, nucl_files
+
 rule circos_configuration:
     input:
-        counts = expand("results/{{asmname}}/3.analysis/06.bcovblp/{query_name}.vs.{{asmname}}.items.circos", query_name=config["prot_queries"]),  ### CIRCOS ITEMS ###
-        fractions = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.fract.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
+        get_circos_files,  ### CIRCOS ITEMS ###
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
