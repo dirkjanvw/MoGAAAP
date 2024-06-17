@@ -38,8 +38,12 @@ reference_genomes:
             6: "Chr6"
 
 # All protein and nucleotide queries that need to be run for the assembly
-# analysis module (circos plot)
-prot_queries: #should be single exon domains only!
+# analysis module (circos plot). The key should be the name of the query and
+# the value should be the path to the query. At least one protein or nucleotide
+# query is required for the module to run.
+# NB: for the protein queries, the query should be a single exon domain as it
+# is searched in the genome.
+prot_queries:
     NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
@@ -66,6 +70,8 @@ set:
         - accessionB
         - accessionC
 
-# General settings
+# General settings; only change if you know what you are doing
 jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
 tmpdir: "/dev/shm/"  #temporary directory for fast IO
+nucmer_maxgap: 1000  #maximum gap size for nucmer
+nucmer_minmatch: 1000  #minimum match size for nucmer

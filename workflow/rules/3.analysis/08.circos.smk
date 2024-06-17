@@ -53,10 +53,22 @@ rule circos_karyotype:
     shell:
         "awk '$1!~/Chr[0-9]+/{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
+def get_circos_files(wildcards):
+    prot_files = []
+    if "prot_queries" in config:
+        for query in config["prot_queries"]:
+            prot_files.append(f"results/{wildcards.asmname}/3.analysis/06.bcovblp/{query}.vs.{wildcards.asmname}.items.circos")
+
+    nucl_files = []
+    if "nucl_queries" in config:
+        for query in config["nucl_queries"]:
+            nucl_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
+
+    return prot_files + nucl_files
+
 rule circos_configuration:
     input:
-        counts = expand("results/{{asmname}}/3.analysis/06.bcovblp/{query_name}.vs.{{asmname}}.items.circos", query_name=config["prot_queries"]),  ### CIRCOS ITEMS ###
-        fractions = expand("results/{{asmname}}/3.analysis/07.bcovbln/{query_name}.vs.{{asmname}}.fract.circos", query_name=config["nucl_queries"]),  ### CIRCOS ITEMS ###
+        files = get_circos_files,  ### CIRCOS ITEMS ###
         karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
         ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
     output:
@@ -70,17 +82,18 @@ rule circos_configuration:
         """
         (
         printf "filename\\tfiletype\\tmin\\tmax\\n" > {output.overview}
-        for file in {input.counts}; do
-            printf "${{file}}\\tcount\\t0\\t100\\n" >> {output.overview}
-        done
-        for file in {input.fractions}; do
-            printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
+        for file in {input.files}; do
+            if [[ "${{file}}" =~ \\.fract\\.circos$ ]]; then
+                printf "${{file}}\\tfraction\\t0\\t1.0\\n" >> {output.overview}
+            else
+                printf "${{file}}\\tcount\\t0\\t100\\n" >> {output.overview}
+            fi
         done
         printf "{input.karyotype}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
-        ln -s $(realpath {input.counts} {input.fractions}) $(dirname {output.conf})/
+        ln -s $(realpath {input.files}) $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
-        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.counts} {input.fractions} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
+        python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.files} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')
         ) &> {log}
         """
 
