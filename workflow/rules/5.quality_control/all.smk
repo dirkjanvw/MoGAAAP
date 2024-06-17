@@ -53,6 +53,31 @@ def get_pantools_output(wildcards):
                     all_output.append(f"results/{asmset}/5.quality_control/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
     return all_output
 
+def get_kmerdb_output(wildcards):
+    all_output = []
+    k = config["k_qc"]
+    for asmset in config["set"]:
+        if len(config["set"][asmset]) >= 2:
+            all_output.append(f"results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash.pdf"),  #kmer distances
+    return all_output
+
+
+def get_mash_output(wildcards):
+    all_output = []
+    for asmset in config["set"]:
+        if len(config["set"][asmset]) >= 2:
+            all_output.append(f"results/{asmset}/5.quality_control/09.mash/{asmset}.pdf"),  #mash distances
+    return all_output
+
+def get_ntsynt_output(wildcards):
+    all_output = []
+    mink = 24
+    minw = 1000
+    for asmset in config["set"]:
+        if len(config["set"][asmset]) >= 2:  #synteny only makes sense for multiple genomes
+            all_output.append(f"results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png")
+    return all_output
+
 def get_sans_output(wildcards):
     all_output = []
     k = config["k_qc"]
@@ -85,9 +110,9 @@ rule qc:
         get_pantools_output,  #pantools
         expand("results/{asmset}/5.quality_control/06.busco_plot/busco_figure.png", asmset=config["set"]),  #busco (proteome) and compleasm (genome)
         expand("results/{asmset}/5.quality_control/07.omark_plot.png", asmset=config["set"]),  #omark
-        expand("results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash.pdf", asmset=config["set"], k=config["k_qc"]),  #kmer distances
-        expand("results/{asmset}/5.quality_control/09.mash/{asmset}.pdf", asmset=config["set"]), #mash distances
-        expand("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png", asmset=config["set"], mink=24, minw=1000), #ntsynt
+        get_kmerdb_output,  #kmer-db
+        get_mash_output,  #mash
+        get_ntsynt_output, #ntsynt
         get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
         get_pangrowth_output,  #pangrowth
         expand("results/{asmset}/5.quality_control/13.statistics/{asmset}.html", asmset=config["set"]),  #statistics
