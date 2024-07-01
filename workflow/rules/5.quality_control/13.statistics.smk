@@ -2,7 +2,7 @@ rule individual_statistics:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
-        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.{{asmname}}.qv", k=config["k_qc"]),
+        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.qv", k=config["k_qc"]),
         annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
     output:
         assembly = "results/{asmname}/5.quality_control/13.statistics/{asmname}.assembly.tsv",
