@@ -10,11 +10,11 @@ properties:
   hifi:
     type: string
     description: path to the HiFi reads
-    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
+    pattern: "^[^;]*\\.[fF](ast)?[qa](\\.gz)?(;[^;]*\\.[fF](ast)?[qa](\\.gz)?)*$"
   ont:
     type: string
     description: path to the ONT reads
-    pattern: "^.*\\.[fF](ast)?[qa](\\.gz)?$"
+    pattern: "^[^;]*\\.[fF](ast)?[qa](\\.gz)?(;[^;]*\\.[fF](ast)?[qa](\\.gz)?)*$"
   illumina_1:
     type: string
     description: path to the forward Illumina reads
