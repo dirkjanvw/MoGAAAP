@@ -29,7 +29,7 @@ rule hifiasm_with_ont:
     conda:
         "../../envs/hifiasm.yaml"
     shell:
-        "hifiasm -t {threads} -o $(echo {output} | rev | cut -d '.' -f 4- | rev) --ul {input.ont} {input.hifi} 2> {log}"
+        "hifiasm -t {threads} -o $(echo {output} | rev | cut -d '.' -f 4- | rev) --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
 rule gfa2fasta:
     input:

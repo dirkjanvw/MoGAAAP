@@ -2,10 +2,10 @@ def get_all_accessions():
     return SAMPLES["accessionId"].values
 
 def get_hifi(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["hifi"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["hifi"].values.item().split(";")
 
 def get_ont(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].values.item().split(";")
 
 def get_illumina_1(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["illumina_1"].values.item()
