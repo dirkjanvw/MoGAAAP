@@ -38,17 +38,21 @@ reference_genomes:
             6: "Chr6"
 
 # All protein and nucleotide queries that need to be run for the assembly
-# analysis module (circos plot). The key should be the name of the query and
-# the value should be the path to the query. At least one protein or nucleotide
-# query is required for the module to run.
-# NB: for the protein queries, the query should be a single exon domain as it
-# is searched in the genome.
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one protein or nucleotide query is
+# required for the module to run (organellar sequences count as nucleotide
+# queries).
+# Contigs with a more than 50% of its length covered by an organellar sequence
+# will be separated from the scaffolded assembly output (not for QC, though).
+# For the protein queries, the query should be a single exon domain as it
+# is searched in the genome and not in the proteome.
 prot_queries:
     NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
+    ribosome: "resources/blast_queries/ribosome.fasta"
+organellar:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
     mitochondrion: "resources/blast_queries/mitochondrion.fasta"
-    telomere: "resources/blast_queries/telomere.fasta"
 
 # Annotation settings
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"
