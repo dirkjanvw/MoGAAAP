@@ -2,8 +2,20 @@ include: "01.liftoff.smk"
 include: "02.helixer.smk"
 include: "03.combined.smk"
 
+rule link_annotation:
+    input:
+        "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+    output:
+        "results/{asmname}/output/{asmname}.full.gff"
+    log:
+        "results/logs/4.annotation/link_annotation/{asmname}.log"
+    benchmark:
+        "results/benchmarks/4.annotation/link_annotation/{asmname}.txt"
+    shell:
+        "ln -s $(realpath {input}) {output} &> {log}"
+
 rule annotate:
     input:
-        expand("results/{asmname}/4.annotation/03.combined/{asmname}.gff", asmname=get_all_accessions()),
+        expand("results/{asmname}/output/{asmname}.full.gff", asmname=get_all_accessions()),
     output:
         touch("results/annotation.done")
