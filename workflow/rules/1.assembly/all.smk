@@ -2,6 +2,18 @@ include: "01.hifiasm.smk"
 include: "02.contigs.smk"
 include: "03.mummer.smk"
 
+rule link_contigs:
+    input:
+        expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
+    output:
+        "results/{asmname}/output/{asmname}.contigs.fa"
+    log:
+        "results/logs/2.scaffolding/link_contigs/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/link_contigs/{asmname}.txt"
+    shell:
+        "ln -s $(realpath {input}) {output} &> {log}"
+
 def get_mummerplot_contigs(wildcards):
     filelist = []
     minlen = config["min_contig_len"]
@@ -12,9 +24,8 @@ def get_mummerplot_contigs(wildcards):
 
 rule assemble:
     input:
-        expand("results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
-            asmname=get_all_accessions(),
-            minlen=config["min_contig_len"]
+        expand("results/{asmname}/output/{asmname}.contigs.fa",
+            asmname=get_all_accessions()
         ),
         get_mummerplot_contigs,
     output:
