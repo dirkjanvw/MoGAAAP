@@ -6,7 +6,7 @@ rule link_annotation:
     input:
         "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
     output:
-        "results/{asmname}/output/{asmname}.full.gff"
+        "final_output/{asmname}.full.gff"
     log:
         "results/logs/4.annotation/link_annotation/{asmname}.log"
     benchmark:
@@ -16,6 +16,6 @@ rule link_annotation:
 
 rule annotate:
     input:
-        expand("results/{asmname}/output/{asmname}.full.gff", asmname=get_all_accessions()),
+        expand("final_output/{asmname}.full.gff", asmname=get_all_accessions()),
     output:
         touch("results/annotation.done")

@@ -6,7 +6,7 @@ rule link_assembly:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        "results/{asmname}/output/{asmname}.full.fa"
+        "final_output/{asmname}.full.fa"
     log:
         "results/logs/2.scaffolding/link_assembly/{asmname}.log"
     benchmark:
@@ -23,7 +23,7 @@ def get_mummerplot_scaffolds(wildcards):
 
 rule scaffold:
     input:
-        expand("results/{asmname}/output/{asmname}.full.fa",
+        expand("final_output/{asmname}.full.fa",
             asmname = get_all_accessions()),
         get_mummerplot_scaffolds,
     output:
