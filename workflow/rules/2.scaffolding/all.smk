@@ -12,7 +12,7 @@ rule link_assembly:
     benchmark:
         "results/benchmarks/2.scaffolding/link_assembly/{asmname}.txt"
     shell:
-        "ln -s $(realpath {input}) {output} &> {log}"
+        "cp $(realpath {input}) {output} &> {log}"
 
 def get_mummerplot_scaffolds(wildcards):
     filelist = []

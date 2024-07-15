@@ -12,7 +12,7 @@ rule link_annotation:
     benchmark:
         "results/benchmarks/4.annotation/link_annotation/{asmname}.txt"
     shell:
-        "ln -s $(realpath {input}) {output} &> {log}"
+        "cp $(realpath {input}) {output} &> {log}"
 
 rule annotate:
     input:

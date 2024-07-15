@@ -23,8 +23,8 @@ rule link_separated_genome:
     shell:
         """
         (
-        ln -s $(realpath {input.nuclear}) {output.nuclear}
-        ln -s $(realpath {input.organellar}) $(dirname {output.organellar} | uniq)
+        cp $(realpath {input.nuclear}) {output.nuclear}
+        cp $(realpath {input.organellar}) $(dirname {output.organellar} | uniq)
         ) &> {log}
         """
 

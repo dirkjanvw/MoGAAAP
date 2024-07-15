@@ -12,7 +12,7 @@ rule link_contigs:
     benchmark:
         "results/benchmarks/2.scaffolding/link_contigs/{asmname}.txt"
     shell:
-        "ln -s $(realpath {input}) {output} &> {log}"
+        "cp $(realpath {input}) {output} &> {log}"
 
 def get_mummerplot_contigs(wildcards):
     filelist = []
