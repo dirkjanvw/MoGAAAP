@@ -35,7 +35,7 @@ rule individual_statistics:
         awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s\\t", $4;}}' {input.qv} >> {output.tsv}
         seqkit stats -abTj1 {input.contigs} > {output.contigs}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$13;}}' {output.contigs} >> {output.tsv}
-        echo "{params.inputdata}" >> {output.tsv}
+        printf "{params.inputdata}\\t" >> {output.tsv}
         echo "{params.assembler}" >> {output.tsv}
         ) &> {log}
         """
