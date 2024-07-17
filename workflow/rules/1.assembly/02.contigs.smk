@@ -42,4 +42,4 @@ rule add_prefix:
     conda:
         "../../envs/bioawk.yaml"
     shell:
-        "bioawk -c fastx '{{ print \">{params.prefix}\" $name; print $seq }}' {input} | perl -pe 's/ptg00//' > {output} 2> {log}"
+        "bioawk -c fastx '{{ print \">{params.prefix}\" ++i; print $seq }}' {input} > {output} 2> {log}"
