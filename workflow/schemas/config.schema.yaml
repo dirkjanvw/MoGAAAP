@@ -12,7 +12,7 @@ properties:
 
   assembler:
     type: string
-    description: assembler to use; supported assemblers: hifiasm, flye, verkko
+    description: assembler to use; supported assemblers are hifiasm, flye, verkko
     pattern: "^(hifiasm|flye|verkko)$"
 
   min_contig_len:
