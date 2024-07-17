@@ -10,6 +10,11 @@ properties:
     description: path to the sample sheet
     pattern: "^.+\\.tsv$"
 
+  assembler:
+    type: string
+    description: assembler to use; supported assemblers: hifiasm, flye, verkko
+    pattern: "^(hifiasm|flye|verkko)$"
+
   min_contig_len:
     type: integer
     description: minimum contig length for filtering the assembly
@@ -121,6 +126,7 @@ properties:
 
 required:
     - samples
+    - assembler
     - min_contig_len
     - ntjoin_k
     - ntjoin_w
