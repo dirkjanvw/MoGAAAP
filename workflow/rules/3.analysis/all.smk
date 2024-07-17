@@ -14,8 +14,8 @@ rule link_separated_genome:
         nuclear = "results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.fa",
         organellar = expand("results/{{asmname}}/3.analysis/09.separate_genome/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
     output:
-        nuclear = "final_output/{asmname}.nuclear.fa",
-        organellar = expand("final_output/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
+        nuclear = protected("final_output/{asmname}.nuclear.fa"),
+        organellar = expand(protected("final_output/{{asmname}}.{organelle}.fa"), organelle = config["organellar"]),
     log:
         "results/logs/3.analysis/link_separated_genome/{asmname}.log"
     benchmark:

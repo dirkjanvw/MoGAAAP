@@ -4,7 +4,7 @@ rule combine_liftoff_helixer:
         helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        protected("results/{asmname}/4.annotation/03.combined/{asmname}.gff"),
+        "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
     log:
         "results/logs/4.annotation/combine_liftoff_helixer/{asmname}.log"
     benchmark:

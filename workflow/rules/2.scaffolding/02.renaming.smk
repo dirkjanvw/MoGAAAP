@@ -129,7 +129,7 @@ rule sort_scaffolds:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.fa"
     output:
-        protected("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa")
+        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     log:
         "results/logs/2.scaffolding/sort_scaffolds/{asmname}.log"
     benchmark:

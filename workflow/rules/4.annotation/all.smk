@@ -6,7 +6,7 @@ rule link_annotation:
     input:
         "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
     output:
-        "final_output/{asmname}.full.gff"
+        protected("final_output/{asmname}.full.gff"),
     log:
         "results/logs/4.annotation/link_annotation/{asmname}.log"
     benchmark:

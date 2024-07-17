@@ -6,7 +6,7 @@ rule link_assembly:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        "final_output/{asmname}.full.fa"
+        protected("final_output/{asmname}.full.fa"),
     log:
         "results/logs/2.scaffolding/link_assembly/{asmname}.log"
     benchmark:
