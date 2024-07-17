@@ -60,6 +60,14 @@ Navigate to the `workflow/singularity` directory and run the following command f
 sudo singularity build ${NAME}.sif ${NAME}.def
 ```
 
+**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
+The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
+- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
+
+It is also recommended to set the following environment variable:
+- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+
 ### Snakemake
 Snakemake can be installed using `conda`/`mamba`:
 ```bash
@@ -264,9 +272,9 @@ If the error is not clear, please open an issue on this GitHub page.
 A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
 All dependencies are included in either a `conda` environment or a `singularity` container.
 
-### Q: Writing output at a different location that `results`
-A: For code simplicity, the pipeline always writes output to the `results` directory.
-However, if you have the output in a different location, you can simply move the output to the desired location after the pipeline has finished.
+### Q: A job that uses singularity fails for no apparent reason
+A: This is likely due to missing environment variables for Singularity/Apptainer.
+See [Singularity/Apptainer](#singularityapptainer) for more information on which environment variables need to be set.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
