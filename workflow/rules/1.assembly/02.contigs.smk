@@ -1,6 +1,6 @@
 rule filter_contigs:
     input:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
+        f"results/{{asmname}}/1.assembly/01.{config['assembler']}/{{asmname}}.fa"
     output:
         "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     log:

@@ -1,4 +1,4 @@
-include: "01.hifiasm.smk"
+include: "01.assembly.smk"
 include: "02.contigs.smk"
 include: "03.mummer.smk"
 

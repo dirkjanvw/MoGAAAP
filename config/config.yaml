@@ -9,6 +9,9 @@
 # ID should be defined.
 samples: "config/samples.tsv"
 
+# Assembly settings
+assembler: "hifiasm"  #supported assemblers: hifiasm, flye, verkko
+
 # All filtering and scaffolding parameters
 min_contig_len: 10000
 ntjoin_k: 52
