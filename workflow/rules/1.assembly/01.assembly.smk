@@ -2,7 +2,7 @@ rule hifiasm:
     input:
         hifi = get_hifi,
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa",
+        "results/{asmname}/1.assembly/01.hifiasm_hifi_only/{asmname}.bp.p_ctg.gfa",
     log:
         "results/logs/1.assembly/hifiasm/{asmname}.log"
     benchmark:
@@ -19,7 +19,7 @@ rule hifiasm_with_ont:
         hifi = get_hifi,
         ont = get_ont,
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa",
+        "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.p_ctg.gfa",
     log:
         "results/logs/1.assembly/hifiasm_with_ont/{asmname}.log"
     benchmark:
@@ -33,15 +33,13 @@ rule hifiasm_with_ont:
 
 rule hifiasm_to_fasta:
     input:
-        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(),  #check if ont is null
-            then = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_only.bp.p_ctg.gfa",
-            otherwise = "results/{asmname}/1.assembly/01.hifiasm/{asmname}_hifi_and_ont.bp.p_ctg.gfa")
+        "results/{asmname}/1.assembly/01.hifiasm_{ext}/{asmname}.bp.p_ctg.gfa",
     output:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
+        "results/{asmname}/1.assembly/01.hifiasm_{ext}/{asmname}.fa",
     log:
-        "results/logs/1.assembly/hifiasm_to_fasta/{asmname}.log"
+        "results/logs/1.assembly/hifiasm_{ext}_to_fasta/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/hifiasm_to_fasta/{asmname}.txt"
+        "results/benchmarks/1.assembly/hifiasm_{ext}_to_fasta/{asmname}.txt"
     shell:
         "awk '/^S/{{print \">\"$2; print $3;}}' {input} > {output} 2> {log}"
 
@@ -49,11 +47,11 @@ rule flye:
     input:
         hifi = get_hifi,
     output:
-        "results/{asmname}/1.assembly/01.flye/{asmname}_flye.fasta",
+        "results/{asmname}/1.assembly/01.flye_hifi_only/assembly.fasta",
     log:
-        "results/logs/1.assembly/flye/{asmname}.log"
+        "results/logs/1.assembly/flye_hifi_only/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/flye/{asmname}.txt"
+        "results/benchmarks/1.assembly/flye_hifi_only/{asmname}.txt"
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
@@ -66,11 +64,11 @@ rule flye_with_ont:
         hifi = get_hifi,
         ont = get_ont,
     output:
-        "results/{asmname}/1.assembly/01.flye/{asmname}_flye_with_ont.fasta",
+        "results/{asmname}/1.assembly/01.flye_hifi_and_ont/assembly.fasta",
     log:
-        "results/logs/1.assembly/flye_with_ont/{asmname}.log"
+        "results/logs/1.assembly/flye_hifi_and_ont/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/flye_with_ont/{asmname}.txt"
+        "results/benchmarks/1.assembly/flye_hifi_and_ont/{asmname}.txt"
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
@@ -78,29 +76,27 @@ rule flye_with_ont:
     shell:
         "flye --pacbio-hifi {input.hifi} --nano-hq {input.ont} --out-dir $(dirname {output}) --threads {threads} &> {log}"
 
-rule flye_to_fasta:
+rule flye_rename_fasta:
     input:
-        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(),  #check if ont is null
-            then = "results/{asmname}/1.assembly/01.flye/{asmname}_flye.fasta",
-            otherwise = "results/{asmname}/1.assembly/01.flye/{asmname}_flye_with_ont.fasta")
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly.fasta",
     output:
-        "results/{asmname}/1.assembly/01.flye/{asmname}.fa"
+        "results/{asmname}/1.assembly/01.flye_{ext}/{asmname}.fa",
     log:
-        "results/logs/1.assembly/flye_to_fasta/{asmname}.log"
+        "results/logs/1.assembly/flye_{ext}_rename_fasta/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/flye_to_fasta/{asmname}.txt"
+        "results/benchmarks/1.assembly/flye_{ext}_rename_fasta/{asmname}.txt"
     shell:
-        "awk '/^>/{print;next}{print toupper($0)}' {input} > {output} 2> {log}"
+        "cp {input} {output} &> {log}"
 
 rule verkko:
     input:
         hifi = get_hifi,
     output:
-        "results/{asmname}/1.assembly/01.verkko/{asmname}_verkko.fasta",
+        "results/{asmname}/1.assembly/01.verkko_hifi_only/assembly.fasta",
     log:
-        "results/logs/1.assembly/verkko/{asmname}.log"
+        "results/logs/1.assembly/verkko_hifi_only/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/verkko/{asmname}.txt"
+        "results/benchmarks/1.assembly/verkko_hifi_only/{asmname}.txt"
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
@@ -113,11 +109,11 @@ rule verkko_with_ont:
         hifi = get_hifi,
         ont = get_ont,
     output:
-        "results/{asmname}/1.assembly/01.verkko/{asmname}_verkko_with_ont.fasta",
+        "results/{asmname}/1.assembly/01.verkko_hifi_and_ont/assembly.fasta",
     log:
-        "results/logs/1.assembly/verkko_with_ont/{asmname}.log"
+        "results/logs/1.assembly/verkko_hifi_and_ont/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/verkko_with_ont/{asmname}.txt"
+        "results/benchmarks/1.assembly/verkko_hifi_and_ont/{asmname}.txt"
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
@@ -125,16 +121,14 @@ rule verkko_with_ont:
     shell:
         "verkko --threads {threads} -d $(dirname {output}) --hifi {input.hifi} --nano {input.ont} &> {log}"
 
-rule verkko_to_fasta:
+rule verkko_rename_fasta:
     input:
-        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(),  #check if ont is null
-            then = "results/{asmname}/1.assembly/01.verkko/{asmname}_verkko.fasta",
-            otherwise = "results/{asmname}/1.assembly/01.verkko/{asmname}_verkko_with_ont.fasta")
+        "results/{asmname}/1.assembly/01.verkko_{ext}/assembly.fasta",
     output:
-        "results/{asmname}/1.assembly/01.verkko/{asmname}.fa"
+        "results/{asmname}/1.assembly/01.verkko_{ext}/{asmname}.fa",
     log:
-        "results/logs/1.assembly/verkko_to_fasta/{asmname}.log"
+        "results/logs/1.assembly/verkko_{ext}_rename_fasta/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/verkko_to_fasta/{asmname}.txt"
+        "results/benchmarks/1.assembly/verkko_{ext}_rename_fasta/{asmname}.txt"
     shell:
-        "awk '/^>/{print;next}{print toupper($0)}' {input} > {output} 2> {log}"
+        "cp {input} {output} &> {log}"
