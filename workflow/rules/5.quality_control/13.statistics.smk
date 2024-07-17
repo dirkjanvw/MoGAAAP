@@ -2,18 +2,18 @@ rule individual_statistics:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
-        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_control/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.qv", k=config["k_qc"]),
+        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.qv", k=config["k_qa"]),
         annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
     output:
-        assembly = "results/{asmname}/5.quality_control/13.statistics/{asmname}.assembly.tsv",
-        contigs = "results/{asmname}/5.quality_control/13.statistics/{asmname}.contigs.tsv",
-        chromosomes = "results/{asmname}/5.quality_control/13.statistics/{asmname}.assigned_sequences.tsv",
-        unassigned = "results/{asmname}/5.quality_control/13.statistics/{asmname}.unassigned_sequences.tsv",
-        tsv = "results/{asmname}/5.quality_control/13.statistics/{asmname}.tsv"
+        assembly = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assembly.tsv",
+        contigs = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.contigs.tsv",
+        chromosomes = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assigned_sequences.tsv",
+        unassigned = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.unassigned_sequences.tsv",
+        tsv = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv"
     log:
-        "results/logs/5.quality_control/individual_statistics/{asmname}.log"
+        "results/logs/5.quality_assessment/individual_statistics/{asmname}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/individual_statistics/{asmname}.txt"
+        "results/benchmarks/5.quality_assessment/individual_statistics/{asmname}.txt"
     params:
         inputdata = lambda wildcards: "HiFi+ONT" if not SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item() else "HiFi only",
     conda:
@@ -40,28 +40,28 @@ rule individual_statistics:
 
 rule overall_statistics:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_control/13.statistics/{asmname}.tsv", asmname=config["set"][wildcards.asmset]),
+        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv", asmname=config["set"][wildcards.asmset]),
     output:
-        "results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv",
+        "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     log:
-        "results/logs/5.quality_control/overall_statistics/{asmset}.log"
+        "results/logs/5.quality_assessment/overall_statistics/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/overall_statistics/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/overall_statistics/{asmset}.txt"
     shell:
         "awk 'NR==1 || FNR>1' {input} > {output} 2> {log}"
 
 rule visualise_overall_statistics:
     input:
-        "results/{asmset}/5.quality_control/13.statistics/{asmset}.tsv",
+        "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     output:
-        report("results/{asmset}/5.quality_control/13.statistics/{asmset}.html",
+        report("results/{asmset}/5.quality_assessment/13.statistics/{asmset}.html",
             category="General statistics",
             caption="../../report/statistics.rst",
             labels={"set": "{asmset}"}),
     log:
-        "results/logs/5.quality_control/visualise_overall_statistics/{asmset}.log"
+        "results/logs/5.quality_assessment/visualise_overall_statistics/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/visualise_overall_statistics/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/visualise_overall_statistics/{asmset}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:
