@@ -56,6 +56,12 @@ properties:
     additionalProperties:
       type: string
       pattern: "^.+$"
+  organellar:
+    type: object
+    description: path to organellar queries for blast search
+    additionalProperties:
+      type: string
+      pattern: "^.+$"
 
   helixer_model:
     type: string
@@ -119,8 +125,7 @@ required:
     - ntjoin_k
     - ntjoin_w
     - reference_genomes
-    - prot_queries
-    - nucl_queries
+    - organellar
     - helixer_model
     - helixer_max_gene_length
     - gxdb

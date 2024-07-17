@@ -1,6 +1,14 @@
+def get_query_file_blast_n(wildcards):
+    if config["organellar"].get(wildcards.query_name):
+        query_file = config["organellar"][wildcards.query_name]
+    else:
+        query_file = config["nucl_queries"][wildcards.query_name]
+
+    return query_file
+
 rule blast_n:
     input:
-        query_file = lambda wildcards: config["nucl_queries"][wildcards.query_name],
+        query_file = get_query_file_blast_n,
         blast_db = "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
     output:
         "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.m7"
