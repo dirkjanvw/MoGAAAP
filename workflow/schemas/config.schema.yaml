@@ -72,9 +72,9 @@ properties:
     description: maximum gene length for Helixer
     minimum: 0
 
-  k_qc:
+  k_qa:
     type: integer
-    description: optimal k-mer size for quality control
+    description: optimal k-mer size for quality assessment
     minimum: 0
     default: 21
   gxdb:

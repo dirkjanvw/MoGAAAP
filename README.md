@@ -1,5 +1,5 @@
-# Meta pipeline for HiFi assembly and QC
-This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality control of HiFi-based assemblies.
+# Meta pipeline for HiFi assembly and QA
+This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any organism.
 The pipeline will work with both HiFi and ONT data, although the former is required.
 
@@ -108,7 +108,7 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
-- `qc`: This module will perform quality control of the scaffolded assembly and the quick-and-dirty annotation.
+- `qa`: This module will perform quality assessment of the scaffolded assembly and the quick-and-dirty annotation.
 - `all`: This module will run all the above modules.
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
@@ -165,7 +165,7 @@ Assembling a genome from raw data to a final usable resource is a process that i
 We believe that this process always necessesitates human curation.
 However, large parts can easily be automated, which is why we created this pipeline.
 This pipeline performs the assembly, scaffolding and renaming of genomic data as well as an initial quick-and-dirty structural annotation.
-Importantly, both genome assembly and annotation are subjected to quality control, providing a direct starting point for the curation of the assembly.
+Importantly, both genome assembly and annotation are subjected to quality assessment, providing a direct starting point for the curation of the assembly.
 Furthermore, each part of the process (module) can be run separately after which its output can be inspected before continuing to the next step.
 
 ```mermaid
@@ -173,8 +173,8 @@ graph TD;
     assemble-->scaffold;
     scaffold-->analyse;
     scaffold-->annotate;
-    scaffold-->qc;
-    annotate-->qc;
+    scaffold-->qa;
+    annotate-->qa;
 ```
 
 ### Assemble module
@@ -204,7 +204,7 @@ After scaffolding, the sequences in the scaffolded assembly are renamed to refle
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 
 #### Next steps
-As the assembly as outputted by this module is used as starting point for the analyse, annotate and qc modules, it is crucial it matches the expectations in terms of size and chromosome number.
+As the assembly as outputted by this module is used as starting point for the analyse, annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
 Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
 ### Analyse module
@@ -228,22 +228,22 @@ In case of overlap in features between `liftoff` and `helixer`, we take the `lif
 
 #### Next steps
 Although this module generally runs for the longest time, no visual output is produced; only a final GFF3 file.
-This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QC.
+This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QA.
 
-### QC module
+### QA module
 
 #### Overview
-This final quality control module is the most important for human curation of the genome.
-The quality control steps in this module can be roughly divided into two categories: individual and grouped.
-Individual quality control steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
-Grouped quality control steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
+This final quality assessment module is the most important for human curation of the genome.
+The quality assessment steps in this module can be roughly divided into two categories: individual and grouped.
+Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
+Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
 Any groups can be defined in the configuration file and a genome may occur in multiple groups.
 
 #### Next steps
 The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
-It contains visual output for each of the quality control steps performed in this module including a description on how to interpret the results.
-Importantly, the qc module does not do any filtering of the assembly or annotation, only reporting.
+It contains visual output for each of the quality assessment steps performed in this module including a description on how to interpret the results.
+Importantly, the qa module does not do any filtering of the assembly or annotation, only reporting.
 Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
 
 ## FAQ
