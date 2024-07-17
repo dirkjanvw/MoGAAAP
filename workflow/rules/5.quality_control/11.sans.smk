@@ -2,11 +2,11 @@ rule sans_prepare_genome:
     input:
         genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
     output:
-        "results/{asmset}/5.quality_control/11.sans.list",
+        "results/{asmset}/5.quality_assessment/11.sans.list",
     log:
-        "results/logs/5.quality_control/sans_prepare_genome/{asmset}.log"
+        "results/logs/5.quality_assessment/sans_prepare_genome/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/sans_prepare_genome/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/sans_prepare_genome/{asmset}.txt"
     shell:
         """
         (
@@ -20,14 +20,14 @@ rule sans_prepare_genome:
 
 rule sans:
     input:
-        "results/{asmset}/5.quality_control/11.sans.list",
+        "results/{asmset}/5.quality_assessment/11.sans.list",
     output:
-        splits = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        splits = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
+        bootstrap = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
     log:
-        "results/logs/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.log"
+        "results/logs/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.txt"
+        "results/benchmarks/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.txt"
     threads:
         min(workflow.cores - 10, 10)
     container:
@@ -37,18 +37,18 @@ rule sans:
 
 rule sans_to_nexus:
     input:
-        filelist = "results/{asmset}/5.quality_control/11.sans.list",
-        splits = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        filelist = "results/{asmset}/5.quality_assessment/11.sans.list",
+        splits = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
+        bootstrap = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
     output:
-        report("results/{asmset}/5.quality_control/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
+        report("results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
             category="Phylogeny",
             caption="../../report/sans.rst",
             labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
-        "results/logs/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.nexus.log"
+        "results/logs/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.nexus.log"
     benchmark:
-        "results/benchmarks/5.quality_control/sans/{k}/{asmset}_b{bootstrap}.nexus.txt"
+        "results/benchmarks/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.nexus.txt"
     container:
         "workflow/singularity/sans/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0.sif"
     shell:

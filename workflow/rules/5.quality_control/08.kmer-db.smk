@@ -2,11 +2,11 @@ rule kmerdb_build:
     input:
         lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
     output:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.db",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.db",
     log:
-        "results/logs/5.quality_control/kmer-db_build/{k}/{asmset}.log"
+        "results/logs/5.quality_assessment/kmer-db_build/{k}/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/kmer-db_build/{k}/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/kmer-db_build/{k}/{asmset}.txt"
     threads:
         10
     conda:
@@ -20,13 +20,13 @@ rule kmerdb_build:
 
 rule kmerdb_compare:
     input:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.db",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.db",
     output:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv",
     log:
-        "results/logs/5.quality_control/kmer-db_compare/{k}/{asmset}.log"
+        "results/logs/5.quality_assessment/kmer-db_compare/{k}/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/kmer-db_compare/{k}/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/kmer-db_compare/{k}/{asmset}.txt"
     threads:
         10
     conda:
@@ -36,18 +36,18 @@ rule kmerdb_compare:
 
 rule kmerdb_distance:
     input:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv",
     output:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.jaccard",
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.min",
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.max",
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.cosine",
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash",
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.ani",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.jaccard",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.min",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.max",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.cosine",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.ani",
     log:
-        "results/logs/5.quality_control/kmer-db_distance/{k}/{asmset}.log"
+        "results/logs/5.quality_assessment/kmer-db_distance/{k}/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/kmer-db_distance/{k}/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/kmer-db_distance/{k}/{asmset}.txt"
     threads:
         10
     conda:
@@ -57,16 +57,16 @@ rule kmerdb_distance:
 
 rule kmerdb_heatmap:
     input:
-        "results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash",
+        "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash",
     output:
-        report("results/{asmset}/5.quality_control/08.kmer-db/{k}/{asmset}.csv.mash.pdf",
+        report("results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash.pdf",
             category="Phylogeny",
             caption="../../report/kmer-db.rst",
             labels={"type": "kmer-db", "set": "{asmset}", "k": "{k}", "distance": "mash"}),
     log:
-        "results/logs/5.quality_control/kmer-db_heatmap/{k}/{asmset}.log"
+        "results/logs/5.quality_assessment/kmer-db_heatmap/{k}/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/kmer-db_heatmap/{k}/{asmset}.txt"
+        "results/benchmarks/5.quality_assessment/kmer-db_heatmap/{k}/{asmset}.txt"
     conda:
         "../../envs/rbase.yaml"
     shell:

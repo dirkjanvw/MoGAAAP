@@ -54,8 +54,8 @@ nucl_queries:
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"
 helixer_max_gene_length: 64152
 
-# Quality control settings
-k_qc: 21  #optimal k-mer size for quality control
+# Quality assessment settings
+k_qa: 21  #optimal k-mer size for quality assessment
 gxdb: "resources/gxdb"  #path to gxdb for fcs-gx
 pantools_grouping: 3  #grouping relaxation setting for pantools
 odb: "viridiplantae_odb10"  #ODB database for busco
