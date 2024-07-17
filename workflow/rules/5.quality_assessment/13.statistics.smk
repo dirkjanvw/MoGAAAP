@@ -16,12 +16,13 @@ rule individual_statistics:
         "results/benchmarks/5.quality_assessment/individual_statistics/{asmname}.txt"
     params:
         inputdata = lambda wildcards: "HiFi+ONT" if not SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item() else "HiFi only",
+        assembler = config["assembler"],
     conda:
         "../../envs/seqkit.yaml"
     shell:
         """
         (
-        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes\\t#transcripts\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#contigs\\tContig N50\\tInput data\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes\\t#transcripts\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#contigs\\tContig N50\\tInput data\\tAssembler\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         seqkit stats -abTj1 {input.assembly} > {output.assembly}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
@@ -35,6 +36,7 @@ rule individual_statistics:
         seqkit stats -abTj1 {input.contigs} > {output.contigs}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$13;}}' {output.contigs} >> {output.tsv}
         echo "{params.inputdata}" >> {output.tsv}
+        echo "{params.assembler}" >> {output.tsv}
         ) &> {log}
         """
 
