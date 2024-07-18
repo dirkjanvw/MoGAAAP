@@ -1,6 +1,8 @@
 rule filter_contigs:
     input:
-        "results/{asmname}/1.assembly/01.hifiasm/{asmname}.fa"
+        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(), #check if ont is null
+                then=f"results/{{asmname}}/1.assembly/01.{config['assembler']}_hifi_only/{{asmname}}.fa",
+                otherwise=f"results/{{asmname}}/1.assembly/01.{config['assembler']}_hifi_and_ont/{{asmname}}.fa"),
     output:
         "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.fa"
     log:
@@ -8,9 +10,9 @@ rule filter_contigs:
     benchmark:
         "results/benchmarks/1.assembly/filter_contigs/{asmname}.{minlen}.txt"
     conda:
-        "../../envs/bioawk.yaml"
+        "../../envs/seqkit.yaml"
     shell:
-        "bioawk -c fastx '{{ if(length($seq) >= {wildcards.minlen}) {{print \">\"$name; print $seq }} }}' {input} > {output} 2> {log}"
+        "seqkit seq -m {wildcards.minlen} {input} > {output} 2> {log}"
 
 rule sort_contigs:
     input:
@@ -22,9 +24,9 @@ rule sort_contigs:
     benchmark:
         "results/benchmarks/1.assembly/sort_contigs/{asmname}.min{minlen}.txt"
     conda:
-        "../../envs/bioawk.yaml"
+        "../../envs/seqkit.yaml"
     shell:
-        "bioawk -c fastx '{{ print \">\"$name, length($seq), $seq }}' {input} | sort -k2nr | perl -pe 's/\\t/  L:/' | perl -pe 's/\\t/ \\n/' > {output} 2> {log}"
+        "seqkit sort -rl {input} > {output} 2> {log}"
 
 rule add_prefix:
     input:
@@ -40,4 +42,4 @@ rule add_prefix:
     conda:
         "../../envs/bioawk.yaml"
     shell:
-        "bioawk -c fastx '{{ print \">{params.prefix}\" $name; print $seq }}' {input} | perl -pe 's/ptg00//' > {output} 2> {log}"
+        "bioawk -c fastx '{{ print \">{params.prefix}\" ++i; print $seq }}' {input} > {output} 2> {log}"

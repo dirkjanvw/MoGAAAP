@@ -95,7 +95,7 @@ rule circos_configuration:
             fi
         done
         printf "{input.karyotype}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
-        ln -s $(realpath {input.files}) $(dirname {output.conf})/
+        cp {input.files} $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
         python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.files} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')

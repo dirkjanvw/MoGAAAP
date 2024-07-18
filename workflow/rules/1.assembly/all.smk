@@ -1,4 +1,4 @@
-include: "01.hifiasm.smk"
+include: "01.assembly.smk"
 include: "02.contigs.smk"
 include: "03.mummer.smk"
 
@@ -6,7 +6,7 @@ rule link_contigs:
     input:
         expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
     output:
-        "final_output/{asmname}.contigs.fa"
+        protected("final_output/{asmname}.contigs.fa"),
     log:
         "results/logs/2.scaffolding/link_contigs/{asmname}.log"
     benchmark:

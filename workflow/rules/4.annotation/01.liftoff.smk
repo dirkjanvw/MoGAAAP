@@ -6,8 +6,8 @@ rule liftoff:
     output:
         ref_annotation = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),  #to prevent write permission issues
         ref_genome = temporary("results/{asmname}/4.annotation/01.liftoff/reference.fa"),  #to prevent write permission issues
-        gff = protected("results/{asmname}/4.annotation/01.liftoff/liftoff.gff"),
-        polished = protected("results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished"),
+        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff",
+        polished = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
     log:
         "results/logs/4.annotation/liftoff/{asmname}.log"
     benchmark:
