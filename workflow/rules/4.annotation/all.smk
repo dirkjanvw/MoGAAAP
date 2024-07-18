@@ -8,7 +8,7 @@ rule copy_annotation:
         coding = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
     output:
         full = protected("final_output/{asmname}.full.gff"),
-        coding = protected("final_output/{asmname}.coding.gff"),
+        coding = protected("final_output/{asmname}.full.coding.gff"),
     log:
         "results/logs/4.annotation/copy_annotation/{asmname}.log"
     benchmark:
@@ -23,6 +23,7 @@ rule copy_annotation:
 
 rule annotate:
     input:
-        expand("final_output/{asmname}.{type}.gff", asmname=get_all_accessions(), type = ["full", "coding"]),
+        expand("final_output/{asmname}.full.gff", asmname=get_all_accessions()),
+        expand("final_output/{asmname}.full.coding.gff", asmname=get_all_accessions()),
     output:
         touch("results/annotation.done")
