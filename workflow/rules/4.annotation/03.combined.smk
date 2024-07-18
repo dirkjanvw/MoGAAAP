@@ -19,7 +19,7 @@ rule identify_coding_genes:
         gff = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        temp = temporary("results/{asmname}/4.annotation/03.combined/{asmname}.coding.list_ID"),
+        temp = temporary("results/{asmname}/4.annotation/03.combined/{asmname}.coding_ID.list"),
         list = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.list",
     log:
         "results/logs/4.annotation/identify_coding_genes/{asmname}.log"
