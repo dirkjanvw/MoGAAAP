@@ -3,7 +3,7 @@ rule gffcompare_liftoff_helixer:
         liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
         helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
     output:
-        directory("results/{asmname}/4.annotation/03.combined/gffcompare_liftoff_helixer/"),
+        "results/{asmname}/4.annotation/03.combined/gffcompare_liftoff_helixer/gffcmp.tracking",
     log:
         "results/logs/4.annotation/gffcompare_liftoff_helixer/{asmname}.log"
     benchmark:
@@ -11,7 +11,7 @@ rule gffcompare_liftoff_helixer:
     conda:
         "../../envs/gffcompare.yaml"
     shell:
-        "gffcompare -r {input.liftoff} -o {output} {input.helixer} &> {log}"
+        "gffcompare -r {input.liftoff} -o $(dirname {output}) {input.helixer} &> {log}"
 
 rule create_helixer_kill_list:
     input:
