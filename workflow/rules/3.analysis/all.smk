@@ -30,6 +30,9 @@ rule link_separated_genome:
 
 rule analyse:
     input:
+        expand("results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html", query_name = config["prot_queries"], asmname = get_all_accessions()), ### BLASTP results ###
+        expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = config["nucl_queries"], asmname = get_all_accessions()), ### BLASTN results for queries ###
+        expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = config["organellar"], asmname = get_all_accessions()), ### BLASTN results for organellar ###
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.html", asmname = get_all_accessions()), ### CIRCOS configuration ###
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
         expand("final_output/{asmname}.{section}.fa", section = [x for x in config["organellar"]] + ["nuclear"], asmname = get_all_accessions()), ### SEPARATED GENOMES ###

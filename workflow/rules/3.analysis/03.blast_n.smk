@@ -28,3 +28,32 @@ rule blast_n:
            -evalue 1e-120 -dbsize 1000000 -dust no -word_size 24 -xdrop_ungap 50 -xdrop_gap 500 -xdrop_gap_final 1000 \
            -max_target_seqs 12000 -num_threads {threads} &> {log}
         """
+
+rule blast_n_to_tsv:
+    input:
+        "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.m7",
+    output:
+        "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.tsv",
+    log:
+        "results/logs/3.analysis/blast_n_to_tsv/{asmname}/{query_name}.vs.{asmname}.log"
+    benchmark:
+        "results/benchmarks/3.analysis/blast_n_to_tsv/{asmname}/{query_name}.vs.{asmname}.txt"
+    shell:
+        "awk 'BEGIN{{FS = OFS = \"\\t\";}} /^# Fields: /{{$1=substr($1,11); gsub(/, /,\"\\t\",$1); print $1; next;}} /^#/{{next;}} {{print;}}' {input} > {output} 2> {log}"
+
+rule visualise_blast_n:
+    input:
+        "results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.tsv",
+    output:
+        report("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html",
+            category="BLAST",
+            caption="../../report/blast.rst",
+            labels={"asmname": "{asmname}", "query_name": "{query_name}"}),
+    log:
+        "results/logs/3.analysis/visualise_blast_n/{asmname}/{query_name}.vs.{asmname}.log"
+    benchmark:
+        "results/benchmarks/3.analysis/visualise_blast_n/{asmname}/{query_name}.vs.{asmname}.txt"
+    conda:
+        "../../envs/csvtotable.yaml"
+    shell:
+        "csvtotable -d $'\\t' {input} {output} &> {log}"
