@@ -29,7 +29,7 @@ rule copy_separated_genome:
         ) &> {log}
         """
 
-def get_query_files:
+def get_query_files(wildcards):
     query_files = []
 
     if "prot_queries" in config:
