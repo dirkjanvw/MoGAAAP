@@ -34,11 +34,13 @@ def get_query_files(wildcards):
 
     if "prot_queries" in config:
         for query_name in config["prot_queries"]:
-            query_files.append(expand("results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html", query_name = query_name, asmname = get_all_accessions())) ### BLASTP results ###
+            for asmname in get_all_accessions():
+                query_files.append(f"results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html") ### BLASTP results ###
 
     if "nucl_queries" in config:
         for query_name in config["nucl_queries"]:
-            query_files.append(expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = query_name, asmname = get_all_accessions())) ### BLASTN results for queries ###
+            for asmname in get_all_accessions():
+                query_files.append(f"results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html") ### BLASTN results results for queries ###
 
     return query_files
 
