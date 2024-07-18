@@ -56,6 +56,7 @@ nucl_queries:
 organellar:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
     mitochondrion: "resources/blast_queries/mitochondrion.fasta"
+telomere_motif: "CCCTAAA"
 
 # Annotation settings
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"

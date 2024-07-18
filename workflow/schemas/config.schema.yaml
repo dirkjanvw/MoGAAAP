@@ -67,6 +67,10 @@ properties:
     additionalProperties:
       type: string
       pattern: "^.+$"
+  telomere_motif:
+    type: string
+    description: telomere motif (typically CCCTAAA for plants or CCCTAA for animals)
+    pattern: "^[ACGT]+$"
 
   helixer_model:
     type: string
@@ -132,6 +136,7 @@ required:
     - ntjoin_w
     - reference_genomes
     - organellar
+    - telomere_motif
     - helixer_model
     - helixer_max_gene_length
     - gxdb

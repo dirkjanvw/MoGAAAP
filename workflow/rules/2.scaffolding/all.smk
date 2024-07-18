@@ -2,15 +2,15 @@ include: "01.ntjoin.smk"
 include: "02.renaming.smk"
 include: "03.mummer.smk"
 
-rule link_assembly:
+rule copy_assembly:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
         protected("final_output/{asmname}.full.fa"),
     log:
-        "results/logs/2.scaffolding/link_assembly/{asmname}.log"
+        "results/logs/2.scaffolding/copy_assembly/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/link_assembly/{asmname}.txt"
+        "results/benchmarks/2.scaffolding/copy_assembly/{asmname}.txt"
     shell:
         "cp $(realpath {input}) {output} &> {log}"
 
