@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - hifiasm=0.19.9
+  - flye=2.9.4

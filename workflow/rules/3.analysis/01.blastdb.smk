@@ -2,7 +2,7 @@ rule blastdb:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
-        "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB"
+        "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
     log:
         "results/logs/3.analysis/blastdb/{asmname}.log"
     benchmark:

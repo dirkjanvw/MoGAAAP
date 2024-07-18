@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - hifiasm=0.19.9
+  - seqtk=1.4

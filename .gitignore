@@ -124,7 +124,7 @@ fabric.properties
 *.svg
 resources/
 results/
-report.html
+*.html
 *.sif
 config.yaml
 
@@ -138,4 +138,5 @@ Rplots.pdf
 .wget-hsts
 .keras/
 tests/
-
+final_output/
+.nv/

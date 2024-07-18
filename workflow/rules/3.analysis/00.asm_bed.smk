@@ -10,13 +10,15 @@ rule asm_bed:
         "results/logs/3.analysis/asm_bed/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/asm_bed/{asmname}.txt"
+    params:
+        num_chr = lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"])
     conda:
         "../../envs/bioawk.yaml"
-    shell: #TODO: don't hardcode the number of chromosomes
+    shell:
         """
         (
         bioawk -c fastx '{{ print $name, 0, length($seq) }}' {input} > {output.asm_bed}
-        head -9 {output.asm_bed} > {output.chr_bed}
+        head -n {params.num_chr} {output.asm_bed} > {output.chr_bed}
         python2 workflow/scripts/make_subrange_from_bed.py 1000000 < {output.asm_bed} > {output.asm_1Mb}
         python2 workflow/scripts/make_subrange_from_bed.py 1000000 < {output.chr_bed} > {output.chr_1Mb}
         ) &> {log}

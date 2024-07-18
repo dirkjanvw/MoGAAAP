@@ -1,16 +1,16 @@
 rule ntsynt:
     input:
         genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
-        divergence = "results/{asmset}/5.quality_control/09.mash/{asmset}.tsv",
+        divergence = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.tsv",
     output:
-        blocks = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
-        commonbf = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.common.bf",
-        mxdot = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.mx.dot",
-        precolblocks = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.pre-collinear-merge.synteny_blocks.tsv",
+        blocks = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
+        commonbf = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.common.bf",
+        mxdot = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.mx.dot",
+        precolblocks = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.pre-collinear-merge.synteny_blocks.tsv",
     log:
-        "results/logs/5.quality_control/ntsynt/{asmset}.k{mink}.w{minw}.log"
+        "results/logs/5.quality_assessment/ntsynt/{asmset}.k{mink}.w{minw}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/ntsynt/{asmset}.k{mink}.w{minw}.txt"
+        "results/benchmarks/5.quality_assessment/ntsynt/{asmset}.k{mink}.w{minw}.txt"
     threads:
         min(workflow.cores, 50)
     conda:
@@ -28,14 +28,14 @@ rule ntsynt:
 rule format_ntsynt:
     input:
         fai = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai", asmname=config["set"][wildcards.asmset]),
-        blocks = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
+        blocks = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
     output:
-        links = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
-        sequence_lengths = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
+        links = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
+        sequence_lengths = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
     log:
-        "results/logs/5.quality_control/format_ntsynt/{asmset}.k{mink}.w{minw}.log"
+        "results/logs/5.quality_assessment/format_ntsynt/{asmset}.k{mink}.w{minw}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/format_ntsynt/{asmset}.k{mink}.w{minw}.txt"
+        "results/benchmarks/5.quality_assessment/format_ntsynt/{asmset}.k{mink}.w{minw}.txt"
     params:
         minlen = 100000 #minimum length for a block
     conda:
@@ -45,17 +45,17 @@ rule format_ntsynt:
 
 rule visualise_ntsynt:
     input:
-        links = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
-        sequence_lengths = "results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
+        links = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
+        sequence_lengths = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
     output:
-        report("results/{asmset}/5.quality_control/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
+        report("results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
             category="Collinearity",
             caption="../../report/ntsynt.rst",
             labels={"type": "ntSynt", "set": "{asmset}", "k": "{mink}", "w": "{minw}"}),
     log:
-        "results/logs/5.quality_control/visualise_ntsynt/{asmset}.k{mink}.w{minw}.log"
+        "results/logs/5.quality_assessment/visualise_ntsynt/{asmset}.k{mink}.w{minw}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/visualise_ntsynt/{asmset}.k{mink}.w{minw}.txt"
+        "results/benchmarks/5.quality_assessment/visualise_ntsynt/{asmset}.k{mink}.w{minw}.txt"
     params:
         minlen = 10000000 #minimum length for a block
     container:
