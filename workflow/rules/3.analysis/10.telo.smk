@@ -12,7 +12,12 @@ rule identify_telomere:
     conda:
         "../../envs/seqtk.yaml"
     shell:
-        "(seqtk telo -m {params.telomere_motif} {input} | sed '$ d' | cut -f -3 > {output}) 2> {log}"
+        """
+        (
+        printf "sequence\\tstart\\tend\\n" > {output}
+        seqtk telo -m {params.telomere_motif} {input} | sed '$ d' | cut -f -3 >> {output}
+        ) 2> {log}
+        """
 
 rule visualise_telomere_locations:
     input:
@@ -21,7 +26,7 @@ rule visualise_telomere_locations:
         report("results/{asmname}/3.analysis/10.telo/{asmname}.telo.html",
             category="Analysis",
             caption="../../report/telo.rst",
-            labels={"asmname": "{asmname}"}),
+            labels={"asmname": "{asmname}", "query_name": "telomere"}),
     log:
         "results/logs/3.analysis/visualise_telomere_locations/{asmname}.log"
     benchmark:
