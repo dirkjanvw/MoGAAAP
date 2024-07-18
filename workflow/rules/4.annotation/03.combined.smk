@@ -30,7 +30,7 @@ rule identify_coding_genes:
     shell:
         """
         (
-        agat_sp_extract_attributes.pl --gff {input.gff} -p mRNA --attribute ID --output {output.temp} --config {input.config}
+        agat_sp_extract_attributes.pl --gff {input.gff} -p mRNA --attribute ID --output {output.list} --config {input.config}
         cut -d ',' -f 1 {output.temp} > {output.list}
         ) &> {log}
         """
