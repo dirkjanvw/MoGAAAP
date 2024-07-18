@@ -29,10 +29,22 @@ rule copy_separated_genome:
         ) &> {log}
         """
 
+def get_query_files:
+    query_files = []
+
+    if "prot_queries" in config:
+        for query_name in config["prot_queries"]:
+            query_files.append(expand("results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html", query_name = query_name, asmname = get_all_accessions())) ### BLASTP results ###
+
+    if "nucl_queries" in config:
+        for query_name in config["nucl_queries"]:
+            query_files.append(expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = query_name, asmname = get_all_accessions())) ### BLASTN results for queries ###
+
+    return query_files
+
 rule analyse:
     input:
-        expand("results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html", query_name = config["prot_queries"], asmname = get_all_accessions()), ### BLASTP results ###
-        expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = config["nucl_queries"], asmname = get_all_accessions()), ### BLASTN results for queries ###
+        get_query_files, ### optional BLAST results ###
         expand("results/{asmname}/3.analysis/03.blast_n/{query_name}.vs.{asmname}.html", query_name = config["organellar"], asmname = get_all_accessions()), ### BLASTN results for organellar ###
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.html", asmname = get_all_accessions()), ### CIRCOS configuration ###
         expand("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
