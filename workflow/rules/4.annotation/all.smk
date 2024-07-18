@@ -23,6 +23,6 @@ rule copy_annotation:
 
 rule annotate:
     input:
-        expand("final_output/{asmname}.full.gff", asmname=get_all_accessions()),
+        expand("final_output/{asmname}.{type}.gff", asmname=get_all_accessions(), type = ["full", "coding"]),
     output:
         touch("results/annotation.done")
