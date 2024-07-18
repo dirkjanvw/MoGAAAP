@@ -12,7 +12,7 @@ rule identify_telomere:
     conda:
         "../../envs/seqtk.yaml"
     shell:
-        "seqtk telo -m {params.telomere_motif} {input} | sed '$ d' | cut -f -3 > {output} 2> {log}"
+        "(seqtk telo -m {params.telomere_motif} {input} | sed '$ d' | cut -f -3 > {output}) 2> {log}"
 
 rule visualise_telomere_locations:
     input:
