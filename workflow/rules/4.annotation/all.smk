@@ -2,17 +2,24 @@ include: "01.liftoff.smk"
 include: "02.helixer.smk"
 include: "03.combined.smk"
 
-rule link_annotation:
+rule copy_annotation:
     input:
-        "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+        full = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        coding = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
     output:
-        protected("final_output/{asmname}.full.gff"),
+        full = protected("final_output/{asmname}.full.gff"),
+        coding = protected("final_output/{asmname}.coding.gff"),
     log:
-        "results/logs/4.annotation/link_annotation/{asmname}.log"
+        "results/logs/4.annotation/copy_annotation/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/link_annotation/{asmname}.txt"
+        "results/benchmarks/4.annotation/copy_annotation/{asmname}.txt"
     shell:
-        "cp $(realpath {input}) {output} &> {log}"
+        """
+        (
+        cp {input.full} {output.full}
+        cp {input.coding} {output.coding}
+        ) &> {log}
+        """
 
 rule annotate:
     input:

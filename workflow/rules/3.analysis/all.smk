@@ -10,7 +10,7 @@ include: "08.circos.smk"
 include: "09.separate_genome.smk"
 include: "10.telo.smk"
 
-rule link_separated_genome:
+rule copy_separated_genome:
     input:
         nuclear = "results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.fa",
         organellar = expand("results/{{asmname}}/3.analysis/09.separate_genome/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
@@ -18,9 +18,9 @@ rule link_separated_genome:
         nuclear = protected("final_output/{asmname}.nuclear.fa"),
         organellar = protected(expand("final_output/{{asmname}}.{organelle}.fa", organelle = config["organellar"])),
     log:
-        "results/logs/3.analysis/link_separated_genome/{asmname}.log"
+        "results/logs/3.analysis/copy_separated_genome/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/link_separated_genome/{asmname}.txt"
+        "results/benchmarks/3.analysis/copy_separated_genome/{asmname}.txt"
     shell:
         """
         (
