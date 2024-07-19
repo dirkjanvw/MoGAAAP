@@ -23,7 +23,7 @@ rule create_helixer_kill_list:
     benchmark:
         "results/benchmarks/4.annotation/create_helixer_kill_list/{asmname}.txt"
     shell:  #only u, s, x, i, y, p types of overlap are kept
-        "awk 'BEGIN{{FS = OFS = \"\t\";}} $4!~/^[usxiyp]/${{split($5,q,\"|\"); print q[2];}}' {input} > {output} 2> {log}"
+        "awk 'BEGIN{{FS = OFS = \"\t\";}} $4!~/^[usxiyp]/{{split($5,q,\"|\"); print q[2];}}' {input} > {output} 2> {log}"
 
 rule filter_helixer:
     input:
