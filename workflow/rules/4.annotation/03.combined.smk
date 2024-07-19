@@ -11,7 +11,7 @@ rule gffcompare_liftoff_helixer:
     conda:
         "../../envs/gffcompare.yaml"
     shell:
-        "gffcompare -r {input.liftoff} -o $(dirname {output}) {input.helixer} &> {log}"
+        "gffcompare -r {input.liftoff} -o $(echo {output} | rev | cut -d '.' -f 2- | rev) {input.helixer} &> {log}"
 
 rule create_helixer_kill_list:
     input:
