@@ -39,9 +39,9 @@ def get_hifiasm_output(wildcards):
     if get_haplotypes(wildcards) == 1:
         return "results/{asmname}/1.assembly/01.hifiasm_{ext}/{asmname}.bp.p_ctg.gfa"
     else:
-        return expand("results/{asmname}/1.assembly/01.hifiasm_{{ext}}/{asmname}.bp.hap{haplotype}.p_ctg.gfa",
-            asmname = get_clean_accession_id(wildcards.asmname),
-            haplotype = [i + 1 for i in range(get_haplotypes(wildcards))])
+        haplotype = int(wildcards.asmname[-1])
+        asmname = get_clean_accession_id(wildcards.asmname)
+        return f"results/{asmname}/1.assembly/01.hifiasm_{wildcards.ext}/{asmname}.bp.hap{haplotype}.p_ctg.gfa"
 
 rule hifiasm_to_fasta:
     input:
@@ -179,12 +179,11 @@ rule other_assembler_hapdup:
 
 def get_other_assembler_output(wildcards):
     if get_haplotypes(wildcards) == 1:
-        files = "results/{asmname}/1.assembly/01.{assembler}_{ext}/assembly.fasta"
+        return "results/{asmname}/1.assembly/01.{assembler}_{ext}/assembly.fasta"
     else:
-        files = expand("results/{asmname}/1.assembly/01.{{assembler}}_{{ext}}/assembly_hapdup/hapdup_dual_{haplotype}.fasta",  #using dual output here instead of phased, since we would like to keep contiguity (so phase switching may occur)
-            asmname = get_clean_accession_id(wildcards.asmname),
-            haplotype = [i + 1 for i in range(get_haplotypes(wildcards))])
-    return(files)
+        haplotype = int(wildcards.asmname[-1])
+        asmname = get_clean_accession_id(wildcards.asmname)
+        return f"results/{asmname}/1.assembly/01.{{assembler}}_{{ext}}/assembly_hapdup/hapdup_dual_{haplotype}.fasta"  #using dual output here instead of phased, since we would like to keep contiguity (so phase switching may occur)
 
 rule other_assembler_rename_fasta:
     input:
