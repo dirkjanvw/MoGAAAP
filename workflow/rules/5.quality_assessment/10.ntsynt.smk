@@ -1,6 +1,6 @@
 rule ntsynt:
     input:
-        genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
+        genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
         divergence = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.tsv",
     output:
         blocks = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
@@ -27,7 +27,7 @@ rule ntsynt:
 
 rule format_ntsynt:
     input:
-        fai = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai", asmname=config["set"][wildcards.asmset]),
+        fai = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
         blocks = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
     output:
         links = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",

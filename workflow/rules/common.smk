@@ -5,7 +5,7 @@ def get_all_accessions():
     """
     return [
         accession if haplotypes == 1 else f"{accession}.hap{hap}"
-        for accession, haplotypes in zip(SAMPLES["accessionId"],SAMPLES["haplotypes"])
+        for accession, haplotypes in zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
         for hap in range(1,haplotypes + 1)
     ]
 
@@ -14,6 +14,18 @@ def get_clean_accession_id(asmname):
     Return the clean accession ID for a given asmname.
     """
     return asmname.split(".hap")[0]
+
+def get_all_accessions_from_asmset(asmset):
+    """
+    Return all accession IDs for a given set, while taking care of haplotypes if needed
+    """
+    all_accessions = zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
+    return [
+        accession if haplotypes == 1 else f"{accession}.hap{hap}"
+        for accession, haplotypes in all_accessions
+        for hap in range(1,haplotypes + 1)
+        if accession in config["set"][asmset]
+    ]
 
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
