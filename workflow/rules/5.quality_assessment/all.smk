@@ -24,13 +24,13 @@ def get_merqury_output(wildcards):
 
     # ONT (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == asmname]["ont"].isnull().values.item():
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item():
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.qv.html")  #per sequence qv
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.qv.html")  #per sequence qv
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
@@ -39,7 +39,7 @@ def get_merqury_output(wildcards):
 def get_multiqc_output(wildcards):
     all_output = []
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == asmname]["illumina_1"].isnull().values.item():
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
             all_output.append(f"results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html")  #mapping
     return all_output
 
