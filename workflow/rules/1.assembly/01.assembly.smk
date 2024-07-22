@@ -43,51 +43,6 @@ rule hifiasm_to_fasta:
     shell:
         "awk '/^S/{{print \">\"$2; print $3;}}' {input} > {output} 2> {log}"
 
-rule flye:
-    input:
-        hifi = get_hifi,
-    output:
-        "results/{asmname}/1.assembly/01.flye_hifi_only/assembly.fasta",
-    log:
-        "results/logs/1.assembly/flye_hifi_only/{asmname}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/flye_hifi_only/{asmname}.txt"
-    threads:
-        min(max(workflow.cores - 1, 1), 50)
-    conda:
-        "../../envs/flye.yaml"
-    shell:
-        "flye --pacbio-hifi {input.hifi} --out-dir $(dirname {output}) --threads {threads} &> {log}"
-
-rule flye_with_ont:
-    input:
-        hifi = get_hifi,
-        ont = get_ont,
-    output:
-        "results/{asmname}/1.assembly/01.flye_hifi_and_ont/assembly.fasta",
-    log:
-        "results/logs/1.assembly/flye_hifi_and_ont/{asmname}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/flye_hifi_and_ont/{asmname}.txt"
-    threads:
-        min(max(workflow.cores - 1, 1), 50)
-    conda:
-        "../../envs/flye.yaml"
-    shell:
-        "flye --pacbio-hifi {input.hifi} --nano-hq {input.ont} --out-dir $(dirname {output}) --threads {threads} &> {log}"
-
-rule flye_rename_fasta:
-    input:
-        "results/{asmname}/1.assembly/01.flye_{ext}/assembly.fasta",
-    output:
-        "results/{asmname}/1.assembly/01.flye_{ext}/{asmname}.fa",
-    log:
-        "results/logs/1.assembly/flye_{ext}_rename_fasta/{asmname}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/flye_{ext}_rename_fasta/{asmname}.txt"
-    shell:
-        "cp {input} {output} &> {log}"
-
 rule verkko:
     input:
         hifi = get_hifi,
