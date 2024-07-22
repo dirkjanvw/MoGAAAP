@@ -10,7 +10,7 @@
 samples: "config/samples.tsv"
 
 # Assembly settings
-assembler: "hifiasm"  #supported assemblers: hifiasm, flye, verkko
+assembler: "hifiasm"  #supported assemblers: hifiasm, verkko
 
 # All filtering and scaffolding parameters
 min_contig_len: 10000

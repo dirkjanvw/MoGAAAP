@@ -24,3 +24,19 @@ rule liftoff:
         liftoff -p {threads} -copies -cds -polish -u $(dirname {output.polished})/unmapped_features.txt -dir $(dirname {output.polished})/intermediate_files -o {output.gff} -g {output.ref_annotation} {input.assembly} {output.ref_genome}
         ) &> {log}
         """
+
+rule fix_cds_phase_liftoff_gff_polished:
+    input:
+        polished = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
+        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        config = "results/{asmname}/agat_config.yaml",
+    output:
+        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff3",
+    log:
+        "results/logs/4.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.log"
+    benchmark:
+        "results/benchmarks/4.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.txt"
+    conda:
+        "../../envs/agat.yaml"
+    shell:
+        "agat_sp_fix_cds_phases.pl --gff {input.polished} --fasta {input.assembly} --output {output} --config {input.config} &> {log}"

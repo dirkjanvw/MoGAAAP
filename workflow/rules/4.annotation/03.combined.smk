@@ -1,6 +1,6 @@
 rule combine_liftoff_helixer:
     input:
-        liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
+        liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff3", # fixed CDS phase with AGAT
         helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
