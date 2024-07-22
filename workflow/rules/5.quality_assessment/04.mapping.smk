@@ -94,7 +94,7 @@ rule flagstat_bam:
 
 def get_wgs_flagstat(wildcards):
     all_output = []
-    if not SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["illumina_1"].isnull().values.item():
+    if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_1"].isnull().values.item():
         all_output.append(f"results/{wildcards.asmname}/5.quality_assessment/04.mapping/output/illumina.sorted.flagstat.txt")
     return all_output
 

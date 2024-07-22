@@ -1,23 +1,40 @@
 def get_all_accessions():
-    return SAMPLES["accessionId"].values
+    """
+    Return all accession IDs.
+    If haplotypes > 1, return "{accessionId}.hap{hap}" for each haplotype.
+    """
+    return [
+        accession if haplotypes == 1 else f"{accession}.hap{hap}"
+        for accession, haplotypes in zip(SAMPLES["accessionId"],SAMPLES["haplotypes"])
+        for hap in range(1,haplotypes + 1)
+    ]
+
+def get_clean_accession_id(asmname):
+    """
+    Return the clean accession ID for a given asmname.
+    """
+    return asmname.split(".hap")[0]
 
 def get_hifi(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["hifi"].values.item().split(";")
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
 
 def get_ont(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].values.item().split(";")
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["ont"].values.item().split(";")
 
 def get_illumina_1(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["illumina_1"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_1"].values.item()
 
 def get_illumina_2(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["illumina_2"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_2"].values.item()
+
+def get_haplotypes(wildcards):
+    return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["haplotypes"].values.item())
 
 def get_species_name(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["speciesName"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["speciesName"].values.item()
 
 def get_taxid(wildcards):
-    return SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["taxId"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["taxId"].values.item()
 
 def get_reference_id(asmname):
-    return SAMPLES[SAMPLES["accessionId"] == asmname]["referenceId"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
