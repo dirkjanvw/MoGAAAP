@@ -30,7 +30,6 @@ report: "report/workflow.rst"
 # Define global wildcard constraints
 wildcard_constraints:
     minlen="\\d+",
-    assembler="verkko", #other assemblers than hifiasm
 
 # Define output of all modules
 rule all:
