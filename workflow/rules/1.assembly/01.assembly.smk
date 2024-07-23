@@ -64,12 +64,14 @@ rule verkko:
         "results/logs/1.assembly/verkko_hifi_only/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/verkko_hifi_only/{asmname}.txt"
+    resources:
+        gbmem=320  #best to make it a multiple of 32 for verkko
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
         "../../envs/verkko.yaml"
     shell:
-        "verkko --threads {threads} -d $(dirname {output}) --hifi {input.hifi} &> {log}"
+        "verkko --local-memory {resources.gbmem} --local-cpus {threads} -d $(dirname {output}) --hifi {input.hifi} &> {log}"
 
 rule verkko_with_ont:
     input:
