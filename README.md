@@ -207,8 +207,9 @@ Finally, we produce an alignment of the (contig) assembly against the provided r
 To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
 
 As alternative to `hifiasm`, we also implemented `verkko` as it is known to work well with HiFi and ONT data.
-For heterozygous accessions, `hapdup` is used to separate the haplotypes based on HiFi alignment to the assembly.
+For heterozygous accessions, `hapdup` is used to try separating the haplotypes based on HiFi alignment to the assembly.
 Please bear in mind that the pipeline was developed with `hifiasm` in mind, so although these other assemblers will technically work, the pipeline may not be optimally set up for them.
+In some preliminary tests, we found that `verkko` doesn't work well with heterozygous accessions, resulting in a partly phased assembly.
 
 #### Next steps
 Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.
