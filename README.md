@@ -126,16 +126,16 @@ For more information about these modules, see [Explaining the pipeline](#explain
 ### Important parameters
 Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default (in `workflow/profiles/default/config.yaml`).
 
-| Parameter              | Optionality       | Description                                                               |
-|------------------------|-------------------|---------------------------------------------------------------------------|
-| `-n`                   | Optional          | Do a dry-run of the pipeline.                                             |
-| `-p`                   | Set by default    | Print the shell commands that are being executed.                         |
-| `-c`/`--cores`         | Required          | Number of CPUs to use; will be referred to as `${CPU}`                    |
-| `--use-conda`          | Set by default    | Use `conda`/`mamba` to manage dependencies.                               |
-| `--conda-prefix`       | Optional          | Path where the `conda` environments will be stored.                       |
-| `--use-singularity`    | Set by default    | Use `singularity`/`apptainer` to manage containers.                       |
-| `--singularity-prefix` | Optional          | Path where the `singularity` images will be stored.                       |
-| `--resources`          | Set by default    | Information about system resources; see below at [Resources](#resources). |
+| Parameter              | Optionality            | Description                                                               |
+|------------------------|------------------------|---------------------------------------------------------------------------|
+| `-n`                   | Optional               | Do a dry-run of the pipeline.                                             |
+| `-p`                   | Set by default to True | Print the shell commands that are being executed.                         |
+| `-c`/`--cores`         | Set by default to all  | Number of CPUs to use.                                                    |
+| `--use-conda`          | Set by default to True | Use `conda`/`mamba` to manage dependencies.                               |
+| `--conda-prefix`       | Optional               | Path where the `conda` environments will be stored.                       |
+| `--use-singularity`    | Set by default to True | Use `singularity`/`apptainer` to manage containers.                       |
+| `--singularity-prefix` | Optional               | Path where the `singularity` images will be stored.                       |
+| `--resources`          | Set by default         | Information about system resources; see below at [Resources](#resources). |
 
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
@@ -152,18 +152,18 @@ The following resources (apart from CPUs) might be heavily used by the pipeline:
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -nc${CPU}
+snakemake ${MODULE} -n
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -c${CPU}
+snakemake ${MODULE}
 ```
 
 ### Reporting
 The pipeline can generate an HTML `report.html` file with the most important results:
 ```bash
-snakemake ${MODULE} -c1 --report report.html
+snakemake ${MODULE} --report report.html
 ```
 
 ## Output
