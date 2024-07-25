@@ -4,5 +4,5 @@ printshellcmds: True
 cores: all
 resources:
   gbmem: 1000
-  helixer: 2
+  helixer: 1
   pantools: 1
