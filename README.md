@@ -139,13 +139,13 @@ Several important `snakemake` parameters are important when running this pipelin
 
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
-- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
+- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
   It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
   Default: 1000 (GB).
-- `helixer`: The number of Helixer jobs that can run at the same time; will be referred to as `${HELIXER}`.
+- `helixer`: The number of Helixer jobs that can run at the same time.
   It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
   Default: 1.
-- `pantools`: The number of PanTools jobs that can run at the same time; will be referred to as `${PANTOOLS}`.
+- `pantools`: The number of PanTools jobs that can run at the same time.
   It is recommended to always keep this at 1, to prevent file collisions.
   Default: 1.
 
