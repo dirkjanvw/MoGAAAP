@@ -124,43 +124,46 @@ All modules except for `annotate` have visual output that can be inspected in an
 For more information about these modules, see [Explaining the pipeline](#explaining-the-pipeline).
 
 ### Important parameters
-Several important `snakemake` parameters are important when running this pipeline:
+Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default (in `workflow/profiles/default/config.yaml`).
 
-| Parameter              | Optionality | Description                                                               |
-|------------------------|-------------|---------------------------------------------------------------------------|
-| `-n`                   | Optional    | Do a dry-run of the pipeline.                                             |
-| `-p`                   | Optional    | Print the shell commands that are being executed.                         |
-| `-c`/`--cores`         | Required    | Number of CPUs to use; will be referred to as `${CPU}`                    |
-| `--use-conda`          | Required    | Use `conda`/`mamba` to manage dependencies.                               |
-| `--conda-prefix`       | Optional    | Path where the `conda` environments will be stored.                       |
-| `--use-singularity`    | Required    | Use `singularity`/`apptainer` to manage containers.                       |
-| `--singularity-prefix` | Optional    | Path where the `singularity` images will be stored.                       |
-| `--resources`          | Optional    | Information about system resources; see below at [Resources](#resources). |
+| Parameter              | Optionality            | Description                                                               |
+|------------------------|------------------------|---------------------------------------------------------------------------|
+| `-n`                   | Optional               | Do a dry-run of the pipeline.                                             |
+| `-p`                   | Set by default to True | Print the shell commands that are being executed.                         |
+| `-c`/`--cores`         | Set by default to all  | Number of CPUs to use.                                                    |
+| `--use-conda`          | Set by default to True | Use `conda`/`mamba` to manage dependencies.                               |
+| `--conda-prefix`       | Optional               | Path where the `conda` environments will be stored.                       |
+| `--use-singularity`    | Set by default to True | Use `singularity`/`apptainer` to manage containers.                       |
+| `--singularity-prefix` | Optional               | Path where the `singularity` images will be stored.                       |
+| `--resources`          | Set by default         | Information about system resources; see below at [Resources](#resources). |
 
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
-- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
-  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs).
-- `helixer`: The number of Helixer jobs that can run at the same time; will be referred to as `${HELIXER}`.
+- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
+  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
+  Default: 1000 (GB).
+- `helixer`: The number of Helixer jobs that can run at the same time.
   It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
-- `pantools`: The number of PanTools jobs that can run at the same time; will be referred to as `${PANTOOLS}`.
+  Default: 1.
+- `pantools`: The number of PanTools jobs that can run at the same time.
   It is recommended to always keep this at 1, to prevent file collisions.
+  Default: 1.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -n
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE}
 ```
 
 ### Reporting
 The pipeline can generate an HTML `report.html` file with the most important results:
 ```bash
-snakemake ${MODULE} -c1 --report report.html
+snakemake ${MODULE} --report report.html
 ```
 
 ## Output
@@ -293,8 +296,8 @@ The name of the log file will be printed in the terminal output of the pipeline.
 If the error is not clear, please open an issue on this GitHub page.
 
 ### Q: The pipeline cannot find software X
-A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
-All dependencies are included in either a `conda` environment or a `singularity` container.
+A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)), as all dependencies are included in either a `conda` environment or a `singularity` container.
+If the issue is with a `conda` environment, please report it as an issue on this GitHub page.
 
 ### Q: A job that uses singularity fails for no apparent reason
 A: This is likely due to missing environment variables for Singularity/Apptainer.
@@ -302,5 +305,4 @@ See [Singularity/Apptainer](#singularityapptainer) for more information on which
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
-
 
