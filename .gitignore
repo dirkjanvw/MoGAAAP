@@ -126,7 +126,6 @@ resources/
 results/
 *.html
 *.sif
-config.yaml
 
 # Specific for this pipeline
 .cache/
