@@ -95,16 +95,17 @@ All fields to fill in are well-documented in the provided `config/config.yaml` f
 
 The `config/samples.tsv` has the following columns to fill in (one row per sample):
 
-| Column name     | Description                                                                                                                                                  |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                  |
-| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format.                                                                                                         |
-| `ont`           | The path to the ONT reads in FASTQ or FASTA format.                                                                                                          |
-| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                      |
-| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                      |
-| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                          |
-| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                         |
-| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file. |
+| Column name     | Description                                                                                                                                                          |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                          |
+| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                         |
+| `ont`           | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                          |
+| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                              |
+| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                              |
+| `haplotypes`    | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. NB: currently only 1 or 2 is supported. |
+| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                                  |
+| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                                 |
+| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.         |
 
 Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
