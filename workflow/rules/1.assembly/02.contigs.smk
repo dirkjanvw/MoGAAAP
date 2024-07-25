@@ -1,6 +1,6 @@
 rule filter_contigs:
     input:
-        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == wildcards.asmname]["ont"].isnull().values.item(), #check if ont is null
+        lambda wildcards: branch(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["ont"].isnull().values.item(), #check if ont is null
                 then=f"results/{{asmname}}/1.assembly/01.{config['assembler']}_hifi_only/{{asmname}}.fa",
                 otherwise=f"results/{{asmname}}/1.assembly/01.{config['assembler']}_hifi_and_ont/{{asmname}}.fa"),
     output:

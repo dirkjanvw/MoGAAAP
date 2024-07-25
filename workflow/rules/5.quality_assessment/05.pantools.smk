@@ -1,6 +1,6 @@
 rule list_pantools_proteomes:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_assessment/proteome.pep.fa", asmname=config["set"][wildcards.asmset]),
+        lambda wildcards: expand("results/{asmname}/5.quality_assessment/proteome.pep.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
         "results/{asmset}/5.quality_assessment/05.pantools/panproteome.list"
     log:

@@ -1,6 +1,6 @@
 rule sans_prepare_genome:
     input:
-        genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
+        genomes = lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
         "results/{asmset}/5.quality_assessment/11.sans.list",
     log:

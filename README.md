@@ -95,16 +95,17 @@ All fields to fill in are well-documented in the provided `config/config.yaml` f
 
 The `config/samples.tsv` has the following columns to fill in (one row per sample):
 
-| Column name     | Description                                                                                                                                                  |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                  |
-| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format.                                                                                                         |
-| `ont`           | The path to the ONT reads in FASTQ or FASTA format.                                                                                                          |
-| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                      |
-| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                      |
-| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                          |
-| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                         |
-| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file. |
+| Column name     | Description                                                                                                                                                          |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                          |
+| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                         |
+| `ont`           | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                          |
+| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                              |
+| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                              |
+| `haplotypes`    | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. NB: currently only 1 or 2 is supported. |
+| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                                  |
+| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                                 |
+| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.         |
 
 Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
@@ -204,10 +205,15 @@ graph TD;
 #### Overview
 In the assemble module, HiFi reads are assembled using `hifiasm`.
 If ONT reads are given, these are used in the assembly process using the `--ul` parameter of `hifiasm`.
-Since the output of `hifiasm` is a GFA file, we next convert this to a FASTA file.
-As alternatives to `hifiasm`, we also implemented `flye` and `verkko` as assemblers as both are known to work well with HiFi and ONT data.
-Finally, we produce an alignment of the assembly against the provided reference genome using `nucmer`.
+Since the output of `hifiasm` is a GFA file, we next convert the (consensus) primary contigs GFA to a FASTA file.
+In case the user has indicated that the accession is heterozygous, the two haplotype assemblies as outputted by `hifiasm` are converted to FASTA files instead.
+Finally, we produce an alignment of the (contig) assembly against the provided reference genome using `nucmer`.
 To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
+
+As alternative to `hifiasm`, we also implemented `verkko` as it is known to work well with HiFi and ONT data.
+For heterozygous accessions, `hapdup` is used to try separating the haplotypes based on HiFi alignment to the assembly.
+Please bear in mind that the pipeline was developed with `hifiasm` in mind, so although these other assemblers will technically work, the pipeline may not be optimally set up for them.
+In some preliminary tests, we found that `verkko` doesn't work well with heterozygous accessions, resulting in a partly phased assembly.
 
 #### Next steps
 Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.

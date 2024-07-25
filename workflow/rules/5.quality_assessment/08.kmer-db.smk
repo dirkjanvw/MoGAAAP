@@ -1,6 +1,6 @@
 rule kmerdb_build:
     input:
-        lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=config["set"][wildcards.asmset]),
+        lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
         "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.db",
     log:

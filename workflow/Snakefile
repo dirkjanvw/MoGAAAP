@@ -29,7 +29,7 @@ report: "report/workflow.rst"
 
 # Define global wildcard constraints
 wildcard_constraints:
-    minlen="\\d+"
+    minlen="\\d+",
 
 # Define output of all modules
 rule all:
