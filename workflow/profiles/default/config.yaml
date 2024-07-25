@@ -1,0 +1,8 @@
+use-conda: True
+#use-singularity: True
+printshellcmds: True
+cores: all
+resources:
+  gbmem: 1000
+  helixer: 2
+  pantools: 1
