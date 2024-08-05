@@ -304,6 +304,13 @@ If the issue is with a `conda` environment, please report it as an issue on this
 A: This is likely due to missing environment variables for Singularity/Apptainer.
 See [Singularity/Apptainer](#singularityapptainer) for more information on which environment variables need to be set.
 
+### Q: Report HTML cuts off the top of the page
+A: This is a known issue of the Snakemake report HTML.
+The current workaround is to run:
+```bash
+sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
+```
+
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
 
