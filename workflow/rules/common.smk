@@ -20,12 +20,16 @@ def get_all_accessions_from_asmset(asmset):
     Return all accession IDs for a given set, while taking care of haplotypes if needed
     """
     all_accessions = zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
-    return [
+    accessions = [
         accession if haplotypes == 1 else f"{accession}.hap{hap}"
         for accession, haplotypes in all_accessions
         for hap in range(1,haplotypes + 1)
         if accession in config["set"][asmset]
     ]
+    if len(accessions) < 2:
+        print(f'ERROR: set {asmset} appears to be empty!')
+        raise ValueError("something went wrong in obtaining set")
+    return accessions
 
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
