@@ -1,4 +1,5 @@
 # THIS SCRIPT SHOULD NOT BE RUN ON ITS OWN
+import math
 
 def rename_sequences(sequences: str, conversion_table: str,
                      chromosome_names: dict, output: str, prefix: str) -> None:
@@ -25,19 +26,27 @@ def rename_sequences(sequences: str, conversion_table: str,
                     break
 
     # Read the input file and write the output
-    c = 1  #for counting unnamed sequences
-    with open(sequences) as f,\
-            open(output, 'w') as out:
-        for line in f:
+    sequencedict = {}
+    with open(sequences) as infile:
+        for line in infile:
             if line.startswith('>'):
-                sequence = line.strip().lstrip('>')
-                if sequence in conversion:
-                    out.write(f'>{prefix}_Chr{conversion.get(sequence, sequence)}\n')  #TODO: Add leading zeroes
-                else:
-                    out.write(f'>{prefix}_Un{c}\n')  #TODO: Add leading zeroes
-                    c += 1
+                sequencename = line.strip().lstrip('>')
+                sequencedict[sequencename] = ""
             else:
-                out.write(line)
+                sequencedict[sequencename] += line
+
+    # Write the output
+    chromosomeleadingzeroes = int(math.log10(len(conversion)))+1
+    contigleadingzeroes = int(math.log10(len(sequencedict)))+1
+    c = 1  #for counting unnamed sequences
+    with open(output, 'w') as outfile:
+        for sequencename, sequence in sequencedict.items():
+            if sequencename in conversion:
+                outfile.write(f'>{prefix}_Chr{str(conversion.get(sequencename, sequencename)).zfill(chromosomeleadingzeroes)}\n')
+            else:
+                outfile.write(f'>{prefix}_Un{str(c).zfill(contigleadingzeroes)} {sequencename}\n')
+                c += 1
+            outfile.write(sequence)
 
 
 rename_sequences(str(snakemake.input.all),
