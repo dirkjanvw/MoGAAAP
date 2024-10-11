@@ -10,6 +10,11 @@ properties:
     description: path to the sample sheet
     pattern: "^.+\\.tsv$"
 
+  assembler:
+    type: string
+    description: assembler to use; supported assemblers are hifiasm, verkko
+    pattern: "^(hifiasm|verkko)$"
+
   min_contig_len:
     type: integer
     description: minimum contig length for filtering the assembly
@@ -56,6 +61,16 @@ properties:
     additionalProperties:
       type: string
       pattern: "^.+$"
+  organellar:
+    type: object
+    description: path to organellar queries for blast search
+    additionalProperties:
+      type: string
+      pattern: "^.+$"
+  telomere_motif:
+    type: string
+    description: telomere motif (typically CCCTAAA for plants or CCCTAA for animals)
+    pattern: "^[ACGT]+$"
 
   helixer_model:
     type: string
@@ -66,9 +81,9 @@ properties:
     description: maximum gene length for Helixer
     minimum: 0
 
-  k_qc:
+  k_qa:
     type: integer
-    description: optimal k-mer size for quality control
+    description: optimal k-mer size for quality assessment
     minimum: 0
     default: 21
   gxdb:
@@ -115,12 +130,13 @@ properties:
 
 required:
     - samples
+    - assembler
     - min_contig_len
     - ntjoin_k
     - ntjoin_w
     - reference_genomes
-    - prot_queries
-    - nucl_queries
+    - organellar
+    - telomere_motif
     - helixer_model
     - helixer_max_gene_length
     - gxdb

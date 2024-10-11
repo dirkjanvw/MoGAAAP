@@ -2,12 +2,12 @@ rule kraken2:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
-        out = "results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.out",
-        report = "results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.report.txt",
+        out = "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.out",
+        report = "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.report.txt",
     log:
-        "results/logs/5.quality_control/kraken2/{asmname}.log"
+        "results/logs/5.quality_assessment/kraken2/{asmname}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/kraken2/{asmname}.txt"
+        "results/benchmarks/5.quality_assessment/kraken2/{asmname}.txt"
     params:
         db=config["kraken2_nt"]
     resources:
@@ -21,16 +21,16 @@ rule kraken2:
 
 rule krona:
     input:
-        "results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.out",
+        "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.out",
     output:
-        report("results/{asmname}/5.quality_control/02.kraken2/{asmname}.kraken2.krona.html",
+        report("results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html",
             category="Contamination",
             caption="../../report/kraken.rst",
             labels={"type": "kraken2", "assembly": "{asmname}"}),
     log:
-        "results/logs/5.quality_control/krona/{asmname}.log"
+        "results/logs/5.quality_assessment/krona/{asmname}.log"
     benchmark:
-        "results/benchmarks/5.quality_control/krona/{asmname}.txt"
+        "results/benchmarks/5.quality_assessment/krona/{asmname}.txt"
     conda:
         "../../envs/kraken2.yaml"
     shell:

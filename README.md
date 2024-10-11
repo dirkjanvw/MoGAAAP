@@ -1,5 +1,5 @@
-# Meta pipeline for HiFi assembly and QC
-This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality control of HiFi-based assemblies.
+# Meta pipeline for HiFi assembly and QA
+This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any organism.
 The pipeline will work with both HiFi and ONT data, although the former is required.
 
@@ -60,6 +60,14 @@ Navigate to the `workflow/singularity` directory and run the following command f
 sudo singularity build ${NAME}.sif ${NAME}.def
 ```
 
+**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
+The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
+- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
+
+It is also recommended to set the following environment variable:
+- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+
 ### Snakemake
 Snakemake can be installed using `conda`/`mamba`:
 ```bash
@@ -87,16 +95,17 @@ All fields to fill in are well-documented in the provided `config/config.yaml` f
 
 The `config/samples.tsv` has the following columns to fill in (one row per sample):
 
-| Column name     | Description                                                                                                                                                  |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                  |
-| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format.                                                                                                         |
-| `ont`           | The path to the ONT reads in FASTQ or FASTA format.                                                                                                          |
-| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                      |
-| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                      |
-| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                          |
-| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                         |
-| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file. |
+| Column name     | Description                                                                                                                                                          |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId`   | The accession ID of the sample. This name has to be unique.                                                                                                          |
+| `hifi`          | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                         |
+| `ont`           | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                          |
+| `illumina_1`    | The path to the forward Illumina reads in FASTQ format.                                                                                                              |
+| `illumina_2`    | The path to the reverse Illumina reads in FASTQ format.                                                                                                              |
+| `haplotypes`    | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. NB: currently only 1 or 2 is supported. |
+| `speciesName`   | A name for the species that is used by Helixer to name novel genes.                                                                                                  |
+| `taxId`         | The NCBI taxonomy ID of the species.                                                                                                                                 |
+| `referenceId`   | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.         |
 
 Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
@@ -108,7 +117,7 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
-- `qc`: This module will perform quality control of the scaffolded assembly and the quick-and-dirty annotation.
+- `qa`: This module will perform quality assessment of the scaffolded assembly and the quick-and-dirty annotation.
 - `all`: This module will run all the above modules.
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
@@ -116,60 +125,70 @@ All modules except for `annotate` have visual output that can be inspected in an
 For more information about these modules, see [Explaining the pipeline](#explaining-the-pipeline).
 
 ### Important parameters
-Several important `snakemake` parameters are important when running this pipeline:
+Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default (in `workflow/profiles/default/config.yaml`).
 
-| Parameter              | Optionality | Description                                                               |
-|------------------------|-------------|---------------------------------------------------------------------------|
-| `-n`                   | Optional    | Do a dry-run of the pipeline.                                             |
-| `-p`                   | Optional    | Print the shell commands that are being executed.                         |
-| `-c`/`--cores`         | Required    | Number of CPUs to use; will be referred to as `${CPU}`                    |
-| `--use-conda`          | Required    | Use `conda`/`mamba` to manage dependencies.                               |
-| `--conda-prefix`       | Optional    | Path where the `conda` environments will be stored.                       |
-| `--use-singularity`    | Required    | Use `singularity`/`apptainer` to manage containers.                       |
-| `--singularity-prefix` | Optional    | Path where the `singularity` images will be stored.                       |
-| `--resources`          | Optional    | Information about system resources; see below at [Resources](#resources). |
+| Parameter              | Optionality            | Description                                                               |
+|------------------------|------------------------|---------------------------------------------------------------------------|
+| `-n`                   | Optional               | Do a dry-run of the pipeline.                                             |
+| `-p`                   | Set by default to True | Print the shell commands that are being executed.                         |
+| `-c`/`--cores`         | Set by default to all  | Number of CPUs to use.                                                    |
+| `--use-conda`          | Set by default to True | Use `conda`/`mamba` to manage dependencies.                               |
+| `--conda-prefix`       | Optional               | Path where the `conda` environments will be stored.                       |
+| `--use-singularity`    | Set by default to True | Use `singularity`/`apptainer` to manage containers.                       |
+| `--singularity-prefix` | Optional               | Path where the `singularity` images will be stored.                       |
+| `--resources`          | Set by default         | Information about system resources; see below at [Resources](#resources). |
 
 ### Resources
 The following resources (apart from CPUs) might be heavily used by the pipeline:
-- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use; will be referred to as `${MEM}`.
-  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs).
-- `helixer`: The number of Helixer jobs that can run at the same time; will be referred to as `${HELIXER}`.
+- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
+  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
+  Default: 1000 (GB).
+- `helixer`: The number of Helixer jobs that can run at the same time.
   It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
-- `pantools`: The number of PanTools jobs that can run at the same time; will be referred to as `${PANTOOLS}`.
+  Default: 1.
+- `pantools`: The number of PanTools jobs that can run at the same time.
   It is recommended to always keep this at 1, to prevent file collisions.
+  Default: 1.
 
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -npc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE} -n
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE} -pc${CPU} --use-conda --use-singularity --resources gbmem=${MEM} helixer=${HELIXER} pantools=${PANTOOLS}
+snakemake ${MODULE}
 ```
 
 ### Reporting
 The pipeline can generate an HTML `report.html` file with the most important results:
 ```bash
-snakemake ${MODULE} -c1 --report report.html
+snakemake ${MODULE} --report report.html
 ```
 
 ## Output
 Next to the [report](#reporting) generated by Snakemake, the most important outputs of the pipeline are the genome assembly and annotation.
-These can be found at the following location (where `${assembly}` is a wildcard for each separate assembly):
+These can be found in the directory `final_output`.
+(All temporary files are stored in the `results` directory.)
 
-```bash
-results/${assembly}/2.scaffolding/02.renaming/${assembly}.fa
-results/${assembly}/4.annotation/03.combined/${assembly}.gff
-```
+The `final_output` directory contains the following files:
+
+| File name                        | Description                                                                                                                   |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `${accessionId}.contigs.fa`      | The contigs produced by the `assemble` module.                                                                                |
+| `${accessionId}.full.fa`         | The scaffolded assembly produced by the `scaffold` module.                                                                    |
+| `${accessionId}.nuclear.fa`      | The scaffolded assembly produced by the `scaffold` module, but only nuclear contigs as obtained from the `analyse` module.    |
+| `${accessionId}.${organelle}.fa` | The scaffolded assembly produced by the `scaffold` module, but only organellar contigs as obtained from the `analyse` module. |
+| `${accessionId}.full.gff`        | The quick-and-dirty annotation produced by the `annotate` module; belongs to `${accessionId}.full.fa`.                        |
+| `${accessionId}.full.coding.gff` | The quick-and-dirty annotation produced by the `annotate` module, but only coding genes; belongs to `${accessionId}.full.fa`. |
 
 ## Explaining the pipeline
 Assembling a genome from raw data to a final usable resource is a process that is hard to automate.
 We believe that this process always necessesitates human curation.
 However, large parts can easily be automated, which is why we created this pipeline.
 This pipeline performs the assembly, scaffolding and renaming of genomic data as well as an initial quick-and-dirty structural annotation.
-Importantly, both genome assembly and annotation are subjected to quality control, providing a direct starting point for the curation of the assembly.
+Importantly, both genome assembly and annotation are subjected to quality assessment, providing a direct starting point for the curation of the assembly.
 Furthermore, each part of the process (module) can be run separately after which its output can be inspected before continuing to the next step.
 
 ```mermaid
@@ -177,8 +196,8 @@ graph TD;
     assemble-->scaffold;
     scaffold-->analyse;
     scaffold-->annotate;
-    scaffold-->qc;
-    annotate-->qc;
+    scaffold-->qa;
+    annotate-->qa;
 ```
 
 ### Assemble module
@@ -186,9 +205,15 @@ graph TD;
 #### Overview
 In the assemble module, HiFi reads are assembled using `hifiasm`.
 If ONT reads are given, these are used in the assembly process using the `--ul` parameter of `hifiasm`.
-Since the output of `hifiasm` is a GFA file, we next convert this to a FASTA file.
-Finally, we produce an alignment of the assembly against the provided reference genome using `nucmer`.
+Since the output of `hifiasm` is a GFA file, we next convert the (consensus) primary contigs GFA to a FASTA file.
+In case the user has indicated that the accession is heterozygous, the two haplotype assemblies as outputted by `hifiasm` are converted to FASTA files instead.
+Finally, we produce an alignment of the (contig) assembly against the provided reference genome using `nucmer`.
 To prevent spurious alignments, we slightly increased the `-l` and `-g` parameter of `nucmer`.
+
+As alternative to `hifiasm`, we also implemented `verkko` as it is known to work well with HiFi and ONT data.
+For heterozygous accessions, `hapdup` is used to try separating the haplotypes based on HiFi alignment to the assembly.
+Please bear in mind that the pipeline was developed with `hifiasm` in mind, so although these other assemblers will technically work, the pipeline may not be optimally set up for them.
+In some preliminary tests, we found that `verkko` doesn't work well with heterozygous accessions, resulting in a partly phased assembly.
 
 #### Next steps
 Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.
@@ -203,21 +228,27 @@ Scaffolding is performed using `ntJoin`, which uses a minimizer-based reference-
 If by visual inspection collinearity between the assembly and reference genome was found, the scaffolding module generally runs without issues.
 Should any error occur, please read the corresponding log file of the step that produced the error.
 In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the config file.
+In our experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
 
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 
 #### Next steps
-As the assembly as outputted by this module is used as starting point for the analyse, annotate and qc modules, it is crucial it matches the expectations in terms of size and chromosome number.
+As the assembly as outputted by this module is used as starting point for the analyse, annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
 Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
 ### Analyse module
 
 #### Overview
 The purpose of the analyse module is to create a genome-wide overview of the newly created assembly.
-It does this by running several user-defined queries against the assembly using BLAST and creating a `circos` plot.
+It does this by running several user-defined queries (including organelle search) against the assembly using BLAST as well as a search for the telomere repeat sequence.
+The results of these queries are visualised in an HTML report file.
+Next to this, the user-defined queries are used to create a template `circos` configuration and plot.
 
 #### Next steps
+Typically, user-defined queries are used to either identify unwanted sequences (known contaminants or organelles) or to identify sequences that are expected to be present in the assembly (e.g. resistance genes).
+The resulting tables in the report may be used to filter out unwanted sequences from the assembly, and to check the quality of the assembly based on the expected sequences (such as making sure the telomere repeat sequence is present at the tails of the chromosomes).
+
 Circos plots are notoriously hard to automate and that is no different for this pipeline.
 Although a `circos` plot should always be produced, it typically doesn't look quite right yet.
 Feel free to copy the config files produced by this pipeline and adjust to your own plotting needs.
@@ -231,23 +262,24 @@ Therefore, we implemented a "quick-and-dirty" annotation in this pipeline by com
 In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
 
 #### Next steps
-Although this module generally runs for the longest time, no visual output is produced; only a final GFF3 file.
-This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QC.
+Although this module generally runs for the longest time, no visual output is produced; only GFF3 file (one unfiltered and one with only coding genes) belonging to the scaffolded assembly.
+This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QA.
 
-### QC module
+### QA module
 
 #### Overview
-This final quality control module is the most important for human curation of the genome.
-The quality control steps in this module can be roughly divided into two categories: individual and grouped.
-Individual quality control steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
-Grouped quality control steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
+This final quality assessment module is the most important for human curation of the genome.
+The quality assessment steps in this module can be roughly divided into two categories: individual and grouped.
+Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
+Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
 Any groups can be defined in the configuration file and a genome may occur in multiple groups.
 
 #### Next steps
 The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
-It contains visual output for each of the quality control steps performed in this module including a description on how to interpret the results.
-Importantly, the qc module does not do any filtering of the assembly or annotation, only reporting.
+It contains visual output for each of the quality assessment steps performed in this module including a description on how to interpret the results.
+It also calculates various statistics that are reported on in the report.
+Importantly, the qa module does not do any filtering of the assembly or annotation, only reporting.
 Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
 
 ## FAQ
@@ -265,14 +297,20 @@ The name of the log file will be printed in the terminal output of the pipeline.
 If the error is not clear, please open an issue on this GitHub page.
 
 ### Q: The pipeline cannot find software X
-A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)) and that the pipeline is run with both `--use-conda` and `--use-singularity`.
-All dependencies are included in either a `conda` environment or a `singularity` container.
+A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)), as all dependencies are included in either a `conda` environment or a `singularity` container.
+If the issue is with a `conda` environment, please report it as an issue on this GitHub page.
 
-### Q: Writing output at a different location that `results`
-A: For code simplicity, the pipeline always writes output to the `results` directory.
-However, if you have the output in a different location, you can simply move the output to the desired location after the pipeline has finished.
+### Q: A job that uses singularity fails for no apparent reason
+A: This is likely due to missing environment variables for Singularity/Apptainer.
+See [Singularity/Apptainer](#singularityapptainer) for more information on which environment variables need to be set.
+
+### Q: Report HTML cuts off the top of the page
+A: This is a known issue of the Snakemake report HTML.
+The current workaround is to run:
+```bash
+sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
+```
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
-
 

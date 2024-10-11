@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioawk=1.0
-  - python=2.7
+  - minimap2=2.28
+  - samtools=1.19.1

@@ -2,7 +2,7 @@ rule helixer:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
     output:
-        protected("results/{asmname}/4.annotation/02.helixer/helixer.gff")
+        "results/{asmname}/4.annotation/02.helixer/helixer.gff",
     log:
         "results/logs/4.annotation/helixer/{asmname}.log"
     benchmark:

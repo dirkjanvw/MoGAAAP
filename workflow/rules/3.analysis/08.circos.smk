@@ -64,7 +64,13 @@ def get_circos_files(wildcards):
         for query in config["nucl_queries"]:
             nucl_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
 
-    return prot_files + nucl_files
+    # If you want to add organellar files, uncomment the following lines
+    #organellar_files = []
+    #if "organellar" in config:
+    #    for query in config["organellar"]:
+    #        organellar_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
+
+    return prot_files + nucl_files #+ organellar_files
 
 rule circos_configuration:
     input:
@@ -90,7 +96,7 @@ rule circos_configuration:
             fi
         done
         printf "{input.karyotype}\\tkaryotype\\tNA\\tNA\\n" >> {output.overview}
-        ln -s $(realpath {input.files}) $(dirname {output.conf})/
+        cp {input.files} $(dirname {output.conf})/
         SCRIPT=$(realpath workflow/scripts/create_circos_config.py)
         cd $(dirname {output.conf})
         python3 $SCRIPT -k $(basename {input.karyotype}) -o $(basename {output.conf}) $(echo {input.files} | awk '{{for (i=1;i<=NF;i++){{n=split($i,a,"/"); print a[n];}}}}')

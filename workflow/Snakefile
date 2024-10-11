@@ -22,14 +22,14 @@ include: "rules/1.assembly/all.smk"
 include: "rules/2.scaffolding/all.smk"
 include: "rules/3.analysis/all.smk"
 include: "rules/4.annotation/all.smk"
-include: "rules/5.quality_control/all.smk"
+include: "rules/5.quality_assessment/all.smk"
 
 # Define report main page
 report: "report/workflow.rst"
 
 # Define global wildcard constraints
 wildcard_constraints:
-    minlen="\\d+"
+    minlen="\\d+",
 
 # Define output of all modules
 rule all:
@@ -38,4 +38,4 @@ rule all:
         "results/scaffolding.done",
         "results/analysis.done",
         "results/annotation.done",
-        "results/quality_control.done",
+        "results/quality_assessment.done",

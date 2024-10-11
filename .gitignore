@@ -124,9 +124,8 @@ fabric.properties
 *.svg
 resources/
 results/
-report.html
+*.html
 *.sif
-config.yaml
 
 # Specific for this pipeline
 .cache/
@@ -138,4 +137,5 @@ Rplots.pdf
 .wget-hsts
 .keras/
 tests/
-
+final_output/
+.nv/

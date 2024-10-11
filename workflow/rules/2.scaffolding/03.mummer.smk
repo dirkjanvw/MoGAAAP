@@ -24,7 +24,7 @@ rule mummer:
         nucmer_maxgap = config["nucmer_maxgap"],
         nucmer_minmatch = config["nucmer_minmatch"],
     threads:
-        24
+        lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]),  #the number of chromosomes
     container:
         "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
     shell:
