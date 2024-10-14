@@ -1,4 +1,4 @@
-# Meta pipeline for HiFi assembly and QA
+# MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
 This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any organism.
 The pipeline will work with both HiFi and ONT data, although the former is required.
@@ -16,12 +16,12 @@ The pipeline will work with both HiFi and ONT data, although the former is requi
 ## Downloading pipeline
 The pipeline can be obtained via:
 ```bash
-git clone https://github.com/dirkjanvw/meta_pipeline_hifi.git
-cd meta_pipeline_hifi/
+git clone https://github.com/dirkjanvw/MoGAAAP.git
+cd MoGAAAP/
 ```
 
 ### (Optional) updating pipeline
-Should you notice that bugs have been fixed on GitHub or a new feature implemented in the pipeline, updating the pipeline is as simple as running the following in the `meta_pipeline_hifi/` directory:
+Should you notice that bugs have been fixed on GitHub or a new feature implemented in the pipeline, updating the pipeline is as simple as running the following in the `MoGAAAP/` directory:
 ```bash
 git pull
 ```
