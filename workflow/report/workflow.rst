@@ -1,5 +1,5 @@
-This report has been created by the `meta pipeline HiFi
-<https://github.com/dirkjanvw/meta_pipeline_hifi>`_ and summarises the results
+This report has been created by the `MoGAAAP
+<https://github.com/dirkjanvw/MoGAAAP>`_ and summarises the results
 of all assembled, scaffolded and annotated genomes. Please bear in mind that
 beyond minimal contig length, no filtering has been applied to the assemblies
 or quick-and-dirty annotations. The goal of this report is to provide an
