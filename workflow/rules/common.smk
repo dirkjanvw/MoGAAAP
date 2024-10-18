@@ -26,9 +26,9 @@ def get_all_accessions_from_asmset(asmset):
         for hap in range(1,haplotypes + 1)
         if accession in config["set"][asmset]
     ]
-    if len(accessions) < 2:
-        print(f'ERROR: set {asmset} appears to be empty!')
-        raise ValueError("something went wrong in obtaining set")
+    if len(accessions) == 1:
+        print(f'WARNING: set "{asmset}" appears to contain only one entry! Treating as if empty.')
+        accessions = []
     return accessions
 
 def get_hifi(wildcards):
