@@ -46,6 +46,8 @@ def get_multiqc_output(wildcards):
 def get_pantools_output(wildcards):
     all_output = []
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt")  #pantools homology grouping
         if len(config["set"][asmset]) >= 3:
             all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
@@ -57,6 +59,8 @@ def get_kmerdb_output(wildcards):
     all_output = []
     k = config["k_qa"]
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         if len(config["set"][asmset]) >= 2:
             all_output.append(f"results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash.pdf"),  #kmer distances
     return all_output
@@ -65,6 +69,8 @@ def get_kmerdb_output(wildcards):
 def get_mash_output(wildcards):
     all_output = []
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         if len(config["set"][asmset]) >= 2:
             all_output.append(f"results/{asmset}/5.quality_assessment/09.mash/{asmset}.pdf"),  #mash distances
     return all_output
@@ -74,6 +80,8 @@ def get_ntsynt_output(wildcards):
     mink = 24
     minw = 1000
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         if len(config["set"][asmset]) >= 2:  #synteny only makes sense for multiple genomes
             all_output.append(f"results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png")
     return all_output
@@ -83,6 +91,8 @@ def get_sans_output(wildcards):
     k = config["k_qa"]
     bootstrap = 1000
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         if len(config["set"][asmset]) >= 4:  #phylogenetic networks only makes sense for 4+ genomes
             all_output.append(f"results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus")
     return all_output
@@ -91,6 +101,8 @@ def get_pangrowth_output(wildcards):
     all_output = []
     k = config["k_qa"]
     for asmset in config["set"]:
+        if (len(get_all_accessions_from_asmset(asmset)) < 2):
+            continue
         if len(config["set"][asmset]) >= 3:
             all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/hist.pdf"),  #pangrowth hist
             all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/growth.pdf"),  #pangrowth growth
