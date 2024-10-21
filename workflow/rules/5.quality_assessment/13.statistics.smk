@@ -44,7 +44,7 @@ rule individual_statistics:
 
 rule overall_statistics:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
+        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1)),
     output:
         "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     log:
