@@ -64,8 +64,7 @@ def get_busco_output(wildcards):
 def get_omark_output(wildcards):
     all_output = []
     for asmset in config["set"]:
-        if len(config["set"][asmset]) >= 2:
-            all_output.append(f"results/{asmset}/5.quality_assessment/07.omark_plot.png")  #omark
+        all_output.append(f"results/{asmset}/5.quality_assessment/07.omark_plot.png")  #omark
     return all_output
 
 def get_kmerdb_output(wildcards):
