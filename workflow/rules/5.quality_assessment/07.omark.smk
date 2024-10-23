@@ -42,7 +42,7 @@ rule omark:
 
 rule omark_plot:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_assessment/07.omark/{asmname}.sum", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
+        lambda wildcards: expand("results/{asmname}/5.quality_assessment/07.omark/{asmname}.sum", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1)),
     output:
         tmpdir = temporary(directory("results/{asmset}/5.quality_assessment/07.omark_plot")),
         png = report("results/{asmset}/5.quality_assessment/07.omark_plot.png",
