@@ -15,7 +15,7 @@ def get_clean_accession_id(asmname):
     """
     return asmname.split(".hap")[0]
 
-def get_all_accessions_from_asmset(asmset):
+def get_all_accessions_from_asmset(asmset, minimum=2):
     """
     Return all accession IDs for a given set, while taking care of haplotypes if needed
     """
@@ -26,8 +26,8 @@ def get_all_accessions_from_asmset(asmset):
         for hap in range(1,haplotypes + 1)
         if accession in config["set"][asmset]
     ]
-    if len(accessions) == 1:
-        print(f'WARNING: set "{asmset}" appears to contain only one entry! Treating as if empty.')
+    if len(accessions) < minimum:
+        print(f'WARNING: set "{asmset}" appears to contain only {len(accessions)} entry! Treating as if empty.')
         accessions = []
     return accessions
 

@@ -55,6 +55,18 @@ def get_pantools_output(wildcards):
                     all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
     return all_output
 
+def get_busco_output(wildcards):
+    all_output = []
+    for asmset in config["set"]:
+        all_output.append(f"results/{asmset}/5.quality_assessment/06.busco_plot/busco_figure.png")  #busco (proteome) and compleasm (genome)
+    return all_output
+
+def get_omark_output(wildcards):
+    all_output = []
+    for asmset in config["set"]:
+        all_output.append(f"results/{asmset}/5.quality_assessment/07.omark_plot.png")  #omark
+    return all_output
+
 def get_kmerdb_output(wildcards):
     all_output = []
     k = config["k_qa"]
@@ -64,7 +76,6 @@ def get_kmerdb_output(wildcards):
         if len(config["set"][asmset]) >= 2:
             all_output.append(f"results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash.pdf"),  #kmer distances
     return all_output
-
 
 def get_mash_output(wildcards):
     all_output = []
@@ -109,6 +120,12 @@ def get_pangrowth_output(wildcards):
             all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/core.pdf"),  #pangrowth core
     return all_output
 
+def get_statistics_output(wildcards):
+    all_output = []
+    for asmset in config["set"]:
+        all_output.append(f"results/{asmset}/5.quality_assessment/13.statistics/{asmset}.html")
+    return all_output
+
 rule qa:
     input:
         # individual outputs
@@ -120,13 +137,13 @@ rule qa:
 
         # grouped outputs
         get_pantools_output,  #pantools
-        expand("results/{asmset}/5.quality_assessment/06.busco_plot/busco_figure.png", asmset=config["set"]),  #busco (proteome) and compleasm (genome)
-        expand("results/{asmset}/5.quality_assessment/07.omark_plot.png", asmset=config["set"]),  #omark
+        get_busco_output,  #busco
+        get_omark_output,  #omark
         get_kmerdb_output,  #kmer-db
         get_mash_output,  #mash
         get_ntsynt_output, #ntsynt
         get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
         get_pangrowth_output,  #pangrowth
-        expand("results/{asmset}/5.quality_assessment/13.statistics/{asmset}.html", asmset=config["set"]),  #statistics
+        get_statistics_output, #statistics
     output:
         touch("results/quality_assessment.done")
