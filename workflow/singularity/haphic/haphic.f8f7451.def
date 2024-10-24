@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10-alpine3.20
+
+%post
+    apk add git bash
+
+    # Clone HapHiC repository
+    git clone https://github.com/zengxiaofei/HapHiC.git /opt/HapHiC
+    cd /opt/HapHiC
+    git checkout f8f7451b932a80b54cf21a9a7861d5f5c9140da2
+
+    # Create the conda environment
+    micromamba create -q -y -n haphic -f /opt/HapHiC/conda_env/environment_py310.yml
+
+    # Create wrapper script for haphic
+    cat > /usr/local/bin/haphic << 'EOF'
+#!/bin/bash
+exec micromamba run -n haphic /opt/HapHiC/haphic "$@"
+EOF
+
+    chmod +x /usr/local/bin/haphic
+    
+    # Clean up
+    micromamba clean --all --yes
+
+%runscript
+    exec "$@"
+
+%help
+    This container provides HapHiC with all its dependencies.
+    
+    Usage:
+    singularity run haphic.sif haphic -h
+    singularity run haphic.sif haphic check
+    
+    For more information, visit: https://github.com/zengxiaofei/HapHiC
