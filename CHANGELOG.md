@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [UNRELEASED]
+## [0.1.2] - 2024-10-24
 
 ## Fixed
 - Also fixed OMArk, BUSCO and statistics for the assembly of a single genome (#52).
