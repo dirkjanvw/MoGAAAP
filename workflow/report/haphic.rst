@@ -5,12 +5,9 @@ together. The colour intensity represents the number of Hi-C contacts between
 the groups of scaffolds. These contacts are used to determine the physical
 distance between sequences in the assembly.
 
-Please use manual curation with e.g. Juicebox to improve the scaffolding. Run
-the following command to create the necessary files for Juicebox:
-
-.. code-block:: bash
-
-    singularity exec workflow/singularity/haphic/haphic.f8f7451.sif results/{{ snakemake.wildcards.asmname }}/2.scaffolding/01.haphic/{{ snakemake.wildcards.asmname }}_HapHiC/04.build/juicebox.sh
+Please use manual curation with e.g. Juicebox to improve the scaffolding. The
+following bash script contains example commands to create the input:
+`results/{{ snakemake.wildcards.asmname }}/2.scaffolding/01.haphic/{{ snakemake.wildcards.asmname }}_HapHiC/04.build/juicebox.sh`
 
 Ideally, a diagonal should be seen from the left bottom to the top right, with
 the centromeres, telomeres and other repeats as off-diagonal signals. In case
