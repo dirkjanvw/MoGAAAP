@@ -44,7 +44,7 @@ rule visualise_ntjoin_renaming:
     conda:
         "../../envs/csvtotable.yaml"
     shell:
-        "csvtotable -d $'\\t' {input} {output} &> {log}"
+        "awk 'BEGIN{{FS = OFS = \"\\t\"; print \"chromosome name\",\"scaffold name\";}} {{print;}}' {input.table} | csvtotable -d $'\\t' -o {output} &> {log}"
 
 rule renaming_scaffolds:
     input:
