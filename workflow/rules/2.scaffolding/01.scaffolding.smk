@@ -159,7 +159,7 @@ rule yahs:
         """
         (
         mkdir -p $(dirname {output.fa})
-        yahs --telo-motif {params.telomere_motif} -o $(echo ${output.fa} | sed 's/_scaffolds_final.fa$//g') {input.contigs} {input.hic}
+        yahs --telo-motif {params.telomere_motif} -o $(echo {output.fa} | sed 's/_scaffolds_final.fa$//g') {input.contigs} {input.hic}
         ) &> {log}
         """
 
