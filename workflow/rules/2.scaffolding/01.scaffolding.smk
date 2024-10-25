@@ -119,6 +119,8 @@ rule haphic_plot:
         "results/logs/2.scaffolding/haphic_plot/{asmname}.log"
     benchmark:
         "results/benchmarks/2.scaffolding/haphic_plot/{asmname}.txt"
+    threads:
+        8
     singularity:
         "workflow/singularity/haphic/haphic.f8f7451.sif"
     shell:
@@ -128,7 +130,7 @@ rule haphic_plot:
         agp="$(realpath {input.agp})"
         bam="$(realpath {input.bam})"
         cd $(dirname {output.pdf})
-        haphic plot $agp $bam
+        haphic plot --threads {threads} $agp $bam
         ) &> {log}
         """
 
