@@ -90,9 +90,11 @@ rule haphic:
     input:
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
         hic = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
-        #gfa = "", #TODO: we could look into using GFA from hifiasm if hifiasm was used, but this interferes with the current renaming of contigs (HapHiC calls this feature EXPERIMENTAL!)
+        #gfa = "", #TODO: we could at some point look into using GFA from hifiasm if hifiasm was used, but this interferes with the current renaming of contigs (HapHiC calls this feature EXPERIMENTAL!)
     output:
-        directory("results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/"),
+        fa = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.fa",
+        salse_agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.agp",
+        yahs_agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
     log:
         "results/logs/2.scaffolding/haphic/{asmname}.log"
     benchmark:
@@ -104,9 +106,31 @@ rule haphic:
     singularity:
         "workflow/singularity/haphic/haphic.f8f7451.sif"
     shell:
-        "haphic pipeline --threads {threads} --outdir {output} --verbose {input.contigs} {input.hic} {params.num_chr} &> {log}"
+        "haphic pipeline --threads {threads} --outdir $(dirname $(dirname {output.fa})) --verbose {input.contigs} {input.hic} {params.num_chr} &> {log}"
 
-
+rule haphic_plot:
+    input:
+        agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
+        bam = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
+    output:
+        pdf = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/scaffolds.pdf",
+        pkl = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/contact_matrix.pkl",
+    log:
+        "results/logs/2.scaffolding/haphic_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/haphic_plot/{asmname}.txt"
+    singularity:
+        "workflow/singularity/haphic/haphic.f8f7451.sif"
+    shell:
+        # "haphic plot {input.agp} {input.bam} &> {log}"
+        """
+        (
+        agp="$(realpath {input.agp})"
+        bam="$(realpath {input.bam})"
+        cd $(dirname {output.pdf})
+        haphic plot $agp $bam
+        ) &> {log}
+        """
 
 
 
