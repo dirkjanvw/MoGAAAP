@@ -190,6 +190,7 @@ use rule haphic_plot as ntjoin_plot with:
             w=config["ntjoin_w"],
         ),
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf",
             category="Hi-C",

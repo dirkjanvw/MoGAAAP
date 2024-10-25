@@ -22,6 +22,29 @@ rule create_renaming_table:
         ) &> {log}
         """
 
+rule visualise_ntjoin_renaming:
+    input:
+        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
+            reference=get_reference_id(wildcards.asmname),
+            minlen=config["min_contig_len"],
+            k=config["ntjoin_k"],
+            w=config["ntjoin_w"],
+        ),
+    output:
+        report("results/{asmname}/2.scaffolding/02.renaming/{asmname}.html",
+            category="Hi-C",
+            labels={"assembly": "{asmname}",
+                    "algorithm": "ntJoin (conversion table)"}
+        ),
+    log:
+        "results/logs/2.scaffolding/visualise_ntjoin_renaming/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/visualise_ntjoin_renaming/{asmname}.txt"
+    conda:
+        "../../envs/csvtotable.yaml"
+    shell:
+        "csvtotable -d $'\\t' {input} {output} &> {log}"
+
 rule renaming_scaffolds:
     input:
         all = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
