@@ -183,7 +183,7 @@ use rule haphic_plot as yahs_plot with:
 
 use rule haphic_plot as ntjoin_plot with:
     input:
-        agp = lambda wildcards: expand("results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        agp = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
