@@ -58,7 +58,7 @@ rule map_hic:
         forward = get_hic_1,
         backward = get_hic_2,
     output:
-        "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.bam",
     log:
         "results/logs/2.scaffolding/map_hic/{asmname}.log"
     benchmark:
@@ -72,9 +72,9 @@ rule map_hic:
 
 rule filter_hic:
     input:
-        "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.bam",
     output:
-        "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
+        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
     log:
         "results/logs/2.scaffolding/filter_hic/{asmname}.log"
     benchmark:
@@ -89,7 +89,7 @@ rule filter_hic:
 rule haphic:
     input:
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
-        hic = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
+        hic = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
         #gfa = "", #TODO: we could at some point look into using GFA from hifiasm if hifiasm was used, but this interferes with the current renaming of contigs (HapHiC calls this feature EXPERIMENTAL!)
     output:
         fa = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.fa",
@@ -113,12 +113,13 @@ rule haphic_plot:
         agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
         bam = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
     output:
-        pdf = report("results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/contact_map.pdf",
+        pdf = report("results/{asmname}/2.scaffolding/01.haphic/contact_map.pdf",
             category="HapHiC",
             caption="../../report/haphic.rst",
-            labels={"assembly": "{asmname}"}
+            labels={"assembly": "{asmname}",
+                    "algorithm": "HapHiC"}
         ),
-        pkl = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/contact_matrix.pkl",
+        pkl = "results/{asmname}/2.scaffolding/01.haphic/contact_matrix.pkl",
     log:
         "results/logs/2.scaffolding/haphic_plot/{asmname}.log"
     benchmark:
@@ -137,9 +138,47 @@ rule haphic_plot:
         ) &> {log}
         """
 
+rule yahs:
+    input:
+        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
+        hic = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+    output:
+        fa = "results/{asmname}/2.scaffolding/01.yahs/{asmname}_scaffolds_final.fa",
+        agp = "results/{asmname}/2.scaffolding/01.yahs/{asmname}_scaffolds_final.agp",
+    log:
+        "results/logs/2.scaffolding/yahs/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/yahs/{asmname}.txt"
+    params:
+        telomere_motif = config["telomere_motif"],
+    threads:
+        8
+    conda:
+        "../../envs/yahs.yaml"
+    shell:
+        """
+        (
+        mkdir -p $(dirname {output.fa})
+        yahs --telo-motif {params.telomere_motif} -o $(echo ${output.fa} | sed 's/_scaffolds_final.fa$//g') {input.contigs} {input.hic}
+        ) &> {log}
+        """
 
-
-
+use rule haphic_plot as yahs_plot with:
+    input:
+        agp = "results/{asmname}/2.scaffolding/01.yahs/{asmname}_scaffolds_final.agp",
+        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+    output:
+        pdf = report("results/{asmname}/2.scaffolding/01.yahs/contact_map.pdf",
+            category="Yahs",
+            caption="../../report/yahs.rst",
+            labels={"assembly": "{asmname}",
+                    "algorithm": "YaHS"}
+        ),
+        pkl = "results/{asmname}/2.scaffolding/01.yahs/contact_matrix.pkl",
+    log:
+        "results/logs/2.scaffolding/yahs_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/yahs_plot/{asmname}.txt"
 
 
 
