@@ -108,7 +108,7 @@ rule haphic:
     shell:
         "haphic pipeline --threads {threads} --outdir $(dirname $(dirname {output.fa})) --verbose {input.contigs} {input.hic} {params.num_chr} &> {log}"
 
-rule haphic_plot:
+rule haphic_plot_hic:
     input:
         agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
@@ -117,6 +117,7 @@ rule haphic_plot:
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
                     "algorithm": "HapHiC"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.haphic/contact_matrix.pkl",
@@ -164,7 +165,7 @@ rule yahs:
         ) &> {log}
         """
 
-use rule haphic_plot as yahs_plot with:
+use rule haphic_plot_hic as yahs_plot_hic with:
     input:
         agp = "results/{asmname}/2.scaffolding/01.yahs/{asmname}_scaffolds_final.agp",
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
@@ -173,6 +174,7 @@ use rule haphic_plot as yahs_plot with:
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
                     "algorithm": "YaHS"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.yahs/contact_matrix.pkl",
@@ -181,7 +183,7 @@ use rule haphic_plot as yahs_plot with:
     benchmark:
         "results/benchmarks/2.scaffolding/yahs_plot/{asmname}.txt"
 
-use rule haphic_plot as ntjoin_plot with:
+use rule haphic_plot_hic as ntjoin_plot_hic with:
     input:
         agp = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             reference=get_reference_id(wildcards.asmname),
@@ -196,6 +198,7 @@ use rule haphic_plot as ntjoin_plot with:
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
                     "algorithm": "ntJoin"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.ntjoin/contact_matrix.pkl",

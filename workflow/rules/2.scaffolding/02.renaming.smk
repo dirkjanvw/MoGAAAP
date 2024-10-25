@@ -34,6 +34,7 @@ rule visualise_ntjoin_renaming:
         report("results/{asmname}/2.scaffolding/02.renaming/{asmname}.html",
             category="Hi-C",
             labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
                     "algorithm": "ntJoin (conversion table)"}
         ),
     log:
