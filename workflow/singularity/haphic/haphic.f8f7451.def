@@ -28,6 +28,13 @@ exec micromamba run -n haphic /opt/HapHiC/utils/${file} "\$@"
 EOF
         chmod +x /usr/local/bin/${file}
     done
+
+    # Create wrapper script for samtools
+    cat > /usr/local/bin/samtools << 'EOF'
+#!/bin/bash
+exec micromamba run -n haphic samtools "$@"
+EOF
+    chmod +x /usr/local/bin/samtools
     
     # Clean up
     micromamba clean --all --yes

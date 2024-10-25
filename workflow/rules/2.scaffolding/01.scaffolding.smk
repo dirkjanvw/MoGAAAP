@@ -84,7 +84,7 @@ rule filter_hic:
     singularity:
         "workflow/singularity/haphic/haphic.f8f7451.sif"
     shell:
-        "(filter_bam.py {input} 1 --nm 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
+        "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
 
 rule haphic:
     input:
