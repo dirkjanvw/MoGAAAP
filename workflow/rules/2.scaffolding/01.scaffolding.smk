@@ -111,7 +111,7 @@ rule haphic:
 rule haphic_plot:
     input:
         agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
-        bam = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
+        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.haphic/contact_map.pdf",
             category="HapHiC",
