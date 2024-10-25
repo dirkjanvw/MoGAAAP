@@ -43,3 +43,17 @@ rule add_prefix:
         "../../envs/bioawk.yaml"
     shell:
         "bioawk -c fastx '{{ print \">{params.prefix}\" ++i; print $seq }}' {input} > {output} 2> {log}"
+
+rule index_contigs:
+    input:
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
+    output:
+        "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.fai"
+    log:
+        "results/logs/1.assembly/index_contigs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/index_contigs/{asmname}.min{minlen}.txt"
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools faidx {input} &> {log}"

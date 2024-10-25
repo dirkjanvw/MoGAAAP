@@ -141,6 +141,7 @@ rule haphic_plot:
 rule yahs:
     input:
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
+        contigs_fai = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.fai", minlen=config["min_contig_len"],),
         hic = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
     output:
         fa = "results/{asmname}/2.scaffolding/01.yahs/{asmname}_scaffolds_final.fa",
