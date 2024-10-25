@@ -43,6 +43,15 @@ def get_illumina_1(wildcards):
 def get_illumina_2(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_2"].values.item()
 
+def has_hic(wildcards):
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hic_1"].isnull().values.item()
+
+def get_hic_1(wildcards):
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hic_1"].values.item()
+
+def get_hic_2(wildcards):
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hic_2"].values.item()
+
 def get_haplotypes(wildcards):
     return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["haplotypes"].values.item())
 

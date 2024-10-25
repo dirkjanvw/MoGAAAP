@@ -11,14 +11,23 @@ From: mambaorg/micromamba:1.5.10-alpine3.20
 
     # Create the conda environment
     micromamba create -q -y -n haphic -f /opt/HapHiC/conda_env/environment_py310.yml
+    micromamba install -y -n haphic -c conda-forge -c bioconda samtools=1.19.1
 
     # Create wrapper script for haphic
     cat > /usr/local/bin/haphic << 'EOF'
 #!/bin/bash
 exec micromamba run -n haphic /opt/HapHiC/haphic "$@"
 EOF
-
     chmod +x /usr/local/bin/haphic
+
+    # Create wrapper script for all files in /opt/HapHiC/utils/ (except .jar)
+    for file in $(ls /opt/HapHiC/utils/ | grep -v ".jar"); do
+        cat > /usr/local/bin/${file} << EOF
+#!/bin/bash
+exec micromamba run -n haphic /opt/HapHiC/utils/${file} "\$@"
+EOF
+        chmod +x /usr/local/bin/${file}
+    done
     
     # Clean up
     micromamba clean --all --yes
