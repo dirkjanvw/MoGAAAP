@@ -113,7 +113,11 @@ rule haphic_plot:
         agp = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/04.build/scaffolds.raw.agp",
         bam = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
     output:
-        pdf = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/scaffolds.pdf",
+        pdf = report("results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/contact_map.pdf",
+            category="HapHiC",
+            caption="../../report/haphic.rst",
+            labels={"assembly": "{asmname}"}
+        ),
         pkl = "results/{asmname}/2.scaffolding/01.haphic/{asmname}_HapHiC/contact_matrix.pkl",
     log:
         "results/logs/2.scaffolding/haphic_plot/{asmname}.log"
@@ -124,7 +128,6 @@ rule haphic_plot:
     singularity:
         "workflow/singularity/haphic/haphic.f8f7451.sif"
     shell:
-        # "haphic plot {input.agp} {input.bam} &> {log}"
         """
         (
         agp="$(realpath {input.agp})"
