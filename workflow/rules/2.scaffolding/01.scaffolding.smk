@@ -114,8 +114,8 @@ rule haphic_plot:
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.haphic/contact_map.pdf",
-            category="HapHiC",
-            caption="../../report/haphic.rst",
+            category="Hi-C",
+            caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "algorithm": "HapHiC"}
         ),
@@ -170,8 +170,8 @@ use rule haphic_plot as yahs_plot with:
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.yahs/contact_map.pdf",
-            category="Yahs",
-            caption="../../report/yahs.rst",
+            category="Hi-C",
+            caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "algorithm": "YaHS"}
         ),
@@ -181,7 +181,27 @@ use rule haphic_plot as yahs_plot with:
     benchmark:
         "results/benchmarks/2.scaffolding/yahs_plot/{asmname}.txt"
 
-
+use rule haphic_plot as ntjoin_plot with:
+    input:
+        agp = lambda wildcards: expand("results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+            reference=get_reference_id(wildcards.asmname),
+            minlen=config["min_contig_len"],
+            k=config["ntjoin_k"],
+            w=config["ntjoin_w"],
+        ),
+        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+    output:
+        pdf = report("results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf",
+            category="Hi-C",
+            caption="../../report/hic.rst",
+            labels={"assembly": "{asmname}",
+                    "algorithm": "ntJoin"}
+        ),
+        pkl = "results/{asmname}/2.scaffolding/01.ntjoin/contact_matrix.pkl",
+    log:
+        "results/logs/2.scaffolding/ntjoin_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/ntjoin_plot/{asmname}.txt"
 
 
 
