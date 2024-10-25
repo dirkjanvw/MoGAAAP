@@ -49,12 +49,12 @@ rule bwa_index_contigs:
 
 rule map_hic:
     input:
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
-        index1 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.0123",
-        index2 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.amb",
-        index3 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.ann",
-        index4 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.bwt.2bit.64",
-        index5 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.pac",
+        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
+        index1 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.0123", minlen=config["min_contig_len"],),
+        index2 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.amb", minlen=config["min_contig_len"],),
+        index3 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.ann", minlen=config["min_contig_len"],),
+        index4 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.bwt.2bit.64", minlen=config["min_contig_len"],),
+        index5 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.pac", minlen=config["min_contig_len"],),
         forward = get_hic_1,
         backward = get_hic_2,
     output:
@@ -88,9 +88,7 @@ rule filter_hic:
 
 rule haphic:
     input:
-        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa",
-            minlen=config["min_contig_len"],
-        ),
+        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
         hic = "results/{asmname}/2.scaffolding/01.haphic/{asmname}.hic.sorted.filtered.bam",
         #gfa = "", #TODO: we could look into using GFA from hifiasm if hifiasm was used, but this interferes with the current renaming of contigs (HapHiC calls this feature EXPERIMENTAL!)
     output:
