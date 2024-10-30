@@ -108,7 +108,7 @@ rule haphic:
     shell:
         """
         (
-        [ -d $(dirname {output.fa}) ] && rm -rd $(dirname {output.fa})
+        [ -d $(dirname {output.fa}) ] && rm -rf $(dirname {output.fa})
         haphic pipeline --threads {threads} --outdir $(dirname $(dirname {output.fa})) --verbose {input.contigs} {input.hic} {params.num_chr}
         ) &> {log}
         """
