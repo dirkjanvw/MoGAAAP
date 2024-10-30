@@ -106,7 +106,12 @@ rule haphic:
     singularity:
         "workflow/singularity/haphic/haphic.f8f7451.sif"
     shell:
-        "haphic pipeline --threads {threads} --outdir $(dirname $(dirname {output.fa})) --verbose {input.contigs} {input.hic} {params.num_chr} &> {log}"
+        """
+        (
+        [ -d $(dirname {output.fa}) ] && rm -rd $(dirname {output.fa})
+        haphic pipeline --threads {threads} --outdir $(dirname $(dirname {output.fa})) --verbose {input.contigs} {input.hic} {params.num_chr}
+        ) &> {log}
+        """
 
 rule haphic_plot_hic:
     input:
