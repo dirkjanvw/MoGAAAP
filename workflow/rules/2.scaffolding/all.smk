@@ -1,4 +1,4 @@
-include: "01.scaffolding.smk"
+include: "01.ntjoin.smk"
 include: "02.renaming.smk"
 include: "03.mummer.smk"
 
