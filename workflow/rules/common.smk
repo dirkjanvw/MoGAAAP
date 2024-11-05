@@ -34,6 +34,9 @@ def get_all_accessions_from_asmset(asmset, minimum=2):
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
 
+def has_ont(asmname):
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item()
+
 def get_ont(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["ont"].values.item().split(";")
 
