@@ -25,8 +25,6 @@ def get_hic_plots(wildcards):
     filelist = []
     for asmname in get_all_accessions():
         if has_hic(asmname):
-            filelist.append(f"results/{asmname}/2.scaffolding/01.haphic/contact_map.pdf")
-            filelist.append(f"results/{asmname}/2.scaffolding/01.yahs/contact_map.pdf")
             filelist.append(f"results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf")
     return filelist
 
