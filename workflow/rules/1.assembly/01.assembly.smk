@@ -34,7 +34,7 @@ rule hifiasm_with_hic:
     conda:
         "../../envs/hifiasm.yaml"
     shell:
-        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.h2} {input.hifi} 2> {log}"
+        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} {input.hifi} 2> {log}"
 
 rule hifiasm_with_ont:
     input:
@@ -74,7 +74,7 @@ rule hifiasm_with_hic_and_ont:
     conda:
         "../../envs/hifiasm.yaml"
     shell:
-        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.h2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
+        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
 def get_hifiasm_output(wildcards):
     if get_haplotypes(wildcards) == 1:
