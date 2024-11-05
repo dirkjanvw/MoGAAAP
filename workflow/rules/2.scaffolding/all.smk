@@ -33,6 +33,6 @@ rule scaffold:
         expand("final_output/{asmname}.full.fa",
             asmname = get_all_accessions()),
         get_mummerplot_scaffolds,
-        get_hic_plots, #TODO: temporary
+        get_hic_plots,
     output:
         touch("results/scaffolding.done")
