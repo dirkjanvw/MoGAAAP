@@ -77,7 +77,7 @@ rule hifiasm_with_hic_and_ont:
         "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
 def get_hifiasm_output(wildcards):
-    suffix = "bp" if has_hic(wildcards.asmname) else "bp"
+    suffix = "hic" if has_hic(wildcards.asmname) else "bp"
     if get_haplotypes(wildcards) == 1:
         return f"results/{{asmname}}/1.assembly/01.hifiasm_{{ext}}/{{asmname}}.{suffix}.p_ctg.gfa"
     else:
