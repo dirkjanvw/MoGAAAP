@@ -22,9 +22,9 @@ rule hifiasm_with_hic:
         hic1 = get_hic_1,
         hic2 = get_hic_2,
     output:
-        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.bp.hap1.p_ctg.gfa",
-        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.bp.hap2.p_ctg.gfa",
-        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.bp.p_ctg.gfa",
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.p_ctg.gfa",
     log:
         "results/logs/1.assembly/hifiasm/{asmname}.log"
     benchmark:
@@ -62,9 +62,9 @@ rule hifiasm_with_hic_and_ont:
         hic2 = get_hic_2,
         ont = get_ont,
     output:
-        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.bp.hap1.p_ctg.gfa",
-        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.bp.hap2.p_ctg.gfa",
-        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.bp.p_ctg.gfa",
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.p_ctg.gfa",
     log:
         "results/logs/1.assembly/hifiasm_with_hic_and_ont/{asmname}.log"
     benchmark:
@@ -77,12 +77,13 @@ rule hifiasm_with_hic_and_ont:
         "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
 def get_hifiasm_output(wildcards):
+    suffix = "bp" if has_hic(wildcards.asmname) else "bp"
     if get_haplotypes(wildcards) == 1:
-        return "results/{asmname}/1.assembly/01.hifiasm_{ext}/{asmname}.bp.p_ctg.gfa"
+        return f"results/{{asmname}}/1.assembly/01.hifiasm_{{ext}}/{{asmname}}.{suffix}.p_ctg.gfa"
     else:
         haplotype = int(wildcards.asmname[-1])
         asmname = get_clean_accession_id(wildcards.asmname)
-        return f"results/{asmname}/1.assembly/01.hifiasm_{wildcards.ext}/{asmname}.bp.hap{haplotype}.p_ctg.gfa"
+        return f"results/{asmname}/1.assembly/01.hifiasm_{wildcards.ext}/{asmname}.{suffix}.hap{haplotype}.p_ctg.gfa"
 
 rule hifiasm_to_fasta:
     input:

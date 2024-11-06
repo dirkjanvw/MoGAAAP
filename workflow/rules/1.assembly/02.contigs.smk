@@ -1,14 +1,14 @@
 def get_assembly(wildcards):
     if has_ont(wildcards.asmname):
         if has_hic(wildcards.asmname):
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_hic_and_ont/{wildcards.asmname}.bp.p_ctg.gfa"
+            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_hic_and_ont/{wildcards.asmname}.fa"
         else:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_ont/{wildcards.asmname}.bp.p_ctg.gfa"
+            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_ont/{wildcards.asmname}.fa"
     else:
         if has_hic(wildcards.asmname):
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_hic/{wildcards.asmname}.bp.p_ctg.gfa"
+            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_hic/{wildcards.asmname}.fa"
         else:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_only/{wildcards.asmname}.bp.p_ctg.gfa"
+            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_only/{wildcards.asmname}.fa"
 
 rule filter_contigs:
     input:
