@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2024-11-07
 
 ## Added
 - Add optional use of Hi-C during assembly and for visualising ntJoin contact map (#56).
