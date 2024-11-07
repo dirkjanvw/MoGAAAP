@@ -2,7 +2,8 @@ rule individual_statistics:
     input:
         assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
-        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/hifi/{{asmname}}_vs_hifi.qv", k=config["k_qa"]),
+        qv = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/{wgstype}/{{asmname}}_vs_{wgstype}.qv", k=config["k_qa"], wgstype=get_best_wgstype(wildcards.asmname).lower()),
+        kmerstats = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/{wgstype}/{{asmname}}_vs_{wgstype}.completeness.stats", k=config["k_qa"], wgstype=get_best_wgstype(wildcards.asmname).lower()),
         full_annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
         coding_annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
     output:
@@ -18,12 +19,13 @@ rule individual_statistics:
     params:
         inputdata = lambda wildcards: "HiFi+ONT+Hi-C" if has_ont(wildcards.asmname) and has_hic(wildcards.asmname) else "HiFi+ONT" if has_ont(wildcards.asmname) else "HiFi+Hi-C" if has_hic(wildcards.asmname) else "HiFi only",
         assembler = config["assembler"],
+        best_wgstype = lambda wildcards: get_best_wgstype(wildcards.asmname)
     conda:
         "../../envs/seqkit.yaml"
     shell:
         """
         (
-        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV (HiFi)\\t#contigs\\tContig N50\\tInput data\\tAssembler\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV ({params.best_wgstype})\\tK-mer completeness ({params.best_wgstype})\\t#contigs\\tContig N50\\tInput data\\tAssembler\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         seqkit stats -abTj1 {input.assembly} > {output.assembly}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
@@ -35,6 +37,7 @@ rule individual_statistics:
         seqkit grep -vrp "Chr" {input.assembly} | seqkit stats -abTj1 > {output.unassigned}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$5;}}' {output.unassigned} >> {output.tsv}
         awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s\\t", $4;}}' {input.qv} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s\\t", $5;}}' {input.kmerstats} >> {output.tsv}
         seqkit stats -abTj1 {input.contigs} > {output.contigs}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$13;}}' {output.contigs} >> {output.tsv}
         printf "{params.inputdata}\\t" >> {output.tsv}
