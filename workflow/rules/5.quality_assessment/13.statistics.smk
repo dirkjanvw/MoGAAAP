@@ -16,7 +16,7 @@ rule individual_statistics:
     benchmark:
         "results/benchmarks/5.quality_assessment/individual_statistics/{asmname}.txt"
     params:
-        inputdata = lambda wildcards: "HiFi+ONT" if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["ont"].isnull().values.item() else "HiFi only",
+        inputdata = lambda wildcards: "HiFi+ONT+Hi-C" if has_ont(wildcards.asmname) and has_hic(wildcards.asmname) else "HiFi+ONT" if has_ont(wildcards.asmname) else "HiFi+Hi-C" if has_hic(wildcards.asmname) else "HiFi only",
         assembler = config["assembler"],
     conda:
         "../../envs/seqkit.yaml"

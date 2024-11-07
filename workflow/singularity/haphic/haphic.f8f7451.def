@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5.10-alpine3.20
+
+%post
+    apk add git bash
+
+    # Clone HapHiC repository
+    git clone https://github.com/zengxiaofei/HapHiC.git /opt/HapHiC
+    cd /opt/HapHiC
+    git checkout f8f7451b932a80b54cf21a9a7861d5f5c9140da2
+
+    # Create the conda environment
+    micromamba create -q -y -n haphic -f /opt/HapHiC/conda_env/environment_py310.yml
+    micromamba install -y -n haphic -c conda-forge -c bioconda samtools=1.19.1
+
+    # Create wrapper script for haphic
+    cat > /usr/local/bin/haphic << 'EOF'
+#!/bin/bash
+exec micromamba run -n haphic /opt/HapHiC/haphic "$@"
+EOF
+    chmod +x /usr/local/bin/haphic
+
+    # Create wrapper script for all files in /opt/HapHiC/utils/ (except .jar)
+    for file in $(ls /opt/HapHiC/utils/ | grep -v ".jar"); do
+        cat > /usr/local/bin/${file} << EOF
+#!/bin/bash
+exec micromamba run -n haphic /opt/HapHiC/utils/${file} "\$@"
+EOF
+        chmod +x /usr/local/bin/${file}
+    done
+
+    # Create wrapper script for samtools
+    cat > /usr/local/bin/samtools << 'EOF'
+#!/bin/bash
+exec micromamba run -n haphic samtools "$@"
+EOF
+    chmod +x /usr/local/bin/samtools
+    
+    # Clean up
+    micromamba clean --all --yes
+
+%runscript
+    exec "$@"
+
+%help
+    This container provides HapHiC with all its dependencies.
+    
+    Usage:
+    singularity run haphic.sif haphic -h
+    singularity run haphic.sif haphic check
+    
+    For more information, visit: https://github.com/zengxiaofei/HapHiC

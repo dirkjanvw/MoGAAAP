@@ -23,6 +23,14 @@ properties:
     type: string
     description: path to the reverse Illumina reads
     pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
+  hic_1:
+    type: string
+    description: path to the forward Hi-C reads
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
+  hic_2:
+    type: string
+    description: path to the reverse Hi-C reads
+    pattern: "^.*\\.[fF](ast)?q(\\.gz)?$"
   haplotypes:
     type: integer
     description: expected number of haplotypes in the sample; use 1 for relatively homozygous diploids but 2 for heterozygous diploids

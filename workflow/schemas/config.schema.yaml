@@ -14,6 +14,7 @@ properties:
     type: string
     description: assembler to use; supported assemblers are hifiasm, verkko
     pattern: "^(hifiasm|verkko)$"
+    default: "hifiasm"
 
   min_contig_len:
     type: integer
