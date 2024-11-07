@@ -16,6 +16,26 @@ rule hifiasm:
     shell:
         "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) {input.hifi} 2> {log}"
 
+rule hifiasm_with_hic:
+    input:
+        hifi = get_hifi,
+        hic1 = get_hic_1,
+        hic2 = get_hic_2,
+    output:
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_hic/{asmname}.hic.p_ctg.gfa",
+    log:
+        "results/logs/1.assembly/hifiasm/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/hifiasm/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/hifiasm.yaml"
+    shell:
+        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} {input.hifi} 2> {log}"
+
 rule hifiasm_with_ont:
     input:
         hifi = get_hifi,
@@ -35,13 +55,35 @@ rule hifiasm_with_ont:
     shell:
         "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
+rule hifiasm_with_hic_and_ont:
+    input:
+        hifi = get_hifi,
+        hic1 = get_hic_1,
+        hic2 = get_hic_2,
+        ont = get_ont,
+    output:
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{asmname}.hic.p_ctg.gfa",
+    log:
+        "results/logs/1.assembly/hifiasm_with_hic_and_ont/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/hifiasm_with_hic_and_ont/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/hifiasm.yaml"
+    shell:
+        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
+
 def get_hifiasm_output(wildcards):
+    suffix = "hic" if has_hic(wildcards.asmname) else "bp"
     if get_haplotypes(wildcards) == 1:
-        return "results/{asmname}/1.assembly/01.hifiasm_{ext}/{asmname}.bp.p_ctg.gfa"
+        return f"results/{{asmname}}/1.assembly/01.hifiasm_{{ext}}/{{asmname}}.{suffix}.p_ctg.gfa"
     else:
         haplotype = int(wildcards.asmname[-1])
         asmname = get_clean_accession_id(wildcards.asmname)
-        return f"results/{asmname}/1.assembly/01.hifiasm_{wildcards.ext}/{asmname}.bp.hap{haplotype}.p_ctg.gfa"
+        return f"results/{asmname}/1.assembly/01.hifiasm_{wildcards.ext}/{asmname}.{suffix}.hap{haplotype}.p_ctg.gfa"
 
 rule hifiasm_to_fasta:
     input:
@@ -73,6 +115,26 @@ rule verkko:
     shell:
         "verkko --local-memory {resources.gbmem} --local-cpus {threads} -d $(dirname {output}) --hifi {input.hifi} &> {log}"
 
+rule verkko_with_hic:
+    input:
+        hifi = get_hifi,
+        hic1 = get_hic_1,
+        hic2 = get_hic_2,
+    output:
+        "results/{asmname}/1.assembly/01.verkko_hifi_and_hic/assembly.fasta",
+    log:
+        "results/logs/1.assembly/verkko_hifi_and_hic/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/verkko_hifi_and_hic/{asmname}.txt"
+    resources:
+        gbmem=320  #best to make it a multiple of 32 for verkko
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/verkko.yaml"
+    shell:
+        "verkko --local-memory {resources.gbmem} --local-cpus {threads} -d $(dirname {output}) --hifi {input.hifi} --hic1 {input.hic1} --hic2 {input.hic2} &> {log}"
+
 rule verkko_with_ont:
     input:
         hifi = get_hifi,
@@ -83,12 +145,35 @@ rule verkko_with_ont:
         "results/logs/1.assembly/verkko_hifi_and_ont/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/verkko_hifi_and_ont/{asmname}.txt"
+    resources:
+        gbmem=320  #best to make it a multiple of 32 for verkko
     threads:
         min(max(workflow.cores - 1, 1), 50)
     conda:
         "../../envs/verkko.yaml"
     shell:
-        "verkko --threads {threads} -d $(dirname {output}) --hifi {input.hifi} --nano {input.ont} &> {log}"
+        "verkko --local-memory {resources.gbmem} --local-cpus {threads} -d $(dirname {output}) --hifi {input.hifi} --nano {input.ont} &> {log}"
+
+rule verkko_with_hic_and_ont:
+    input:
+        hifi = get_hifi,
+        hic1 = get_hic_1,
+        hic2 = get_hic_2,
+        ont = get_ont,
+    output:
+        "results/{asmname}/1.assembly/01.verkko_hifi_hic_and_ont/assembly.fasta",
+    log:
+        "results/logs/1.assembly/verkko_hifi_hic_and_ont/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/verkko_hifi_hic_and_ont/{asmname}.txt"
+    resources:
+        gbmem=320  #best to make it a multiple of 32 for verkko
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/verkko.yaml"
+    shell:
+        "verkko --local-memory {resources.gbmem} --local-cpus {threads} -d $(dirname {output}) --hifi {input.hifi} --hic1 {input.hic1} --hic2 {input.hic2} --nano {input.ont} &> {log}"
 
 rule verkko_assembly_minimap2:
     input:
