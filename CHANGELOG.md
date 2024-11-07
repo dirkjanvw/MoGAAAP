@@ -4,6 +4,8 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## Added
 - Add optional use of Hi-C during assembly and for visualising ntJoin contact map (#56).
+- Add k-mer completeness statistics (#57).
+- Use Illumina instead of HiFi for final stats if available (#57).
 
 ## [0.1.2] - 2024-10-24
 
