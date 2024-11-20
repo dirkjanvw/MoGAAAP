@@ -46,7 +46,9 @@ rule filter_valid_ORF_mRNA:
         gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff",
+        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff",
+        report = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_report.txt",
+        discarded = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_discarded.gff",
     log:
         "results/logs/4.annotation/filter_valid_ORF_mRNA/{asmname}.log"
     benchmark:
@@ -54,4 +56,4 @@ rule filter_valid_ORF_mRNA:
     conda:
         "../../envs/agat.yaml"
     shell:
-        "agat_sp_filter_feature_by_attribute_value.pl --gff {input.gff} -l level2 --attribute valid_ORF --value False --output {output} --config {input.config} &> {log}"
+        "agat_sp_filter_feature_by_attribute_value.pl --gff {input.gff} -l level2 --attribute valid_ORF --value False --output {output.gff} --config {input.config} &> {log}"
