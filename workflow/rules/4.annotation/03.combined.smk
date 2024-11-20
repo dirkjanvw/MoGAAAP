@@ -1,6 +1,6 @@
 rule combine_liftoff_helixer:
     input:
-        liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff3", # fixed CDS phase and removed transcripts with invalid ORF
+        liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff", # fixed CDS phase and removed transcripts with invalid ORF
         helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
