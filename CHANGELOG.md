@@ -1,5 +1,13 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+## Added
+- Add clean GFF file: only necessary attributes and clean names (#60).
+
+## Changed
+- Remove invalid ORFs from Liftoff output (#60).
+
 ## [0.2.0] - 2024-11-07
 
 ## Added
