@@ -40,3 +40,31 @@ rule fix_cds_phase_liftoff_gff_polished:
         "../../envs/agat.yaml"
     shell:
         "agat_sp_fix_cds_phases.pl --gff {input.polished} --fasta {input.assembly} --output {output} --config {input.config} &> {log}"
+
+rule get_mRNA_with_valid_ORF: # get mRNA with valid ORF and other RNA
+    input:
+        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff3",
+    output:
+        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.txt",
+    log:
+        "results/logs/4.annotation/get_mRNA_with_valid_ORF/{asmname}.log"
+    benchmark:
+        "results/benchmarks/4.annotation/get_mRNA_with_valid_ORF/{asmname}.txt"
+    shell:
+        "awk 'BEGIN{{FS = OFS = \"\\t\";}} ($3==\"mRNA\" && $9~/valid_ORF=True/) || $3~/[^m]RNA$/ {{split($9,a,\";\"); for (i in a){{if (a[i]~/^ID=/){{split(a[i],id,\"=\"); print id[2];}}}}}}' {input} > {output} 2> {log}"
+
+rule filter_valid_ORF_mRNA:
+    input:
+        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff3",
+        valid_ORF = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.txt",
+        config = "results/{asmname}/agat_config.yaml",
+    output:
+        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff3",
+    log:
+        "results/logs/4.annotation/filter_valid_ORF_mRNA/{asmname}.log"
+    benchmark:
+        "results/benchmarks/4.annotation/filter_valid_ORF_mRNA/{asmname}.txt"
+    conda:
+        "../../envs/agat.yaml"
+    shell:
+        "agat_sp_filter_feature_from_keep_list.pl --gff {input.gff} --keep_list {input.valid_ORF} --output {output} --config {input.config} &> {log}"
