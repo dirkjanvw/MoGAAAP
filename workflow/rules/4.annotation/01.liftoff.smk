@@ -54,4 +54,4 @@ rule filter_valid_ORF_mRNA:
     conda:
         "../../envs/agat.yaml"
     shell:
-        "agat_sp_filter_feature_by_attribute_value.pl --gff {input.gff} --attribute valid_ORF --value False --output {output} --config {input.config} &> {log}"
+        "agat_sp_filter_feature_by_attribute_value.pl --gff {input.gff} -l level2 --attribute valid_ORF --value False --output {output} --config {input.config} &> {log}"
