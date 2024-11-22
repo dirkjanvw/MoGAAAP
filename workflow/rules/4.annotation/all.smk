@@ -10,7 +10,7 @@ rule copy_annotation:
     output:
         full = protected("final_output/{asmname}.full.gff"),
         coding = protected("final_output/{asmname}.full.coding.gff"),
-        clean = protected("final_output/{asmname}.clean.gff"),
+        clean = protected("final_output/{asmname}.full.clean.gff"),
     log:
         "results/logs/4.annotation/copy_annotation/{asmname}.log"
     benchmark:
@@ -28,6 +28,6 @@ rule annotate:
     input:
         expand("final_output/{asmname}.full.gff", asmname=get_all_accessions()),
         expand("final_output/{asmname}.full.coding.gff", asmname=get_all_accessions()),
-        expand("final_output/{asmname}.clean.gff", asmname=get_all_accessions()),
+        expand("final_output/{asmname}.full.clean.gff", asmname=get_all_accessions()),
     output:
         touch("results/annotation.done")
