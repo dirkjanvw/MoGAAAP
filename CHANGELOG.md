@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.1] - 2024-11-22
 
 ## Added
 - Add clean GFF file: only necessary attributes and clean names (#60).
