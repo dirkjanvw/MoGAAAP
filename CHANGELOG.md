@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+## Added
+- More clearly mark in report which WGS data was used for which statistics (#64).
+
 ## [0.2.1] - 2024-11-22
 
 ## Added
