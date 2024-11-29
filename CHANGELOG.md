@@ -2,6 +2,9 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## [Unreleased]
 
+## Fixed
+- Fix PanTools upset plot creation for accessions with 2 haplotypes (#65).
+
 ## Added
 - More clearly mark in report which WGS data was used for which statistics (#64).
 
