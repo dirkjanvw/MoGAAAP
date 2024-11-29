@@ -15,6 +15,12 @@ def get_clean_accession_id(asmname):
     """
     return asmname.split(".hap")[0]
 
+def get_haplotype_accession_id(asmname):
+    """
+    Return the haplotype for a given asmname.
+    """
+    return "hap" + asmname.split(".hap")[1]
+
 def get_all_accessions_from_asmset(asmset, minimum=2):
     """
     Return all accession IDs for a given set, while taking care of haplotypes if needed
@@ -68,6 +74,9 @@ def get_hic_2(wildcards):
 
 def get_haplotypes(wildcards):
     return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["haplotypes"].values.item())
+
+def get_haplotype_information(asmname):
+    return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["haplotypes"].values.item())
 
 def get_species_name(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["speciesName"].values.item()
