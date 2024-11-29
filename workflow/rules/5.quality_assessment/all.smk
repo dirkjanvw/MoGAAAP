@@ -49,9 +49,9 @@ def get_pantools_output(wildcards):
         if (len(get_all_accessions_from_asmset(asmset)) < 2):
             continue
         all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pantools_homology_groups.txt")  #pantools homology grouping
-        if len(config["set"][asmset]) >= 3:
+        if len(get_all_accessions_from_asmset(asmset)) >= 3:
             all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png")  #pantools pangenome growth
-            if len(config["set"][asmset]) <= 10:
+            if len(get_all_accessions_from_asmset(asmset)) <= 10:
                     all_output.append(f"results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf")  #pantools gene classification
     return all_output
 
