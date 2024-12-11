@@ -25,7 +25,7 @@ rule individual_statistics:
     shell:
         """
         (
-        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV ({params.best_wgstype})\\tK-mer completeness ({params.best_wgstype})\\t#contigs\\tContig N50\\tInput data\\tAssembler\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\t#chromosomes\\tTotal length (chromosomes)\\t#unassigned sequences\\tTotal length (unassigned sequences)\\tTotal QV\\tK-mer completeness\\t#contigs\\tContig N50\\tInput data\\tAssembler\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         seqkit stats -abTj1 {input.assembly} > {output.assembly}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
@@ -36,8 +36,8 @@ rule individual_statistics:
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$5;}}' {output.chromosomes} >> {output.tsv}
         seqkit grep -vrp "Chr" {input.assembly} | seqkit stats -abTj1 > {output.unassigned}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$5;}}' {output.unassigned} >> {output.tsv}
-        awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s\\t", $4;}}' {input.qv} >> {output.tsv}
-        awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s\\t", $5;}}' {input.kmerstats} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s ({params.best_wgstype})\\t", $4;}}' {input.qv} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} NR==1{{printf "%s ({params.best_wgstype})\\t", $5;}}' {input.kmerstats} >> {output.tsv}
         seqkit stats -abTj1 {input.contigs} > {output.contigs}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t", $4,$13;}}' {output.contigs} >> {output.tsv}
         printf "{params.inputdata}\\t" >> {output.tsv}

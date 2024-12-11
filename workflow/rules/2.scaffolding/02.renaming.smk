@@ -18,7 +18,7 @@ rule create_renaming_table:
             sort | \
             uniq -c | \
             sort -nr | \
-            awk -vnum_chr="{params.num_chr}" 'BEGIN{{OFS = "\\t";}} FNR<=num_chr{{print $2,$3;}}' > {output}
+            awk -vnum_chr="{params.num_chr}" 'BEGIN{{OFS = "\\t";}} FNR<=num_chr && !a[$2] {{print $2,$3; a[$2]=1;}}' > {output}
         ) &> {log}
         """
 
