@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.2 - 2024-12-11]
 
 ## Fixed
 - Fix PanTools upset plot creation for accessions with 2 haplotypes (#65).
