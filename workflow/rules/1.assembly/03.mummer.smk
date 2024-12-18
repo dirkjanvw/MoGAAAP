@@ -36,10 +36,14 @@ rule dotplot_contigs:
         reference = "results/{asmname}/1.assembly/03.mummer/{reference}.fa",
     output:
         gp = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp",
+        rplot = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.rplot",
+        fplot = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.fplot",
+        filterfile = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.filter",
         png = report("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.png",
             category="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",
+                    "size": "default",
                     "stage": "contigs"}),
     log:
         "results/logs/1.assembly/dotplot/{asmname}/{asmname}.min{minlen}.vs.{reference}.log"
@@ -52,5 +56,33 @@ rule dotplot_contigs:
         (
         cd $(dirname {output.gp})
         mummerplot --filter --png --large --prefix=$(basename {output.gp} | rev | cut -d'.' -f 2- | rev) --title {wildcards.asmname} $(basename {input.delta})
+        ) &> {log}
+        """
+
+rule dotplot_large_contigs:
+    input:
+        gp = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp",
+        rplot = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.rplot",
+        fplot = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.fplot",
+    output:
+        gp = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp",
+        png = report("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.png",
+            category="MUMmerplot",
+            caption="../../report/mummerplot.rst",
+            labels={"assembly": "{asmname}",
+                    "size": "large",
+                    "stage": "contigs"}),
+    log:
+        "results/logs/1.assembly/dotplot/{asmname}/{asmname}.min{minlen}.vs.{reference}.large.log"
+    benchmark:
+        "results/benchmarks/1.assembly/dotplot/{asmname}/{asmname}.min{minlen}.vs.{reference}.large.txt"
+    container:
+        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
+    shell:
+        """
+        (
+        sed 's/set terminal png tiny size 1400,1400/set terminal png large size 2600,2600/' {input.gp} | awk '/^set output/{{gsub(/.png/, ".large.png");}} /^set mouse/{{$0="# "$0;}} /^set style/{{$NF="0.5";}} 1' > {output.gp}
+        cd $(dirname {output.gp})
+        gnuplot $(basename {output.gp})
         ) &> {log}
         """
