@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [0.2.3 - 2024-12-18]
+
+## Added
+- Creation of extra large MUMmerplot (#70).
+
 ## [0.2.2 - 2024-12-11]
 
 ## Fixed

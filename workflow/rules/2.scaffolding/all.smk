@@ -19,6 +19,7 @@ def get_mummerplot_scaffolds(wildcards):
     for asmname in get_all_accessions():
         reference = get_reference_id(asmname)
         filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp")
+        filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.large.gp")
     return filelist
 
 def get_hic_plots(wildcards):
