@@ -20,6 +20,7 @@ def get_mummerplot_contigs(wildcards):
     for asmname in get_all_accessions():
         reference = get_reference_id(asmname)
         filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp")
+        filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp")
     return filelist
 
 rule assemble:
