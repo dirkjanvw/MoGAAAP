@@ -50,23 +50,26 @@ onstart:
     | |\\/| |/ _ \\| | __ |  _  ||  _  ||  _  ||  __/
     | |  | | (_) | |_\\ \\| | | || | | || | | || |
     \\_|  |_/\\___/ \\____/\\_| |_/\\_| |_/\\_| |_/\\_|
-    """)
-    print("\033[0m"
+    """
+    "\033[0m"
     """
     Welcome to the MoGAAAP workflow.
-    For more information, see https://github.com/dirkjanvw/MoGAAAP
 
+    For citation information, see https://github.com/dirkjanvw/MoGAAAP
     (c) Dirk-Jan van Workum, 2024
     """)
 
 onsuccess:
     print("""
     MoGAAAP workflow finished successfully.
+
+    For citation information, see https://github.com/dirkjanvw/MoGAAAP
+    (c) Dirk-Jan van Workum, 2024
     """)
 
 onerror:
     print("""
     MoGAAAP workflow failed.
-    Please check the provided error message and log file of the rule that failed carefully before reporting any issues at https://github.com/dirkjanvw/MoGAAAP/issues for help.
+    Please check the provided error message and log file of the rule that failed above carefully before reporting any issues at https://github.com/dirkjanvw/MoGAAAP/issues for help.
     """)
 
