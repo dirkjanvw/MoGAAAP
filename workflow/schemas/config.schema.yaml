@@ -30,10 +30,12 @@ properties:
     type: integer
     description: k-mer size for ntjoin
     minimum: 0
+    default: 52
   ntjoin_w:
     type: integer
     description: window size for ntjoin
     minimum: 0
+    default: 16000
 
   reference_genomes:
     type: object
