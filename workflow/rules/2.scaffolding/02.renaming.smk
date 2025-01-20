@@ -52,21 +52,20 @@ rule create_ragtag_renaming_table:
 
 rule visualise_scaffold_renaming:
     input:
-        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{scaffolder}.conversion.tsv",
+        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{{scaffolder}}.conversion.tsv",
             reference=get_reference_id(wildcards.asmname),
-            scaffolder=config["scaffolder"],
         ),
     output:
-        report("results/{asmname}/2.scaffolding/02.renaming/{asmname}.html",
+        report("results/{asmname}/2.scaffolding/02.renaming/{asmname}.{scaffolder}.html",
             category="Hi-C",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "{config['scaffolder']} (conversion table)"}
+                    "algorithm": "{scaffolder} (conversion table)"}
         ),
     log:
-        "results/logs/2.scaffolding/visualise_scaffold_renaming/{asmname}.log"
+        "results/logs/2.scaffolding/visualise_scaffold_renaming/{asmname}.{scaffolder}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/visualise_scaffold_renaming/{asmname}.txt"
+        "results/benchmarks/2.scaffolding/visualise_scaffold_renaming/{asmname}.{scaffolder}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:

@@ -118,14 +118,14 @@ rule ntjoin_plot_hic:
             w=config["ntjoin_w"],
         ),
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
-        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.html", #making sure that the table is generated before the plot so that the report can be interpreted
+        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf",
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ntJoin"}
+                    "algorithm": "ntjoin (contact map)"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.ntjoin/contact_matrix.pkl",
     log:
@@ -153,14 +153,14 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             minlen=config["min_contig_len"],
         ),
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
-        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.html", #making sure that the table is generated before the plot so that the report can be interpreted
+        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.ragtag/contact_map.pdf",
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "RagTag"}
+                    "algorithm": "ragtag (contact map)"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.ragtag/contact_matrix.pkl",
     log:
