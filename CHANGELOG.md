@@ -4,6 +4,7 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## Added
 - Messages on start, success and error (#73).
+- RagTag is now available for scaffolding as alternative to ntJoin (#75).
 
 ## [0.2.3 - 2024-12-18]
 
