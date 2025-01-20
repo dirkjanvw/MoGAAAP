@@ -89,14 +89,14 @@ rule visualise_scaffold_renaming:
 
 def get_scaffolds(wildcards):
     if config["scaffolder"] == "ntjoin":
-        return expand("results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
+        return expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         )
     elif config["scaffolder"] == "ragtag":
-        return expand("results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fa",
+        return expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.fa",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         )
