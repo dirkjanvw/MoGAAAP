@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.4 - 2025-01-20]
 
 ## Added
 - Messages on start, success and error (#73).
