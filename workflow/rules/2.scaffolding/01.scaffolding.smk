@@ -29,6 +29,29 @@ rule ntjoin:
         ) &> {log}
         """
 
+rule ragtag:
+    input:
+        reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
+        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+    output:
+        agp = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
+        paf = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
+        paflog = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf.log",
+        confidence = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.confidence.txt",
+        err = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.err",
+        fasta = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
+        stats = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.stats",
+    log:
+        "results/logs/2.scaffolding/ragtag/{asmname}.vs.{reference}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/ragtag/{asmname}.vs.{reference}.min{minlen}.txt"
+    threads:
+        5
+    conda:
+        "../../envs/ragtag.yaml"
+    shell:
+        "ragtag.py scaffold -rt{threads} -o$(dirname {output.fasta}) {input.reference} {input.contigs} &> {log}"
+
 rule bwa_index_contigs:
     input:
         contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
@@ -95,14 +118,14 @@ rule ntjoin_plot_hic:
             w=config["ntjoin_w"],
         ),
         bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
-        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.html", #making sure that the table is generated before the plot so that the report can be interpreted
+        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf",
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ntJoin"}
+                    "algorithm": "ntjoin (contact map)"}
         ),
         pkl = "results/{asmname}/2.scaffolding/01.ntjoin/contact_matrix.pkl",
     log:
@@ -122,3 +145,25 @@ rule ntjoin_plot_hic:
         haphic plot --threads {threads} $agp $bam
         ) &> {log}
         """
+
+use rule ntjoin_plot_hic as ragtag_plot_hic with:
+    input:
+        agp = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
+            reference=get_reference_id(wildcards.asmname),
+            minlen=config["min_contig_len"],
+        ),
+        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
+    output:
+        pdf = report("results/{asmname}/2.scaffolding/01.ragtag/contact_map.pdf",
+            category="Hi-C",
+            caption="../../report/hic.rst",
+            labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
+                    "algorithm": "ragtag (contact map)"}
+        ),
+        pkl = "results/{asmname}/2.scaffolding/01.ragtag/contact_matrix.pkl",
+    log:
+        "results/logs/2.scaffolding/ragtag_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/ragtag_plot/{asmname}.txt"

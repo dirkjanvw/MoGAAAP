@@ -16,6 +16,12 @@ properties:
     pattern: "^(hifiasm|verkko)$"
     default: "hifiasm"
 
+  scaffolder:
+    type: string
+    description: scaffolder to use; supported scaffolders are ntjoin, ragtag
+    pattern: "^(ntjoin|ragtag)$"
+    default: "ntjoin"
+
   min_contig_len:
     type: integer
     description: minimum contig length for filtering the assembly
@@ -24,10 +30,12 @@ properties:
     type: integer
     description: k-mer size for ntjoin
     minimum: 0
+    default: 52
   ntjoin_w:
     type: integer
     description: window size for ntjoin
     minimum: 0
+    default: 16000
 
   reference_genomes:
     type: object
@@ -130,18 +138,17 @@ properties:
     default: "/tmp/snakemake_tmp"
 
 required:
-    - samples
-    - assembler
-    - min_contig_len
-    - ntjoin_k
-    - ntjoin_w
-    - reference_genomes
-    - organellar
-    - telomere_motif
-    - helixer_model
-    - helixer_max_gene_length
-    - gxdb
-    - odb
-    - kraken2_nt
-    - OMAdb
-    - set
+  - samples
+  - assembler
+  - scaffolder
+  - min_contig_len
+  - reference_genomes
+  - organellar
+  - telomere_motif
+  - helixer_model
+  - helixer_max_gene_length
+  - gxdb
+  - odb
+  - kraken2_nt
+  - OMAdb
+  - set

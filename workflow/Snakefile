@@ -56,7 +56,6 @@ onstart:
     Welcome to the MoGAAAP workflow.
 
     For citation information, see https://github.com/dirkjanvw/MoGAAAP
-    (c) Dirk-Jan van Workum, 2024
     """)
 
 onsuccess:
@@ -64,7 +63,6 @@ onsuccess:
     MoGAAAP workflow finished successfully.
 
     For citation information, see https://github.com/dirkjanvw/MoGAAAP
-    (c) Dirk-Jan van Workum, 2024
     """)
 
 onerror:

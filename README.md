@@ -11,6 +11,7 @@ The pipeline will work with both HiFi and ONT data, although only the former is 
 - [Running the pipeline](#running-the-pipeline)
 - [Output](#output)
 - [Explaining the pipeline](#explaining-the-pipeline)
+- [Citation](#citation)
 - [FAQ](#faq)
 
 ## Downloading pipeline
@@ -285,6 +286,12 @@ It contains visual output for each of the quality assessment steps performed in 
 It also calculates various statistics that are reported on in the report.
 Importantly, the qa module does not do any filtering of the assembly or annotation, only reporting.
 Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
+
+## Citation
+If you use MoGAAAP in your work, please cite this work as:
+```bibtex
+in prep.
+```
 
 ## FAQ
 
