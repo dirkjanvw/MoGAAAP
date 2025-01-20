@@ -290,7 +290,7 @@ Next steps could include (but are not limited to) removal of contaminants, disco
 ## Citation
 If you use MoGAAAP in your work, please cite this work as:
 ```bibtex
-TODO
+in prep.
 ```
 
 ## FAQ
