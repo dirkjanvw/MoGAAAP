@@ -245,7 +245,7 @@ Please carefully look at the `nucmer` alignment plot to check that the assembly 
 
 #### Overview
 The purpose of the analyse module is to create a genome-wide overview of the newly created assembly.
-It does this by running several user-defined queries (including organelle search) against the assembly using BLAST as well as a search for the telomere repeat sequence.
+It does this by running several user-defined queries (including organelle search) against the assembly using BLAST as well as a search for the telomere repeat sequence (please see [this note in the FAQ](#q-should-i-use-blastn-or-seqtk-for-the-telomere-search) for more information on telomere identification).
 The results of these queries are visualised in an HTML report file.
 Next to this, the user-defined queries are used to create a template `circos` configuration and plot.
 
@@ -320,6 +320,10 @@ The current workaround is to run:
 ```bash
 sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
 ```
+
+### Q: Should I use BLASTN or seqtk for the telomere search?
+A: While `seqtk` is more accurate in the boundaries of the telomere search, it cannot identify telomeres that are not at the ends of the chromosomes.
+Therefore, we recommend to also run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
