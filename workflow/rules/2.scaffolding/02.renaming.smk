@@ -96,7 +96,7 @@ def get_scaffolds(wildcards):
             w=config["ntjoin_w"],
         )
     elif config["scaffolder"] == "ragtag":
-        return expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.fa",
+        return expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         )
