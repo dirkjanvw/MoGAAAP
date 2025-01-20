@@ -1,19 +1,16 @@
 rule create_ntjoin_renaming_table:
     input:
-        # agp = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
         agp = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        # mxdot = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
         mxdot = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
     output:
-        # "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.ntjoin.conversion.tsv",
     log:
         "results/logs/2.scaffolding/create_ntjoin_renaming_table/{asmname}.vs.{reference}.log"
@@ -55,12 +52,6 @@ rule create_ragtag_renaming_table:
 
 rule visualise_scaffold_renaming:
     input:
-        # table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
-        #     reference=get_reference_id(wildcards.asmname),
-        #     minlen=config["min_contig_len"],
-        #     k=config["ntjoin_k"],
-        #     w=config["ntjoin_w"],
-        # ),
         table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{scaffolder}.conversion.tsv",
             reference=get_reference_id(wildcards.asmname),
             scaffolder=config["scaffolder"],
@@ -105,19 +96,7 @@ def get_scaffolds(wildcards):
 
 rule renaming_scaffolds:
     input:
-        # all = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
-        #     reference=get_reference_id(wildcards.asmname),
-        #     minlen=config["min_contig_len"],
-        #     k=config["ntjoin_k"],
-        #     w=config["ntjoin_w"],
-        # ),
         all = get_scaffolds,
-        # table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.conversion.tsv",
-        #     reference=get_reference_id(wildcards.asmname),
-        #     minlen=config["min_contig_len"],
-        #     k=config["ntjoin_k"],
-        #     w=config["ntjoin_w"],
-        # ),
         table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{scaffolder}.conversion.tsv",
             reference=get_reference_id(wildcards.asmname),
             scaffolder=config["scaffolder"],
