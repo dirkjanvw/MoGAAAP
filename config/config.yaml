@@ -53,10 +53,11 @@ prot_queries:
     NBS_domain: "resources/blast_queries/query1.amac"
 nucl_queries:
     ribosome: "resources/blast_queries/ribosome.fasta"
+    telomere: "resources/blast_queries/telomere.fasta" #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
 organellar:
     chloroplast: "resources/blast_queries/chloroplast.fasta"
     mitochondrion: "resources/blast_queries/mitochondrion.fasta"
-telomere_motif: "CCCTAAA"
+telomere_motif: "CCCTAAA" #for seqtk: it only identifies the motif at the end of a chromosome
 
 # Annotation settings
 helixer_model: "resources/land_plant_v0.3_a_0080.h5"
