@@ -326,5 +326,5 @@ A: While `seqtk` is more accurate in the boundaries of the telomere search, it c
 Therefore, we recommend to also run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Contact
-If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page or send me an email over dirk[dash]jan[dot]vanworkum[at]wur[dot]nl.
+If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
 
