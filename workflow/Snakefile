@@ -39,3 +39,35 @@ rule all:
         "results/analysis.done",
         "results/annotation.done",
         "results/quality_assessment.done",
+
+# Define messages for start, success and error
+onstart:
+    print("\033[1;34m"
+    """
+    ___  ___      _____   ___    ___    ___  ______
+    |  \\/  |     |  __ \\ / _ \\  / _ \\  / _ \\ | ___ \\
+    | .  . | ___ | |  \\// /_\\ \\/ /_\\ \\/ /_\\ \\| |_/ /
+    | |\\/| |/ _ \\| | __ |  _  ||  _  ||  _  ||  __/
+    | |  | | (_) | |_\\ \\| | | || | | || | | || |
+    \\_|  |_/\\___/ \\____/\\_| |_/\\_| |_/\\_| |_/\\_|
+    """
+    "\033[0m"
+    """
+    Welcome to the MoGAAAP workflow.
+
+    For citation information, see https://github.com/dirkjanvw/MoGAAAP
+    """)
+
+onsuccess:
+    print("""
+    MoGAAAP workflow finished successfully.
+
+    For citation information, see https://github.com/dirkjanvw/MoGAAAP
+    """)
+
+onerror:
+    print("""
+    MoGAAAP workflow failed.
+    Please check the provided error message and log file of the rule that failed above carefully before reporting any issues at https://github.com/dirkjanvw/MoGAAAP/issues for help.
+    """)
+

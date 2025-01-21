@@ -1,4 +1,4 @@
-include: "01.ntjoin.smk"
+include: "01.scaffolding.smk"
 include: "02.renaming.smk"
 include: "03.mummer.smk"
 
@@ -26,7 +26,7 @@ def get_hic_plots(wildcards):
     filelist = []
     for asmname in get_all_accessions():
         if has_hic(asmname):
-            filelist.append(f"results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf")
+            filelist.append(f"results/{asmname}/2.scaffolding/01.{config['scaffolder']}/contact_map.pdf")
     return filelist
 
 rule scaffold:
