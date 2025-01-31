@@ -18,8 +18,9 @@ Options:
 
   [General options]
   -y, --config         Configuration YAML file (required)
-  --skip-custom-singularity
-                       Skip custom singularity containers (default: false)
+  --use-custom-singularity
+                       Use custom singularity containers (default: true)
+                       NB: Setting this to false will reduce the output
 
   [Configuration options (writes to --config); all required]
   --generate-config    Generate a configuration YAML file and exit
@@ -50,7 +51,7 @@ EOF
 
 
 # Parse options
-skip_custom_singularity=false
+use_custom_singularity=true
 config=
 
 generate_config=false
@@ -154,9 +155,9 @@ while [[ $# -gt 0 ]]; do
             memory="$2"
             shift 2
             ;;
-        --skip-custom-singularity)
-            skip_custom_singularity=true
-            shift
+        --use-custom-singularity)
+            use_custom_singularity="$2"
+            shift 2
             ;;
         *)
             echo "Error: Unknown option: $1"
@@ -178,6 +179,10 @@ if ${generate_config} && ${run}; then
 fi
 if ! ${generate_config} && ! ${run}; then
     echo "Error: Either --generate-config or --run must be specified"
+    incomplete=true
+fi
+if [[ ! "${use_custom_singularity" =~ ^(true|false)$ ]]; then
+    echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
     incomplete=true
 fi
 if ${generate_config}; then
@@ -351,7 +356,7 @@ samples: $(realpath ${samples})
 
 # Whether custom singularity containers can be used. If set to false, not all
 # output will be available.
-custom_singularity: ${skip_custom_singularity}
+custom_singularity: ${use_custom_singularity}
 
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
@@ -476,7 +481,7 @@ if ${run}; then
       --cores ${cores} \
       ${dryrun:+--dryrun} \
       --use-conda --use-singularity \
-      --config skip_custom_singularity=${skip_custom_singularity} \
+      --config custom_singularity=${use_custom_singularity} \
       --resources gbmem=${memory}
 
     # Create report if requested
