@@ -52,6 +52,16 @@ This installation process requires root access, but typically a server admin can
 If not installed already, Singularity/Apptainer can be installed by following the instructions on their website: [apptainer.org](https://apptainer.org/docs/user/latest/quick_start.html).
 Make sure to install either Singularity version 3.7 or higher or Apptainer version 1.0 or higher.
 
+#### Singularity/Apptainer environment variables
+**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
+The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
+- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
+
+It is also recommended to set the following environment variable:
+- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+
+#### Singularity/Apptainer setup
 **NB**: For running the pipeline, no root access or special permissions are required.
 However, the pipeline needs some SIF files that are not included in the repository.
 These need to be built using the provided DEF files, which requires `sudo` permissions.
@@ -61,13 +71,8 @@ Navigate to the `workflow/singularity` directory and run the following command f
 sudo singularity build ${NAME}.sif ${NAME}.def
 ```
 
-**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
-The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
-- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
-- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
-
-It is also recommended to set the following environment variable:
-- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+In case you do not have `sudo` permissions, you can also use set the `custom_singularity` flag in the `config/config.yaml` file to `false` to disable all rules that require a custom Singularity container.
+This means that not all output will be generated that is described [below](#output).
 
 ### Snakemake
 Snakemake can be installed using `conda`/`mamba`:
@@ -334,4 +339,3 @@ Therefore, we recommend to also run BLASTN with a fasta file containing 100x the
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
-
