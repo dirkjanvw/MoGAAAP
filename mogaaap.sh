@@ -279,11 +279,11 @@ if ${generate_config}; then
         echo "Error: Helixer model not found: ${helixer_model}"
         critical_error=true
     fi
-    if [[ ! -f "${gxdb}" ]]; then
+    if [[ ! -d "${gxdb}" ]]; then
         echo "Error: GXDB database not found: ${gxdb}"
         critical_error=true
     fi
-    if [[ ! -f "${kraken}" ]]; then
+    if [[ ! -d "${kraken}" ]]; then
         echo "Error: Kraken2 database not found: ${kraken}"
         critical_error=true
     fi
