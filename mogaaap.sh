@@ -18,9 +18,6 @@ Options:
 
   [General options]
   -y, --config         Configuration YAML file (required)
-  --use-custom-singularity
-                       Use custom singularity containers (default: true)
-                       NB: Setting this to false will reduce the output
 
   [Configuration options (writes to --config); all required]
   --generate-config    Generate a configuration YAML file and exit
@@ -35,6 +32,9 @@ Options:
   --kraken-db          Kraken2 database location
   --OMA-db             OMA database location
   --telomere-motif     Telomere motif (default: CCCTAAA)
+  --use-custom-singularity
+                       Use custom singularity containers (default: true)
+                       NB: Setting this to false will reduce the output
 
   [Pipeline options]
   --run                Run the pipeline
@@ -51,7 +51,6 @@ EOF
 
 
 # Parse options
-use_custom_singularity=true
 config=
 
 generate_config=false
@@ -66,6 +65,7 @@ odb=
 kraken=
 OMAdb=
 telomere_motif=CCCTAAA
+use_custom_singularity=true
 
 run=false
 target=all
@@ -181,10 +181,6 @@ if ! ${generate_config} && ! ${run}; then
     echo "Error: Either --generate-config or --run must be specified"
     incomplete=true
 fi
-if [[ ! "${use_custom_singularity}" =~ ^(true|false)$ ]]; then
-    echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
-    incomplete=true
-fi
 if ${generate_config}; then
     if [[ -z "${samples}" ]]; then
         echo "Error: Missing required option for --generate-config: --samples"
@@ -220,6 +216,10 @@ if ${generate_config}; then
     fi
     if [[ -z "${OMAdb}" ]]; then
         echo "Error: Missing required option for --generate-config: --OMA-db"
+        incomplete=true
+    fi
+    if [[ ! "${use_custom_singularity}" =~ ^(true|false)$ ]]; then
+        echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
         incomplete=true
     fi
     if ${report}; then
@@ -274,6 +274,10 @@ if ${run}; then
     fi
     if [[ -n "${OMAdb}" ]]; then
         echo "Error: --OMA-db cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${use_custom_singularity}" ]]; then
+        echo "Error: --use-custom-singularity cannot be combined with --run"
         incomplete=true
     fi
     if [[ ! "${target}" =~ ^(all|assemble|scaffold|analyse|annotate|qa)$ ]]; then
@@ -481,7 +485,6 @@ if ${run}; then
       --cores ${cores} \
       ${dryrun:+--dryrun} \
       --use-conda --use-singularity \
-      --config custom_singularity=${use_custom_singularity} \
       --resources gbmem=${memory}
 
     # Create report if requested
