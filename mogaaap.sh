@@ -181,7 +181,7 @@ if ! ${generate_config} && ! ${run}; then
     echo "Error: Either --generate-config or --run must be specified"
     incomplete=true
 fi
-if [[ ! "${use_custom_singularity" =~ ^(true|false)$ ]]; then
+if [[ ! "${use_custom_singularity}" =~ ^(true|false)$ ]]; then
     echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
     incomplete=true
 fi
