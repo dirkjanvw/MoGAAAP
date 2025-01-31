@@ -1,4 +1,4 @@
-*
-!config.yaml
-!samples.tsv
-!.gitignore
+*.yaml
+*.tsv
+!example.yaml
+!example.tsv
