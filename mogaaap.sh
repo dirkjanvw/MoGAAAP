@@ -21,11 +21,13 @@ Options:
   --skip-custom-singularity
                        Skip custom singularity containers (default: false)
 
-  [Configuration options (writes to --config)]
+  [Configuration options (writes to --config); all required]
   --generate-config    Generate a configuration YAML file and exit
   -s, --samples        Sample sheet TSV file
   --reference-fasta    Reference genome FASTA file
   --reference-gff3     Reference annotation GFF3 file
+  --mitochondrion      Mitochondrial genome FASTA file
+  --chloroplast        Chloroplast genome FASTA file (optional)
   --helixer-model      Helixer model file
   --gxdb               GXDB database location
   --odb                ODB name for BUSCO
@@ -55,6 +57,8 @@ generate_config=false
 samples=
 reference=
 annotation=
+mitochondrion=
+chloroplast=
 helixer_model=
 gxdb=
 odb=
@@ -92,6 +96,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --reference-gff3)
             annotation="$2"
+            shift 2
+            ;;
+        --mitochondrion)
+            mitochondrion="$2"
+            shift 2
+            ;;
+        --chloroplast)
+            chloroplast="$2"
             shift 2
             ;;
         --helixer-model)
@@ -181,6 +193,10 @@ if ${generate_config}; then
         echo "Error: Missing required option for --generate-config: --reference-gff3"
         incomplete=true
     fi
+    if [[ -z "${mitochondrion}" ]]; then
+        echo "Error: Missing required option for --generate-config: --mitochondrion"
+        incomplete=true
+    fi
     if [[ -z "${helixer_model}" ]]; then
         echo "Error: Missing required option for --generate-config: --helixer-model"
         incomplete=true
@@ -225,6 +241,14 @@ if ${run}; then
     fi
     if [[ -n "${annotation}" ]]; then
         echo "Error: --reference-gff3 cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${mitochondrion}" ]]; then
+        echo "Error: --mitochondrion cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${chloroplast}" ]]; then
+        echo "Error: --chloroplast cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${helixer_model}" ]]; then
@@ -273,6 +297,14 @@ if ${generate_config}; then
     fi
     if [[ ! -f "${annotation}" ]]; then
         echo "Error: Reference annotation not found: ${annotation}"
+        critical_error=true
+    fi
+    if [[ ! -f "${mitochondrion}" ]]; then
+        echo "Error: Mitochondrial genome not found: ${mitochondrion}"
+        critical_error=true
+    fi
+    if [[ -n "${chloroplast}" ]] && [[ ! -f "${chloroplast}" ]]; then
+        echo "Error: Chloroplast genome not found: ${chloroplast}"
         critical_error=true
     fi
     if [[ ! -f "${helixer_model}" ]]; then
@@ -357,7 +389,15 @@ EOF
 #prot_queries: #optional
 nucl_queries: #optional but recommended
     telomere: $(realpath ${telomere_file}) #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
-#organellar: #optional
+organellar:
+    mitochondrion: $(realpath ${mitochondrion})
+EOF
+    # Add chloroplast if available
+    if [[ -n "${chloroplast}" ]]; then
+        echo "    chloroplast: $(realpath ${chloroplast})" >> "${config}"
+    fi
+    # And continue
+    cat <<EOF >> "${config}"
 telomere_motif: "${telomere_motif}" #for seqtk: it only identifies the motif at the end of a chromosome
 
 # Annotation settings
