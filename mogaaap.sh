@@ -2,12 +2,7 @@
 # This is a wrapper script around the MoGAAAP Snakemake pipeline
 # It is intended as a convenience script to run the pipeline
 #
-# Usage: mogaaap <command> [options]
-#
-# Commands:
-#   configure   Configure the configuration files using command line arguments
-#   validate    Validate the configuration files and existence of SIF files
-#   run         Run the MoGAAAP pipeline
+# Usage: mogaaap [options]
 
 
 # Print usage
@@ -16,232 +11,406 @@ usage() {
 
 === MoGAAAP wrapper script ===
 
-Usage: $(basename "$0") <command> [options]
+Usage: $(basename "$0") [options]
 
-Commands:
-  configure   Configure the pipeline
-                NB: This only works when all samples have the same reference genome
-    Options:
-      -s, --samples        Sample sheet TSV file
-                             (required)
-      -f, --reference      Reference genome FASTA file
-                             (required)
-      -g, --annotation     Reference annotation GFF3 file
-                             (required)
-      -m, --helixer_model  Helixer model file
-                             (required)
-      -x, --gxdb           GXDB database location
-                             (required)
-      -b, --odb            ODB name for BUSCO
-                             (required)
-      -k, --kraken_db      Kraken2 database location
-                             (required)
-      -a, --OMA-db         OMA database location
-                             (required)
-      -t, --telomere_motif Telomere motif
-                             default: CCCTAAA
-      -o, --output         Output configuration YAML file
-                             default: config.yaml
+Options:
+  -h, --help           Print this help message and exit
 
-  validate    Validate the configuration and pipeline
-    Options:
-      -v, --verbose  Print verbose output
-                       default: false
+  -y, --config         Configuration YAML file (required)
 
-  run         Run the MoGAAAP pipeline
-    Options:
-      -t, --target   Target to run (all, assemble, scaffold, analyse, annotate,
-                           qa)
-                       default: all
-      -r, --report   Generate a report
-                       default: false
-      -n, --dryrun  Perform a dry-run
-                       default: false
-      -c, --cores    Maximum allowed number of cores
-                       default: 10
-      -m, --memory   Maximum allowed memory (in GB)
-                       default: 10
+  [Configuration options (writes to --config)]
+  --generate-config    Generate a configuration YAML file and exit
+  --samples        Sample sheet TSV file
+  --reference-fasta    Reference genome FASTA file
+  --reference-gff3     Reference annotation GFF3 file
+  --helixer-model      Helixer model file
+  --gxdb               GXDB database location
+  --odb                ODB name for BUSCO
+  --kraken-db          Kraken2 database location
+  --OMA-db             OMA database location
+  --telomere-motif     Telomere motif (default: CCCTAAA)
 
-Global options:
-  -h, --help  Print this help message and exit
+  [Pipeline options]
+  --run                Run the pipeline
+  -t, --target         Target to run (all, assemble, scaffold, analyse,
+                            annotate, qa) (default: all)
+  -r, --report         Generate a report
+  -n, --dryrun         Perform a dry-run
+  -c, --cores          Maximum allowed number of cores (default: 10)
+  -m, --memory         Maximum allowed memory (in GB) (default: 500)
 
 EOF
     exit 1
 }
 
 
-# Handle configure subcommand
-handle_configure() {
-    # Parse options
-    telomere_motif=CCCTAAA
-    output=config.yaml
-    while getopts ":s:f:g:m:x:b:k:a:t:o:" opt; do
-        case $opt in
-            s) samples="$OPTARG" ;;
-            f) reference="$OPTARG" ;;
-            g) annotation="$OPTARG" ;;
-            m) helixer_model="$OPTARG" ;;
-            x) gxdb="$OPTARG" ;;
-            b) odb="$OPTARG" ;;
-            k) kraken="$OPTARG" ;;
-            a) OMAdb="$OPTARG" ;;
-            t) telomere_motif="$OPTARG" ;;
-            o) output="$OPTARG" ;;
-            \?) echo "Error: Invalid option -$OPTARG" >&2; usage ;;
-            :) echo "Error: Option -$OPTARG requires an argument" >&2; usage ;;
-        esac
-    done
+# Parse options
+samples=
+config=
+generate_config=false
+reference=
+annotation=
+helixer_model=
+gxdb=
+odb=
+kraken=
+OMAdb=
+telomere_motif=CCCTAAA
+run=false
+target=all
+report=false
+dryrun=false
+cores=10
+memory=500
 
-    # Check if required options are given
-    if [[ -z "${samples}" || -z "${reference}" || -z "${annotation}" || -z "${helixer_model}" || -z "${gxdb}" || -z "${odb}" || -z "${kraken}" || -z "${OMAdb}" ]]; then
-        echo "Error: Missing required options"
-        usage
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            usage
+            ;;
+        -s|--samples)
+            samples="$2"
+            shift 2
+            ;;
+        -y|--config)
+            config="$2"
+            shift 2
+            ;;
+        --generate-config)
+            generate_config=true
+            shift
+            ;;
+        --reference-fasta)
+            reference="$2"
+            shift 2
+            ;;
+        --reference-gff3)
+            annotation="$2"
+            shift 2
+            ;;
+        --helixer-model)
+            helixer_model="$2"
+            shift 2
+            ;;
+        --gxdb)
+            gxdb="$2"
+            shift 2
+            ;;
+        --odb)
+            odb="$2"
+            shift 2
+            ;;
+        --kraken-db)
+            kraken="$2"
+            shift 2
+            ;;
+        --OMA-db)
+            OMAdb="$2"
+            shift 2
+            ;;
+        --telomere-motif)
+            telomere_motif="$2"
+            shift 2
+            ;;
+        --run)
+            run=true
+            shift
+            ;;
+        -t|--target)
+            target="$2"
+            shift 2
+            ;;
+        -r|--report)
+            report=true
+            shift
+            ;;
+        -n|--dryrun)
+            dryrun=true
+            shift
+            ;;
+        -c|--cores)
+            cores="$2"
+            shift 2
+            ;;
+        -m|--memory)
+            memory="$2"
+            shift 2
+            ;;
+        *)
+            echo "Error: Unknown option: $1"
+            usage
+            ;;
+    esac
+done
+
+
+# Validate options
+incomplete=false
+if [[ -z "${config}" ]]; then
+    echo "Error: Missing required option: --config"
+    incomplete=true
+fi
+if ${generate_config} && ${run}; then
+    echo "Error: --generate-config cannot be combined with --run"
+    incomplete=true
+fi
+if ! ${generate_config} && ! ${run}; then
+    echo "Error: Either --generate-config or --run must be specified"
+    incomplete=true
+fi
+if ${generate_config}; then
+    if [[ -z "${samples}" ]]; then
+        echo "Error: Missing required option for --generate-config: --samples"
+        incomplete=true
     fi
+    if [[ -z "${reference}" ]]; then
+        echo "Error: Missing required option for --generate-config: --reference-fasta"
+        incomplete=true
+    fi
+    if [[ -z "${annotation}" ]]; then
+        echo "Error: Missing required option for --generate-config: --reference-gff3"
+        incomplete=true
+    fi
+    if [[ -z "${helixer_model}" ]]; then
+        echo "Error: Missing required option for --generate-config: --helixer-model"
+        incomplete=true
+    fi
+    if [[ -z "${gxdb}" ]]; then
+        echo "Error: Missing required option for --generate-config: --gxdb"
+        incomplete=true
+    fi
+    if [[ -z "${odb}" ]]; then
+        echo "Error: Missing required option for --generate-config: --odb"
+        incomplete=true
+    fi
+    if [[ -z "${kraken}" ]]; then
+        echo "Error: Missing required option for --generate-config: --kraken-db"
+        incomplete=true
+    fi
+    if [[ -z "${OMAdb}" ]]; then
+        echo "Error: Missing required option for --generate-config: --OMA-db"
+        incomplete=true
+    fi
+    if ${report}; then
+        echo "Error: --report cannot be combined with --generate-config"
+        incomplete=true
+    fi
+    if ${dryrun}; then
+        echo "Error: --dryrun cannot be combined with --generate-config"
+        incomplete=true
+    fi
+fi
+if ${run}; then
+    if [[ ! -f "${config}" ]]; then
+        echo "Error: Configuration file not found: ${config}"
+        incomplete=true
+    fi
+    if [[ -n "${samples}" ]]; then
+        echo "Error: --samples cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${reference}" ]]; then
+        echo "Error: --reference-fasta cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${annotation}" ]]; then
+        echo "Error: --reference-gff3 cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${helixer_model}" ]]; then
+        echo "Error: --helixer-model cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${gxdb}" ]]; then
+        echo "Error: --gxdb cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${odb}" ]]; then
+        echo "Error: --odb cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${kraken}" ]]; then
+        echo "Error: --kraken-db cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ -n "${OMAdb}" ]]; then
+        echo "Error: --OMA-db cannot be combined with --run"
+        incomplete=true
+    fi
+    if [[ ! "${target}" =~ ^(all|assemble|scaffold|analyse|annotate|qa)$ ]]; then
+        echo "Error: Invalid target: ${target}"
+        incomplete=true
+    fi
+fi
+if ${incomplete}; then
+    exit 1
+fi
 
-    # Check if files exist or can be created
-    fileerror=false
+
+# Generate configuration file if requested
+if ${generate_config}; then
+    echo "Generating configuration file: ${config}"
+
+    # Check existence files
+    critical_error=false
     if [[ ! -f "${samples}" ]]; then
-        echo "Error: Sample sheet file not found: ${samples}"
-        fileerror=true
+        echo "Error: Sample sheet not found: ${samples}"
+        critical_error=true
     fi
     if [[ ! -f "${reference}" ]]; then
-        echo "Error: Reference genome file not found: ${reference}"
-        fileerror=true
+        echo "Error: Reference genome not found: ${reference}"
+        critical_error=true
     fi
     if [[ ! -f "${annotation}" ]]; then
-        echo "Error: Reference annotation file not found: ${annotation}"
-        fileerror=true
+        echo "Error: Reference annotation not found: ${annotation}"
+        critical_error=true
     fi
     if [[ ! -f "${helixer_model}" ]]; then
-        echo "Error: Helixer model file not found: ${helixer_model}"
-        fileerror=true
+        echo "Error: Helixer model not found: ${helixer_model}"
+        critical_error=true
     fi
-    if [[ ! -d "${gxdb}" ]]; then
-        echo "Error: GXDB directory not found: ${gxdb}"
-        fileerror=true
+    if [[ ! -f "${gxdb}" ]]; then
+        echo "Error: GXDB database not found: ${gxdb}"
+        critical_error=true
     fi
-    if [[ ! -d "${kraken}" ]]; then
-        echo "Error: Kraken2 database directory not found: ${kraken}"
-        fileerror=true
+    if [[ ! -f "${kraken}" ]]; then
+        echo "Error: Kraken2 database not found: ${kraken}"
+        critical_error=true
     fi
-    if [[ ! -d "${OMAdb}" ]]; then
-        echo "Error: OMA database directory not found: ${OMAdb}"
-        fileerror=true
+    if [[ ! -f "${OMAdb}" ]]; then
+        echo "Error: OMA database not found: ${OMAdb}"
+        critical_error=true
     fi
-    if [[ -f "${output}" ]]; then
-        echo "Error: Output file already exists: ${output}"
-        fileerror=true
-    fi
-    if ${fileerror}; then
+    if ${critical_error}; then
         exit 1
     fi
 
     # Get reference name from first sample
     refname=$(awk 'BEGIN{FS = OFS = "\t";} FNR==1{for (i=1;i<=NF;i++) if ($i == "referenceId") {col=i; break;}} FNR==2{print $col; exit;}' ${samples})
 
-    # Configure the pipeline
-    echo "Writing configuration to ${output}"
-    echo "samples: $(realpath ${samples})" > ${output}
-    echo "assembler: hifiasm" >> ${output}
-    echo "scaffolder: ntjoin" >> ${output}
-    echo "min_contig_len: 10000" >> ${output}
-    echo "ntjoin_k: 52" >> ${output}
-    echo "ntjoin_w: 16000" >> ${output}
-    echo "reference_genomes:" >> ${output}
-    echo "    ${refname}:" >> ${output}
-    echo "        genome: $(realpath ${reference})" >> ${output}
-    echo "        annotation: $(realpath ${annotation})" >> ${output}
-    echo "        chromosomes:" >> ${output}
-    awk '/^>/{printf "            %d: \"%s\"\n", ++c, substr($0,2);}' ${reference} >> ${output}
-    echo "#prot_queries: #optional" >> ${output}
-    echo "#nucl_queries: #optional" >> ${output}
-    echo "#organellar: #optional" >> ${output}
-    echo "telomere_motif: \"${telomere_motif}\"" >> ${output}
-    echo "helixer_model: $(realpath ${helixer_model})" >> ${output}
-    echo "helixer_max_gene_length: 64152" >> ${output}
-    echo "k_qa: 21" >> ${output}
-    echo "gxdb: $(realpath ${gxdb})" >> ${output}
-    echo "pantools_grouping: 3" >> ${output}
-    echo "odb: ${odb}" >> ${output}
-    echo "kraken2_nt: $(realpath ${kraken})" >> ${output}
-    echo "OMAdb: $(realpath ${OMAdb})" >> ${output}
-    echo "set:" >> ${output}
-    echo "    all:" >> ${output}
+    # Create telomere motif file for blastn
+    telomere_file=$(mktemp)
+    echo ${telomere_motif} | awk 'BEGIN{print ">telomere";} {for (i=1;i<=100;i++){printf "%s",$1;} printf "\n";}' > ${telomere_file}
+
+    cat <<EOF > "${config}"
+# MoGAAAP configuration file (auto-generated)
+# Please edit this file to customize the pipeline
+
+# This file contains the full configuration for the pipeline in YAML format.
+# Make sure to fill out at least everything that is not labelled as optional.
+# All strings that start with "resources" should be relative or absolute paths
+# on your machine that are readable by Snakemake.
+
+# All samples should be defined in a TSV file. In this file, a unique
+# accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
+# paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
+# ID should be defined.
+samples: $(realpath ${samples})
+
+# Assembly settings
+assembler: "hifiasm" #supported assemblers: hifiasm, verkko
+
+# Scaffolding settings
+scaffolder: "ntjoin" #supported scaffolders: ntjoin, ragtag
+
+# All filtering and scaffolding parameters
+min_contig_len: 10000
+ntjoin_k: 52 #required for ntjoin
+ntjoin_w: 16000 #required for ntjoin
+
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
+reference_genomes:
+    ${refname}:
+        genome: $(realpath ${reference})
+        annotation: $(realpath ${annotation})
+        chromosomes:
+EOF
+    # Add chromosomes to configuration
+    awk '/^>/{printf "            %d: \"%s\"\n", ++c, substr($0,2);}' "${reference}" >> "${config}"
+    # And continue
+    cat <<EOF >> "${config}"
+
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one protein or nucleotide query is
+# required for the module to run (organellar sequences count as nucleotide
+# queries).
+# Contigs with a more than 50% of its length covered by an organellar sequence
+# will be separated from the scaffolded assembly output (not for QC, though).
+# For the protein queries, the query should be a single exon domain as it
+# is searched in the genome and not in the proteome
+#prot_queries: #optional
+nucl_queries: #optional but recommended
+    telomere: $(realpath ${telomere_file}) #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
+#organellar: #optional
+telomere_motif: "${telomere_motif}" #for seqtk: it only identifies the motif at the end of a chromosome
+
+# Annotation settings
+helixer_model: $(realpath ${helixer_model})
+helixer_max_gene_length: 64152
+
+# Quality assessment settings
+k_qa: 21 #optimal k-mer size for quality assessment
+gxdb: $(realpath ${gxdb}) #path to gxdb for fcs-gx
+pantools_grouping: 3 #grouping relaxation setting for pantools
+odb: ${odb} #ODB database for busco
+kraken2_nt: $(realpath ${kraken}) #kraken2 database
+OMAdb: $(realpath ${OMAdb}) #OMA database for orthologs
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive and will only be used for QC.
+set:
+    all:
+EOF
+    # Add samples to configuration
     for id in $(cut -f 1 ${samples} | tail -n +2); do
-        echo "        - ${id}" >> ${output}
+        echo "        - ${id}" >> "${config}"
     done
-    echo "jvm: \"-Xmx100g -Xms100g\"" >> ${output}
-    echo "tmpdir: /dev/shm" >> ${output}
-    echo "nucmer_maxgap: 1000" >> ${output}
-    echo "nucmer_minmatch: 1000" >> ${output}
-}
+    # And continue
+    cat <<EOF >> "${config}"
+
+# General settings; only change if you know what you are doing
+jvm: "-Xmx100g -Xms100g" #java virtual machine settings
+tmpdir: "/dev/shm/" #temporary directory for fast IO
+nucmer_maxgap: 1000 #maximum gap size for nucmer
+nucmer_minmatch: 1000 #minimum match size for nucmer
+EOF
+    exit 0
+
+    # Log success
+    echo "Configuration file generated: ${config}"
+    echo "Please edit this file to customize the pipeline"
+fi
 
 
-# Handle validate subcommand
-handle_validate() {
-    # Parse options
-    verbose=false
-    while getopts ":v" opt; do
-        case $opt in
-            v) verbose=true ;;
-            \?) echo "Error: Invalid option -$OPTARG" >&2; usage ;;
-        esac
-    done
+# Run the pipeline if requested
+if ${run}; then
 
-    # Validate the pipeline
-    echo "Validating pipeline"
-    valid=true
-    for def in $(ls workflow/singularity/*/*def); do
-        if [[ -f "${def%def}sif" ]]; then
-            if $verbose; then
-                echo "Found SIF file for $(basename $(dirname ${def})): ${def%def}sif"
-            fi
-        else
-            echo "Error: SIF file not found for $(basename $(dirname ${def})): ${def%def}sif"
-            valid=false
-        fi
-    done
-
-    # Exit if pipeline is not valid
-    if ! $valid; then
+    # Check existence of configuration file
+    if [[ ! -f "${config}" ]]; then
+        echo "Error: Configuration file not found: ${config}"
         exit 1
     fi
 
-    # Validate the configuration by running Snakemake with --dryrun
-    echo "Validating configuration"
-    echo snakemake ${target} \
-      --printshellcmds \
-      --cores ${cores} \
-      --dryrun \
-      --use-conda --use-singularity \
-      --resources gbmem=${memory} helixer=1 pantools=1
-}
+    # Check if snakemake and singularity (or apptainer) are available
+    if ! command -v snakemake &> /dev/null; then
+        echo "Error: Snakemake not found"
+        exit 1
+    fi
+    if ! command -v singularity &> /dev/null; then
+        if ! command -v apptainer &> /dev/null; then
+            echo "Error: Singularity nor Apptainer found"
+            exit 1
+        fi
+    fi
 
-
-# Handle run subcommand
-handle_run() {
-    # Parse options
-    target=all
-    dryrun=
-    report=false
-    cores=10
-    memory=10
-    while getopts ":nrt:c:m:" opt; do
-        case $opt in
-            n) dryrun=true ;;
-            r) report=true ;;
-            t) target="$OPTARG" ;;
-            c) cores="$OPTARG" ;;
-            m) memory="$OPTARG" ;;
-            \?) echo "Error: Invalid option -$OPTARG" >&2; usage ;;
-            :) echo "Error: Option -$OPTARG requires an argument" >&2; usage ;;
-        esac
-    done
-
-    # Check if target is valid
-    if [[ ! "$target" =~ ^(all|assemble|scaffold|analyse|annotate|qa)$ ]]; then
-        echo "Error: Invalid target: $target"
-        usage
+    # Log start
+    if ${dryrun}; then
+        echo "Performing a dry-run"
+    else
+        echo "Running the pipeline"
+        dryrun=
     fi
 
     # Run the pipeline
@@ -250,49 +419,10 @@ handle_run() {
       --cores ${cores} \
       ${dryrun:+--dryrun} \
       --use-conda --use-singularity \
-      --resources gbmem=${memory} helixer=1 pantools=1
+      --resources gbmem=${memory}
 
     # Create report if requested
-    if $report; then
+    if ${report}; then
         echo snakemake ${target} --report report.html
     fi
-}
-
-
-# Check if any arguments are given
-if [[ $# -eq 0 ]]; then
-    usage
 fi
-
-
-# Handle global options
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -h|--help)
-            usage
-            ;;
-        *)
-            break
-            ;;
-    esac
-done
-
-
-# Handle subcommands
-subcommand="$1"
-shift
-case "$subcommand" in
-    configure)
-        handle_configure "$@"
-        ;;
-    validate)
-        handle_validate "$@"
-        ;;
-    run)
-        handle_run "$@"
-        ;;
-    *)
-        echo "Error: Unknown command: $subcommand"
-        usage
-        ;;
-esac
