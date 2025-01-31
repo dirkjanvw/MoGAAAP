@@ -430,7 +430,7 @@ if ${run}; then
     fi
 
     # Run the pipeline
-    echo snakemake ${target} \
+    snakemake ${target} \
       --configfile ${config} \
       --printshellcmds \
       --cores ${cores} \
@@ -441,6 +441,8 @@ if ${run}; then
 
     # Create report if requested
     if ${report}; then
-        echo snakemake ${target} --report report.html
+        snakemake ${target} \
+          ${dryrun:+--dryrun} \
+          --report report.html
     fi
 fi
