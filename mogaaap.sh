@@ -16,11 +16,14 @@ Usage: $(basename "$0") [options]
 Options:
   -h, --help           Print this help message and exit
 
+  [General options]
   -y, --config         Configuration YAML file (required)
+  --skip-custom-singularity
+                       Skip custom singularity containers (default: false)
 
   [Configuration options (writes to --config)]
   --generate-config    Generate a configuration YAML file and exit
-  --samples        Sample sheet TSV file
+  -s, --samples        Sample sheet TSV file
   --reference-fasta    Reference genome FASTA file
   --reference-gff3     Reference annotation GFF3 file
   --helixer-model      Helixer model file
@@ -45,9 +48,11 @@ EOF
 
 
 # Parse options
-samples=
+skip_custom_singularity=false
 config=
+
 generate_config=false
+samples=
 reference=
 annotation=
 helixer_model=
@@ -56,6 +61,7 @@ odb=
 kraken=
 OMAdb=
 telomere_motif=CCCTAAA
+
 run=false
 target=all
 report=false
@@ -135,6 +141,10 @@ while [[ $# -gt 0 ]]; do
         -m|--memory)
             memory="$2"
             shift 2
+            ;;
+        --skip-custom-singularity)
+            skip_custom_singularity=true
+            shift
             ;;
         *)
             echo "Error: Unknown option: $1"
@@ -307,6 +317,10 @@ if ${generate_config}; then
 # ID should be defined.
 samples: $(realpath ${samples})
 
+# Whether custom singularity containers can be used. If set to false, not all
+# output will be available.
+custom_singularity: ${skip_custom_singularity}
+
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
 
@@ -422,6 +436,7 @@ if ${run}; then
       --cores ${cores} \
       ${dryrun:+--dryrun} \
       --use-conda --use-singularity \
+      --config skip_custom_singularity=${skip_custom_singularity} \
       --resources gbmem=${memory}
 
     # Create report if requested
