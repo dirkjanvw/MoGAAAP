@@ -16,11 +16,12 @@ rule copy_contigs:
 
 def get_mummerplot_contigs(wildcards):
     filelist = []
-    minlen = config["min_contig_len"]
-    for asmname in get_all_accessions():
-        reference = get_reference_id(asmname)
-        filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp")
-        filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp")
+    if singularity_enabled():
+        minlen = config["min_contig_len"]
+        for asmname in get_all_accessions():
+            reference = get_reference_id(asmname)
+            filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp")
+            filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp")
     return filelist
 
 rule assemble:

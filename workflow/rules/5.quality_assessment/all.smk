@@ -88,36 +88,39 @@ def get_mash_output(wildcards):
 
 def get_ntsynt_output(wildcards):
     all_output = []
-    mink = 24
-    minw = 1000
-    for asmset in config["set"]:
-        if (len(get_all_accessions_from_asmset(asmset)) < 2):
-            continue
-        if len(config["set"][asmset]) >= 2:  #synteny only makes sense for multiple genomes
-            all_output.append(f"results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png")
+    if singularity_enabled():
+        mink = 24
+        minw = 1000
+        for asmset in config["set"]:
+            if (len(get_all_accessions_from_asmset(asmset)) < 2):
+                continue
+            if len(config["set"][asmset]) >= 2:  #synteny only makes sense for multiple genomes
+                all_output.append(f"results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png")
     return all_output
 
 def get_sans_output(wildcards):
     all_output = []
-    k = config["k_qa"]
-    bootstrap = 1000
-    for asmset in config["set"]:
-        if (len(get_all_accessions_from_asmset(asmset)) < 2):
-            continue
-        if len(config["set"][asmset]) >= 4:  #phylogenetic networks only makes sense for 4+ genomes
-            all_output.append(f"results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus")
+    if singularity_enabled():
+        k = config["k_qa"]
+        bootstrap = 1000
+        for asmset in config["set"]:
+            if (len(get_all_accessions_from_asmset(asmset)) < 2):
+                continue
+            if len(config["set"][asmset]) >= 4:  #phylogenetic networks only makes sense for 4+ genomes
+                all_output.append(f"results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus")
     return all_output
 
 def get_pangrowth_output(wildcards):
     all_output = []
-    k = config["k_qa"]
-    for asmset in config["set"]:
-        if (len(get_all_accessions_from_asmset(asmset)) < 2):
-            continue
-        if len(config["set"][asmset]) >= 3:
-            all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/hist.pdf"),  #pangrowth hist
-            all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/growth.pdf"),  #pangrowth growth
-            all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/core.pdf"),  #pangrowth core
+    if singularity_enabled():
+        k = config["k_qa"]
+        for asmset in config["set"]:
+            if (len(get_all_accessions_from_asmset(asmset)) < 2):
+                continue
+            if len(config["set"][asmset]) >= 3:
+                all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/hist.pdf"),  #pangrowth hist
+                all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/growth.pdf"),  #pangrowth growth
+                all_output.append(f"results/{asmset}/5.quality_assessment/12.pangrowth/{k}/core.pdf"),  #pangrowth core
     return all_output
 
 def get_statistics_output(wildcards):
