@@ -65,7 +65,7 @@ odb=
 kraken=
 OMAdb=
 telomere_motif=CCCTAAA
-use_custom_singularity=true
+use_custom_singularity=
 
 run=false
 target=all
@@ -217,6 +217,9 @@ if ${generate_config}; then
     if [[ -z "${OMAdb}" ]]; then
         echo "Error: Missing required option for --generate-config: --OMA-db"
         incomplete=true
+    fi
+    if [[ -z "${use_custom_singularity}" ]]; then
+        use_custom_singularity=true
     fi
     if [[ ! "${use_custom_singularity}" =~ ^(true|false)$ ]]; then
         echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
