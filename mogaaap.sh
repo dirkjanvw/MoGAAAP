@@ -341,7 +341,7 @@ reference_genomes:
         chromosomes:
 EOF
     # Add chromosomes to configuration
-    awk '/^>/{printf "            %d: \"%s\"\n", ++c, substr($0,2);}' "${reference}" >> "${config}"
+    awk '/^>/{printf "            %d: \"%s\"\n", ++c, substr($1,2);}' "${reference}" >> "${config}"
     # And continue
     cat <<EOF >> "${config}"
 
