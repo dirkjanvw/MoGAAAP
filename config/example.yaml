@@ -9,6 +9,10 @@
 # ID should be defined.
 samples: "config/example.tsv"
 
+# Whether custom singularity containers can be used. If set to false, not all
+# output will be available.
+custom_singularity: true
+
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
 
