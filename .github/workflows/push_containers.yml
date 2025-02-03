@@ -1,0 +1,30 @@
+name: Build and Push Singularity Containers
+
+on: push
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v3
+
+            - name: Set up Skopeo
+              run: sudo apt-get update && sudo apt-get install -y skopeo singularity-container
+
+            - name: Log in to GitHub Container Registry
+              uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build and Push Singularity Containers
+              run: |
+                  cd workflow/singularity
+                  for def_file in */*.def; do
+                    container_name=$(basename "${def_file}" .def)
+                    sudo singularity build "${container_name}.sif" "${def_file}"
+                    skopeo copy oci:"./${container_name}.sif" docker-daemon:ghcr.io/${{ github.repository }}-"${container_name}":latest
+                    docker push ghcr.io/${{ github.repository }}-"${container_name}":latest
+                  done
