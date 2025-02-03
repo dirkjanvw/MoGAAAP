@@ -160,7 +160,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         *)
-            echo "Error: Unknown option: $1"
+            echo "[wrapper] Error: Unknown option: $1"
             usage
             ;;
     esac
@@ -170,121 +170,121 @@ done
 # Validate options
 incomplete=false
 if [[ -z "${config}" ]]; then
-    echo "Error: Missing required option: --config"
+    echo "[wrapper] Error: Missing required option: --config"
     incomplete=true
 fi
 if ${generate_config} && ${run}; then
-    echo "Error: --generate-config cannot be combined with --run"
+    echo "[wrapper] Error: --generate-config cannot be combined with --run"
     incomplete=true
 fi
 if ! ${generate_config} && ! ${run}; then
-    echo "Error: Either --generate-config or --run must be specified"
+    echo "[wrapper] Error: Either --generate-config or --run must be specified"
     incomplete=true
 fi
 if ${generate_config}; then
     if [[ -z "${samples}" ]]; then
-        echo "Error: Missing required option for --generate-config: --samples"
+        echo "[wrapper] Error: Missing required option for --generate-config: --samples"
         incomplete=true
     fi
     if [[ -z "${reference}" ]]; then
-        echo "Error: Missing required option for --generate-config: --reference-fasta"
+        echo "[wrapper] Error: Missing required option for --generate-config: --reference-fasta"
         incomplete=true
     fi
     if [[ -z "${annotation}" ]]; then
-        echo "Error: Missing required option for --generate-config: --reference-gff3"
+        echo "[wrapper] Error: Missing required option for --generate-config: --reference-gff3"
         incomplete=true
     fi
     if [[ -z "${mitochondrion}" ]]; then
-        echo "Error: Missing required option for --generate-config: --mitochondrion"
+        echo "[wrapper] Error: Missing required option for --generate-config: --mitochondrion"
         incomplete=true
     fi
     if [[ -z "${helixer_model}" ]]; then
-        echo "Error: Missing required option for --generate-config: --helixer-model"
+        echo "[wrapper] Error: Missing required option for --generate-config: --helixer-model"
         incomplete=true
     fi
     if [[ -z "${gxdb}" ]]; then
-        echo "Error: Missing required option for --generate-config: --gxdb"
+        echo "[wrapper] Error: Missing required option for --generate-config: --gxdb"
         incomplete=true
     fi
     if [[ -z "${odb}" ]]; then
-        echo "Error: Missing required option for --generate-config: --odb"
+        echo "[wrapper] Error: Missing required option for --generate-config: --odb"
         incomplete=true
     fi
     if [[ -z "${kraken}" ]]; then
-        echo "Error: Missing required option for --generate-config: --kraken-db"
+        echo "[wrapper] Error: Missing required option for --generate-config: --kraken-db"
         incomplete=true
     fi
     if [[ -z "${OMAdb}" ]]; then
-        echo "Error: Missing required option for --generate-config: --OMA-db"
+        echo "[wrapper] Error: Missing required option for --generate-config: --OMA-db"
         incomplete=true
     fi
     if [[ -z "${use_custom_singularity}" ]]; then
         use_custom_singularity=true
     fi
     if [[ ! "${use_custom_singularity}" =~ ^(true|false)$ ]]; then
-        echo "Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
+        echo "[wrapper] Error: Invalid option for --use-custom-singularity: ${use_custom_singularity} (only true/false allowed)"
         incomplete=true
     fi
     if ${report}; then
-        echo "Error: --report cannot be combined with --generate-config"
+        echo "[wrapper] Error: --report cannot be combined with --generate-config"
         incomplete=true
     fi
     if ${dryrun}; then
-        echo "Error: --dryrun cannot be combined with --generate-config"
+        echo "[wrapper] Error: --dryrun cannot be combined with --generate-config"
         incomplete=true
     fi
 fi
 if ${run}; then
     if [[ ! -f "${config}" ]]; then
-        echo "Error: Configuration file not found: ${config}"
+        echo "[wrapper] Error: Configuration file not found: ${config}"
         incomplete=true
     fi
     if [[ -n "${samples}" ]]; then
-        echo "Error: --samples cannot be combined with --run"
+        echo "[wrapper] Error: --samples cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${reference}" ]]; then
-        echo "Error: --reference-fasta cannot be combined with --run"
+        echo "[wrapper] Error: --reference-fasta cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${annotation}" ]]; then
-        echo "Error: --reference-gff3 cannot be combined with --run"
+        echo "[wrapper] Error: --reference-gff3 cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${mitochondrion}" ]]; then
-        echo "Error: --mitochondrion cannot be combined with --run"
+        echo "[wrapper] Error: --mitochondrion cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${chloroplast}" ]]; then
-        echo "Error: --chloroplast cannot be combined with --run"
+        echo "[wrapper] Error: --chloroplast cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${helixer_model}" ]]; then
-        echo "Error: --helixer-model cannot be combined with --run"
+        echo "[wrapper] Error: --helixer-model cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${gxdb}" ]]; then
-        echo "Error: --gxdb cannot be combined with --run"
+        echo "[wrapper] Error: --gxdb cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${odb}" ]]; then
-        echo "Error: --odb cannot be combined with --run"
+        echo "[wrapper] Error: --odb cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${kraken}" ]]; then
-        echo "Error: --kraken-db cannot be combined with --run"
+        echo "[wrapper] Error: --kraken-db cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${OMAdb}" ]]; then
-        echo "Error: --OMA-db cannot be combined with --run"
+        echo "[wrapper] Error: --OMA-db cannot be combined with --run"
         incomplete=true
     fi
     if [[ -n "${use_custom_singularity}" ]]; then
-        echo "Error: --use-custom-singularity cannot be combined with --run"
+        echo "[wrapper] Error: --use-custom-singularity cannot be combined with --run"
         incomplete=true
     fi
     if [[ ! "${target}" =~ ^(all|assemble|scaffold|analyse|annotate|qa)$ ]]; then
-        echo "Error: Invalid target: ${target}"
+        echo "[wrapper] Error: Invalid target: ${target}"
         incomplete=true
     fi
 fi
@@ -295,44 +295,44 @@ fi
 
 # Generate configuration file if requested
 if ${generate_config}; then
-    echo "Generating configuration file: ${config}"
+    echo "[wrapper] Generating configuration file: ${config}"
 
     # Check existence files
     critical_error=false
     if [[ ! -f "${samples}" ]]; then
-        echo "Error: Sample sheet not found: ${samples}"
+        echo "[wrapper] Error: Sample sheet not found: ${samples}"
         critical_error=true
     fi
     if [[ ! -f "${reference}" ]]; then
-        echo "Error: Reference genome not found: ${reference}"
+        echo "[wrapper] Error: Reference genome not found: ${reference}"
         critical_error=true
     fi
     if [[ ! -f "${annotation}" ]]; then
-        echo "Error: Reference annotation not found: ${annotation}"
+        echo "[wrapper] Error: Reference annotation not found: ${annotation}"
         critical_error=true
     fi
     if [[ ! -f "${mitochondrion}" ]]; then
-        echo "Error: Mitochondrial genome not found: ${mitochondrion}"
+        echo "[wrapper] Error: Mitochondrial genome not found: ${mitochondrion}"
         critical_error=true
     fi
     if [[ -n "${chloroplast}" ]] && [[ ! -f "${chloroplast}" ]]; then
-        echo "Error: Chloroplast genome not found: ${chloroplast}"
+        echo "[wrapper] Error: Chloroplast genome not found: ${chloroplast}"
         critical_error=true
     fi
     if [[ ! -f "${helixer_model}" ]]; then
-        echo "Error: Helixer model not found: ${helixer_model}"
+        echo "[wrapper] Error: Helixer model not found: ${helixer_model}"
         critical_error=true
     fi
     if [[ ! -d "${gxdb}" ]]; then
-        echo "Error: GXDB database not found: ${gxdb}"
+        echo "[wrapper] Error: GXDB database not found: ${gxdb}"
         critical_error=true
     fi
     if [[ ! -d "${kraken}" ]]; then
-        echo "Error: Kraken2 database not found: ${kraken}"
+        echo "[wrapper] Error: Kraken2 database not found: ${kraken}"
         critical_error=true
     fi
     if [[ ! -f "${OMAdb}" ]]; then
-        echo "Error: OMA database not found: ${OMAdb}"
+        echo "[wrapper] Error: OMA database not found: ${OMAdb}"
         critical_error=true
     fi
     if ${critical_error}; then
@@ -445,8 +445,8 @@ EOF
     exit 0
 
     # Log success
-    echo "Configuration file generated: ${config}"
-    echo "Please edit this file to customize the pipeline"
+    echo "[wrapper] Configuration file generated: ${config}"
+    echo "[wrapper] Please edit this file to customize the pipeline"
 fi
 
 
@@ -456,29 +456,29 @@ if ${run}; then
 
     # Check existence of Snakemake
     if ! command -v snakemake &> /dev/null; then
-        echo "Error: Snakemake not found"
+        echo "[wrapper] Error: Snakemake not found"
         problems=true
     fi
 
     # Log start
     if ${dryrun}; then
-        echo "Performing a dry-run"
+        echo "[wrapper] Performing a dry-run"
     else
-        echo "Running the pipeline"
+        echo "[wrapper] Running the pipeline"
         dryrun=
     fi
 
     # Check existence of Singularity or Apptainer
     if ! command -v singularity &> /dev/null; then
         if ! command -v apptainer &> /dev/null; then
-            echo "Error: Singularity nor Apptainer found"
+            echo "[wrapper] Error: Singularity nor Apptainer found"
             problems=true
         fi
     fi
 
     # Check existence of configuration file
     if [[ ! -f "${config}" ]]; then
-        echo "Error: Configuration file not found: ${config}"
+        echo "[wrapper] Error: Configuration file not found: ${config}"
         problems=true
     fi
 
@@ -486,7 +486,7 @@ if ${run}; then
     if grep -q "custom_singularity: true" ${config}; then
         for def in workflow/singularity/*/*.def; do
             if [[ ! -f "${def%def}sif" ]]; then
-                echo "Error: Custom Singularity container not found: ${def%def}sif"
+                echo "[wrapper] Error: Custom Singularity container not found: ${def%def}sif"
                 problems=true
             fi
         done
