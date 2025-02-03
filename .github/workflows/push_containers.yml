@@ -27,10 +27,11 @@ jobs:
 
             - name: Build and Push Singularity Containers
               run: |
+                  repo_name=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
                   cd workflow/singularity
                   for def_file in */*.def; do
                     container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
                     sudo singularity build "${container_name}.sif" "${def_file}"
-                    skopeo copy oci:"./${container_name}.sif" docker-daemon:ghcr.io/${{ github.repository | toLowerCase }}-"${container_name}":latest
-                    docker push ghcr.io/${{ github.repository | toLowerCase }}-"${container_name}":latest
+                    skopeo copy oci:"./${container_name}.sif" docker://ghcr.io/${repo_name}-"${container_name}":latest
+                    docker push ghcr.io/${repo_name}-"${container_name}":latest
                   done
