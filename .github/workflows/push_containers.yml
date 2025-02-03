@@ -18,12 +18,16 @@ jobs:
             - name: Set up Skopeo
               run: sudo apt-get update && sudo apt-get install -y skopeo singularity-container
 
-            - name: Log in to GitHub Container Registry
-              uses: docker/login-action@v2
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
+            # - name: Log in to GitHub Container Registry
+            #   uses: docker/login-action@v2
+            #   with:
+            #       registry: ghcr.io
+            #       username: ${{ github.actor }}
+            #       password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Log in to GitHub Container Registry for ORAS
+              run: |
+                  echo "${{ secrets.GITHUB_TOKEN }}" | singularity remote login --token oras://ghcr.io
 
             - name: Build and Push Singularity Containers
               run: |
@@ -32,6 +36,5 @@ jobs:
                   for def_file in */*.def; do
                     container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
                     sudo singularity build "${container_name}.sif" "${def_file}"
-                    skopeo copy oci:"./${container_name}.sif" docker://ghcr.io/${repo_name}-"${container_name}":latest
-                    docker push ghcr.io/${repo_name}-"${container_name}":latest
+                    sudo singularity push "${container_name}.sif" oras://ghcr.io/${repo_name}/${container_name}:latest
                   done
