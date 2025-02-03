@@ -1,12 +1,12 @@
 name: Build and Push Singularity Containers
 
-on:
-    push:
-        branches:
-            - main
-            - try_add_containers
-        paths:
-            - "workflow/singularity/**"
+# on:
+#     push:
+#         branches:
+#             - main
+#         paths:
+#             - "workflow/singularity/**"
+on: push
 
 jobs:
     build-and-push:
