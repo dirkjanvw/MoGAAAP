@@ -452,11 +452,12 @@ fi
 
 # Run the pipeline if requested
 if ${run}; then
+    problems=false
 
     # Check existence of Snakemake
     if ! command -v snakemake &> /dev/null; then
         echo "Error: Snakemake not found"
-        exit 1
+        problems=true
     fi
 
     # Log start
@@ -465,19 +466,34 @@ if ${run}; then
     else
         echo "Running the pipeline"
         dryrun=
+    fi
 
-        # Check existence of Singularity or Apptainer
-        if ! command -v singularity &> /dev/null; then
-            if ! command -v apptainer &> /dev/null; then
-                echo "Error: Singularity nor Apptainer found"
-                exit 1
-            fi
+    # Check existence of Singularity or Apptainer
+    if ! command -v singularity &> /dev/null; then
+        if ! command -v apptainer &> /dev/null; then
+            echo "Error: Singularity nor Apptainer found"
+            problems=true
         fi
     fi
 
     # Check existence of configuration file
     if [[ ! -f "${config}" ]]; then
         echo "Error: Configuration file not found: ${config}"
+        problems=true
+    fi
+
+    # If custom_singularity in config file has been set to true, check for presence of SIF files in workflow/singularity directory
+    if grep -q "custom_singularity: true" ${config}; then
+        for def in workflow/singularity/*/*.def; do
+            if [[ ! -f "${def%def}sif" ]]; then
+                echo "Error: Custom Singularity container not found: ${def%def}sif"
+                problems=true
+            fi
+        done
+    fi
+
+    # Exit if any problems were found
+    if ${problems}; then
         exit 1
     fi
 
