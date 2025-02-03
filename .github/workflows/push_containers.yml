@@ -27,7 +27,6 @@ jobs:
 
             - name: Log in to GitHub Container Registry for ORAS
               run: |
-                  echo "${{ secrets.GITHUB_TOKEN }}" | singularity remote login --token oras://ghcr.io
                   echo "${{ secrets.GITHUB_TOKEN }}" | singularity remote login -u ${{ secrets.GHCR_USERNAME }} --password-stdin oras://ghcr.io
 
             - name: Build and Push Singularity Containers
