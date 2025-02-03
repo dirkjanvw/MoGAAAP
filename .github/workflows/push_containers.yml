@@ -42,5 +42,5 @@ jobs:
                   for def_file in */*.def; do
                     container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
                     sudo singularity build "${container_name}.sif" "${def_file}"
-                    sudo singularity push "${container_name}.sif" oras://ghcr.io/${repo_name}/${container_name}:latest
+                    oras push oras://ghcr.io/${repo_name}/${container_name}:latest "${container_name}.sif"
                   done
