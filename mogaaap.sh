@@ -342,6 +342,9 @@ if ${generate_config}; then
     # Get reference name from first sample
     refname=$(awk 'BEGIN{FS = OFS = "\t";} FNR==1{for (i=1;i<=NF;i++) if ($i == "referenceId") {col=i; break;}} FNR==2{print $col; exit;}' ${samples})
 
+    # Get k-mer size for merqury (k=\frac{\log \left(G \cdot \frac{1-e}{e}\right)}{\log (n)}) where G=genome size, n=4, e=0.001
+    k_qa=$(awk '/^[^>]/{s+=length($1);} END{print s;}' ${reference} | awk -ve=0.001 -vn=4 '{print int(log($1*(1-e)/e)/log(n));}')
+
     # Create telomere motif file for blastn
     telomere_file=$(mktemp)
     echo ${telomere_motif} | awk 'BEGIN{print ">telomere";} {for (i=1;i<=100;i++){printf "%s",$1;} printf "\n";}' > ${telomere_file}
@@ -417,7 +420,7 @@ helixer_model: $(realpath ${helixer_model})
 helixer_max_gene_length: 64152
 
 # Quality assessment settings
-k_qa: 21 #optimal k-mer size for quality assessment
+k_qa: ${k_qa} #optimal k-mer size for quality assessment
 gxdb: $(realpath ${gxdb}) #path to gxdb for fcs-gx
 pantools_grouping: 3 #grouping relaxation setting for pantools
 odb: ${odb} #ODB database for busco
