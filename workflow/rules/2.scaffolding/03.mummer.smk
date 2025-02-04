@@ -26,7 +26,7 @@ rule mummer:
     threads:
         lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]),  #the number of chromosomes
     container:
-        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/mummer-4.0.0rc1:latest"
     shell:
         "nucmer -t {threads} -l {params.nucmer_maxgap} -g {params.nucmer_minmatch} --prefix=$(echo {output} | rev | cut -d '.' -f 2- | rev) {input.reference} {input.assembly} &> {log}"
 
@@ -50,7 +50,7 @@ rule dotplot:
     benchmark:
         "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.txt"
     container:
-        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/mummer-4.0.0rc1:latest"
     shell:  #assumes input and output are in same directory
         """
         (
@@ -77,7 +77,7 @@ rule dotplot_large:
     benchmark:
         "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.large.txt"
     container:
-        "workflow/singularity/mummer/mummer-4.0.0rc1.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/mummer-4.0.0rc1:latest"
     shell:
         """
         (
