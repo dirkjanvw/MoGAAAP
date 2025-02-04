@@ -15,6 +15,8 @@ rule fcs_gx:
         gbmem = 500
     container:
         "docker://ncbi/fcs-gx:0.5.0"
+    retries:
+        3
     shell:
         "run_gx --fasta {input} --tax-id {params.taxid} --gx-db {params.gxdb} --out-basename {wildcards.asmname} --out-dir $(dirname {output.taxonomy}) &> {log}"
 
@@ -60,6 +62,8 @@ rule fcs_adaptor:
         "results/benchmarks/5.quality_assessment/fcs-adaptor/{asmname}.txt"
     container:
         "docker://ncbi/fcs-adaptor:0.5.0"
+    retries:
+        3
     shell:
         "av_screen_x -o $(dirname {output.fcsadaptorrpt}) --euk {input} &> {log}"
 
