@@ -90,7 +90,7 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 
 | Database            | Download instructions                                                                                                                            |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Helixer model       | [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                                                     |
+| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                |
 | GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX) (I only tested the Cloud instructions) |
 | Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                     |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
@@ -121,7 +121,7 @@ Both `config/config.yaml` and `config/samples.tsv` files validated against a bui
 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
-- `assemble`: This module will only assembly the reads into contigs.
+- `assemble`: This module will only assemble the reads into contigs.
 - `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
