@@ -5,6 +5,9 @@ All notable changes to MoGAAAP will be documented in this file.
 ### Added
 - Add option to use pipeline without sudo rights to build custom singularity containers (#79).
 
+### Changed
+- No longer require sudo rights for setup (#81).
+
 ## [0.2.4 - 2025-01-20]
 
 ### Added
