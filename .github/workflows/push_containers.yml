@@ -1,12 +1,10 @@
 name: Build and Push Singularity Containers
 
-# on:
-#     push:
-#         branches:
-#             - main
-#         paths:
-#             - "workflow/singularity/**"
-on: push
+on:
+    push:
+        paths:
+            - "workflow/singularity/**"
+            - ".github/workflows/push_containers.yml"
 
 permissions:
     contents: read
@@ -39,8 +37,10 @@ jobs:
               run: |
                   repo_name=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
                   cd workflow/singularity
+                  echo '{"type":"container"}' > config.json
                   for def_file in */*.def; do
                     container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
                     sudo singularity build "${container_name}.sif" "${def_file}"
-                    oras push ghcr.io/${repo_name}/${container_name}:latest "${container_name}.sif"
+                    oras push --artifact-type application/vnd.sylabs.sif.layer.v1.sif --config config.json:application/vnd.sylabs.sif.config.v1+json ghcr.io/${repo_name}/${container_name}:latest "${container_name}.sif:application/vnd.sylabs.sif.layer.v1.sif"
+
                   done
