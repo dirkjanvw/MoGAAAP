@@ -50,7 +50,7 @@ conda config --set channel_priority strict
 ### Singularity/Apptainer
 This installation process requires root access, but typically a server admin can install it for you if it is not already installed.
 If not installed already, Singularity/Apptainer can be installed by following the instructions on their website: [apptainer.org](https://apptainer.org/docs/user/latest/quick_start.html).
-Make sure to install either Singularity version 3.7 or higher or Apptainer version 1.0 or higher.
+Make sure to install either Singularity version 4.0 or higher or Apptainer version 1.3 or higher.
 
 #### Singularity/Apptainer environment variables
 **NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
@@ -60,19 +60,6 @@ The following ones are required to be set in your `.profile`, `.bashrc` or `.bas
 
 It is also recommended to set the following environment variable:
 - `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
-
-#### Singularity/Apptainer setup
-**NB**: For running the pipeline, no root access or special permissions are required.
-However, the pipeline needs some SIF files that are not included in the repository.
-These need to be built using the provided DEF files, which requires `sudo` permissions.
-Building these SIF files can be done locally on a personal laptop (or on a server if you happen to have `sudo` permissions).
-Navigate to the `workflow/singularity` directory and run the following command for each DEF file (file ending in `.def`):
-```bash
-sudo singularity build ${NAME}.sif ${NAME}.def
-```
-
-In case you do not have `sudo` permissions, you can also use set the `custom_singularity` flag in the `config/config.yaml` file to `false` to disable all rules that require a custom Singularity container.
-This means that not all output will be generated that is described [below](#output).
 
 ### Snakemake
 Snakemake can be installed using `conda`/`mamba`:
@@ -321,12 +308,12 @@ The name of the log file will be printed in the terminal output of the pipeline.
 If the error is not clear, please open an issue on this GitHub page.
 
 ### Q: The pipeline cannot find software X
-A: Make sure that all SIF containers are built (see [Singularity/Apptainer](#singularityapptainer)), as all dependencies are included in either a `conda` environment or a `singularity` container.
-If the issue is with a `conda` environment, please report it as an issue on this GitHub page.
+A: This is likely happening because the `--use-conda` and `--use-singularity` flags are not set.
+If they are set and the error persists, please report it as an issue on this GitHub page.
 
 ### Q: A job that uses singularity fails for no apparent reason
 A: This is likely due to missing environment variables for Singularity/Apptainer.
-See [Singularity/Apptainer](#singularityapptainer) for more information on which environment variables need to be set.
+See [Singularity/Apptainer](#singularityapptainer-environment-variables) for more information on which environment variables need to be set.
 
 ### Q: Report HTML cuts off the top of the page
 A: This is a known issue of the Snakemake report HTML.

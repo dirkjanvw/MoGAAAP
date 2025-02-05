@@ -10,7 +10,7 @@ rule pangrowth_hist:
     threads:
         min(workflow.cores - 10, 10)
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "pangrowth hist -k {wildcards.k} -t {threads} {input} > {output} 2> {log}"
 
@@ -27,7 +27,7 @@ rule pangrowth_hist_plot:
     benchmark:
         "results/benchmarks/5.quality_assessment/pangrowth_hist_plot/{asmset}/{k}.txt"
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "plot_single_hist.py {input} {output} &> {log}"
 
@@ -41,7 +41,7 @@ rule pangrowth_growth:
     benchmark:
         "results/benchmarks/5.quality_assessment/pangrowth_growth/{asmset}/{k}.txt"
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "pangrowth growth -h {input} > {output} 2> {log}"
 
@@ -58,7 +58,7 @@ rule pangrowth_growth_plot:
     benchmark:
         "results/benchmarks/5.quality_assessment/pangrowth_growth_plot/{asmset}/{k}.txt"
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "plot_growth.py {input} {output} &> {log}"
 
@@ -72,7 +72,7 @@ rule pangrowth_core:
     benchmark:
         "results/benchmarks/5.quality_assessment/pangrowth_core/{asmset}/{k}.txt"
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "pangrowth core -h {input} > {output} 2> {log}"
 
@@ -89,6 +89,6 @@ rule pangrowth_core_plot:
     benchmark:
         "results/benchmarks/5.quality_assessment/pangrowth_core_plot/{asmset}/{k}.txt"
     container:
-        "workflow/singularity/pangrowth/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/pangrowth.71d67bde89326644f6718c82ec2ee7b751f3080b:latest"
     shell:
         "plot_core.py {input} {output} &> {log}"

@@ -59,6 +59,6 @@ rule visualise_ntsynt:
     params:
         minlen = 10000000 #minimum length for a block
     container:
-        "workflow/singularity/ntSynt/ntSynt.visualization_scripts.v1.0.0.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt.visualization_scripts.v1.0.0:latest"
     shell:
         "workflow/scripts/ntSynt.v1.0.0/plot_synteny_blocks_gggenomes.R -s {input.sequence_lengths} -l {input.links} -p $(echo {output} | rev | cut -d '.' -f 2- | rev) &> {log}"

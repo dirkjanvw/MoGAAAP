@@ -14,7 +14,7 @@ rule fcs_gx:
     resources:
         gbmem = 500
     container:
-        "docker://ncbi/fcs-gx:0.5.0"
+        "docker://ncbi/fcs-gx:0.5.4"
     shell:
         "run_gx --fasta {input} --tax-id {params.taxid} --gx-db {params.gxdb} --out-basename {wildcards.asmname} --out-dir $(dirname {output.taxonomy}) &> {log}"
 
