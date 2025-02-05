@@ -403,7 +403,7 @@ EOF
 # For the protein queries, the query should be a single exon domain as it
 # is searched in the genome and not in the proteome
 #prot_queries: #optional
-nucl_queries: #optional but recommended
+nucl_queries: #at least one required
     telomere: $(realpath ${telomere_file}) #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
 organellar:
     mitochondrion: $(realpath ${mitochondrion})
