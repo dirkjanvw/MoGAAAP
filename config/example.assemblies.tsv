@@ -1,0 +1,4 @@
+accessionId	assemblyLocation	annotationLocation	speciesName	taxId
+accessionA	"resources/assembly/assemblyA.fasta"	"resources/annotation/annotationA.gff"	"speciesSp"	123
+accessionB	"resources/assembly/assemblyB.fasta"	""	"speciesSp"	123
+accessionC	"resources/assembly/assemblyC.fasta"	""	"speciesSp"	234

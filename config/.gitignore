@@ -2,3 +2,5 @@
 !config.yaml
 !samples.tsv
 !.gitignore
+!example.assemblies.tsv
+!example.assemblies.yaml

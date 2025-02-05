@@ -1,0 +1,53 @@
+# This file contains the full configuration for the pipeline in YAML format.
+# Make sure to fill out at least everything that is not labelled as optional.
+# All strings that start with "resources" should be relative or absolute paths
+# on your machine that are readable by Snakemake.
+
+# All assemblies should be defined in a TSV file. In this file, a unique
+# accessionId, path to assembly FASTA, (optional) path to assembly GFF, species
+# name and NCBI taxonomy ID should be defined.
+assemblies: "config/example.assemblies.tsv"
+
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one protein or nucleotide query is
+# required for the module to run (organellar sequences count as nucleotide
+# queries).
+# Contigs with a more than 50% of its length covered by an organellar sequence
+# will be separated from the scaffolded assembly output (not for QC, though).
+# For the protein queries, the query should be a single exon domain as it
+# is searched in the genome and not in the proteome.
+prot_queries:
+    NBS_domain: "resources/blast_queries/query1.amac"
+nucl_queries:
+    ribosome: "resources/blast_queries/ribosome.fasta"
+    telomere: "resources/blast_queries/telomere.fasta" #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
+organellar:
+    chloroplast: "resources/blast_queries/chloroplast.fasta"
+    mitochondrion: "resources/blast_queries/mitochondrion.fasta"
+telomere_motif: "CCCTAAA" #for seqtk: it only identifies the motif at the end of a chromosome
+
+# Annotation settings
+helixer_model: "resources/land_plant_v0.3_a_0080.h5"
+helixer_max_gene_length: 64152
+
+# Quality assessment settings
+k_qa: 21 #optimal k-mer size for quality assessment
+gxdb: "resources/gxdb" #path to gxdb for fcs-gx
+pantools_grouping: 3 #grouping relaxation setting for pantools
+odb: "viridiplantae_odb10" #ODB database for busco
+kraken2_nt: "resources/kraken/nt" #kraken2 database
+OMAdb: "resources/OMAmerDB.h5" #OMA database for orthologs
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive and will only be used for QC.
+set:
+    all:
+        - accessionA
+        - accessionB
+        - accessionC
+
+# General settings; only change if you know what you are doing
+jvm: "-Xmx100g -Xms100g" #java virtual machine settings
+tmpdir: "/dev/shm/" #temporary directory for fast IO
+custom_singularity: true # Whether custom singularity containers can be used.
