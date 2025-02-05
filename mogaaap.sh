@@ -45,6 +45,7 @@ Options:
   -c, --cores          Maximum allowed number of cores (default: 10)
   -m, --memory         Maximum allowed memory (in GB) (default: 500)
                            NB: At least 500GB is required for kraken2 and fcs-gx
+  --other              Other options to pass to Snakemake
 
 EOF
     exit 1
@@ -74,6 +75,7 @@ report=false
 dryrun=false
 cores=10
 memory=500
+other=()
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -156,6 +158,10 @@ while [[ $# -gt 0 ]]; do
             memory="$2"
             shift 2
             ;;
+        --other)
+            other+=("$2")
+            shift 2
+            ;;
         --use-custom-singularity)
             use_custom_singularity="$2"
             shift 2
@@ -232,6 +238,10 @@ if ${generate_config}; then
     fi
     if ${dryrun}; then
         echo "[wrapper] Error: --dryrun cannot be combined with --generate-config"
+        incomplete=true
+    fi
+    if [[ -n ${other[@]} ]]; then
+        echo "[wrapper] Error: --other cannot be combined with --generate-config"
         incomplete=true
     fi
 fi
@@ -514,6 +524,7 @@ if ${run}; then
       --cores ${cores} \
       ${dryrun:+--dryrun} \
       --use-conda --use-singularity \
+      ${other[@]} \
       --resources gbmem=${memory}
 
     # Create report if requested
