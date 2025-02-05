@@ -118,6 +118,10 @@ def has_annotation_location(asmname):
     return not ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
 
 def get_annotation_location(asmname):
+    """
+    Obtain the annotation location for a given asmname within the annotation module.
+    NB: DO NOT USE THIS FUNCTION TO OBTAIN THE ACTUAL ANNOTATION FILE, "final_output/{asmname}.full.gff" SHOULD BE USED INSTEAD.
+    """
     if PERFORM_ASSEMBLY:
         return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"
     else:
