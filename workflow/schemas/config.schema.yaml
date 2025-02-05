@@ -179,6 +179,7 @@ dependentRequired:
         - OMAdb
         - set
     assemblies:
+        - reference_genomes
         - organellar
         - nucl_queries
         - telomere_motif

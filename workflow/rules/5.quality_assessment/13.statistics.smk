@@ -1,21 +1,21 @@
-rule individual_statistics:
+rule individual_statistics_full:
     input:
         assembly = "final_output/{asmname}.full.fa",
         contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
         qv = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/{wgstype}/{{asmname}}_vs_{wgstype}.qv", k=config["k_qa"], wgstype=get_best_wgstype(wildcards.asmname).lower()),
         kmerstats = lambda wildcards: expand("results/{{asmname}}/5.quality_assessment/01.merqury/{k}/{wgstype}/{{asmname}}_vs_{wgstype}.completeness.stats", k=config["k_qa"], wgstype=get_best_wgstype(wildcards.asmname).lower()),
-        full_annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
-        coding_annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
+        full_annotation = "final_output/{asmname}.full.gff",
+        coding_annotation = "final_output/{asmname}.full.coding.gff",
     output:
         assembly = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assembly.tsv",
         contigs = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.contigs.tsv",
         chromosomes = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assigned_sequences.tsv",
         unassigned = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.unassigned_sequences.tsv",
-        tsv = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv"
+        tsv = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.full.tsv"
     log:
-        "results/logs/5.quality_assessment/individual_statistics/{asmname}.log"
+        "results/logs/5.quality_assessment/individual_statistics_full/{asmname}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/individual_statistics/{asmname}.txt"
+        "results/benchmarks/5.quality_assessment/individual_statistics_full/{asmname}.txt"
     params:
         inputdata = lambda wildcards: "HiFi+ONT+Hi-C" if has_ont(wildcards.asmname) and has_hic(wildcards.asmname) else "HiFi+ONT" if has_ont(wildcards.asmname) else "HiFi+Hi-C" if has_hic(wildcards.asmname) else "HiFi only",
         assembler = config["assembler"],
@@ -45,9 +45,40 @@ rule individual_statistics:
         ) &> {log}
         """
 
+rule individual_statistics_no_assembly:
+    input:
+        assembly = "final_output/{asmname}.full.fa",
+        full_annotation = "final_output/{asmname}.full.gff",
+        coding_annotation = "final_output/{asmname}.full.coding.gff",
+    output:
+        assembly = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assembly.tsv",
+        chromosomes = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assigned_sequences.tsv",
+        unassigned = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.unassigned_sequences.tsv",
+        tsv = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.small.tsv"
+    log:
+        "results/logs/5.quality_assessment/individual_statistics_no_assembly/{asmname}.log"
+    benchmark:
+        "results/benchmarks/5.quality_assessment/individual_statistics_no_assembly/{asmname}.txt"
+    conda:
+        "../../envs/seqkit.yaml"
+    shell:
+        """
+        (
+        printf "Name\\tTotal length\\t#sequences\\tN50\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\n" > {output.tsv}
+        printf "{wildcards.asmname}\\t" >> {output.tsv}
+        seqkit stats -abTj1 {input.assembly} > {output.assembly}
+        awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} $3=="gene"{{genes+=1;}} END{{printf "%s\\t", genes;}}' {input.full_annotation} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} $3=="gene"{{genes+=1;}} END{{printf "%s\\t", genes;}}' {input.coding_annotation} >> {output.tsv}
+        awk 'BEGIN{{FS = "\\t";}} $3=="mRNA"{{transcripts+=1;}} END{{printf "%s\\t", transcripts;}}' {input.coding_annotation} >> {output.tsv}
+        ) &> {log}
+        """
+
 rule overall_statistics:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1)),
+        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.full.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1))
+            if PERFORM_ASSEMBLY
+            else expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.small.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1)),
     output:
         "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     log:

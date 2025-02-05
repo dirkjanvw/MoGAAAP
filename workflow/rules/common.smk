@@ -88,7 +88,10 @@ def get_haplotypes(wildcards):
     return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["haplotypes"].values.item())
 
 def get_haplotype_information(asmname):
-    return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["haplotypes"].values.item())
+    if PERFORM_ASSEMBLY:
+        return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["haplotypes"].values.item())
+    else:
+        return 1
 
 def get_species_name(wildcards):
     if PERFORM_ASSEMBLY:
@@ -103,10 +106,22 @@ def get_taxid(wildcards):
         return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["taxId"].values.item()
 
 def get_reference_id(asmname):
-    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
+    if PERFORM_ASSEMBLY:
+        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
+    else:
+        return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
 
 def get_assembly_location(asmname):
     return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].values.item()
 
+def has_annotation_location(asmname):
+    return not ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
+
 def get_annotation_location(asmname):
-    return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
+    if PERFORM_ASSEMBLY:
+        return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+    else:
+        if has_annotation_location(asmname):
+            return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
+        else:
+            return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"

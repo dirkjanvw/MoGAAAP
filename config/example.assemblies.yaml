@@ -8,6 +8,19 @@
 # name and NCBI taxonomy ID should be defined.
 assemblies: "config/example.assemblies.tsv"
 
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
+reference_genomes:
+    referenceX:
+        genome: "resources/reference_genome_X.fa"
+        annotation: "resources/reference_genome_X.gff"
+        chromosomes:
+            1: "Chr1"
+            2: "Chr2"
+            3: "Chr3"
+            4: "Chr4"
+            5: "Chr5"
+
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module. The key should be the name of the query and the value should
 # be the path to the query. At least one protein or nucleotide query is

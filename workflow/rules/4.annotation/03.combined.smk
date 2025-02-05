@@ -39,7 +39,9 @@ rule identify_coding_genes:
 
 rule filter_coding_genes:
     input:
-        original = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        original = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+                if PERFORM_ASSEMBLY
+                else get_annotation_location(wildcards.asmname),
         coding_genes = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.list",
         config = "results/{asmname}/agat_config.yaml",
     output:
@@ -55,7 +57,9 @@ rule filter_coding_genes:
 
 rule remove_attributes_gff:
     input:
-        original = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        original = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+                    if PERFORM_ASSEMBLY
+                    else get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
         temporary("results/{asmname}/4.annotation/03.combined/{asmname}.no_attr.gff"),
