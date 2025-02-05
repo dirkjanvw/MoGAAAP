@@ -34,16 +34,17 @@ Options:
   --telomere-motif     Telomere motif (default: CCCTAAA)
   --use-custom-singularity
                        Use custom singularity containers (default: true)
-                       NB: Setting this to false will reduce the output
+                           NB: Setting this to false will reduce the output
 
   [Pipeline options]
   --run                Run the pipeline
   -t, --target         Target to run (all, assemble, scaffold, analyse,
-                            annotate, qa) (default: all)
+                           annotate, qa) (default: all)
   -r, --report         Generate a report
   -n, --dryrun         Perform a dry-run
   -c, --cores          Maximum allowed number of cores (default: 10)
   -m, --memory         Maximum allowed memory (in GB) (default: 500)
+                           NB: At least 500GB is required for kraken2 and fcs-gx
 
 EOF
     exit 1
@@ -495,6 +496,12 @@ if ${run}; then
         done
     fi
 
+    # Check total free memory, if it's less than 500GB, warn the user kraken2 and fcs-gx might fail
+    total_memory=$(awk '/MemTotal/{print $2/1024/1024;}' /proc/meminfo)
+    if [[ ${total_memory} -lt 500 ]]; then
+        echo "[wrapper] Warning: Total free memory is less than 500GB, kraken2 and fcs-gx might fail because they require their databases to be loaded in memory"
+    fi
+
     # Exit if any problems were found
     if ${problems}; then
         exit 1
@@ -513,6 +520,8 @@ if ${run}; then
     if ${report}; then
         snakemake ${target} \
           ${dryrun:+--dryrun} \
-          --report report.html
+          --report report_original.html
     fi
+    sed -E 's/([^l]) h-screen/\1/g' report_original.html > report.html
+    rm report_original.html
 fi
