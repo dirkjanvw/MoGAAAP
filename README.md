@@ -1,7 +1,7 @@
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
-This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality assessment of HiFi-based assemblies.
-Although developed for a project in lettuce, the pipeline is designed to work with any organism.
-The pipeline will work with both HiFi and ONT data, although only the former is required.
+This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
+Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
+The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
 ## Index
 - [Downloading the pipeline](#downloading-pipeline)
@@ -28,7 +28,7 @@ git pull
 ```
 
 ## Installing dependencies
-The pipeline will work on any Linux system where `conda`/`mamba` and `singularity`/`apptainer` are installed.
+The pipeline will work on any Linux system where Snakemake, `conda`/`mamba` and `singularity`/`apptainer` are installed.
 
 ### Conda/mamba
 If not installed already, `conda`/`mamba` can be installed by following these instructions:
@@ -322,7 +322,7 @@ sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
 
 ### Q: Should I use BLASTN or seqtk for the telomere search?
 A: While `seqtk` is more accurate in the boundaries of the telomere search, it cannot identify telomeres that are not at the ends of the chromosomes.
-Therefore, we recommend to also run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
+Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
