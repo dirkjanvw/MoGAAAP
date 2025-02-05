@@ -46,7 +46,7 @@ properties:
                 genome:
                     type: string
                     description: path to the reference genome
-                    pattern: "^.+\\.fn?a$"
+                    pattern: "^.*\\.f(?:|n|ast)a?$"
                 annotation:
                     type: string
                     description: path to the reference genome annotation
