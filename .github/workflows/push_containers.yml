@@ -1,0 +1,46 @@
+name: Build and Push Singularity Containers
+
+on:
+    push:
+        paths:
+            - "workflow/singularity/**"
+            - ".github/workflows/push_containers.yml"
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v3
+
+            - name: Set up Singularity
+              run: sudo apt-get update && sudo apt-get install -y singularity-container
+
+            - name: Install ORAS
+              run: |
+                  VERSION="1.2.2"
+                  curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz"
+                  mkdir -p oras-install/
+                  tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/
+                  sudo mv oras-install/oras /usr/local/bin/
+                  rm -rf oras_${VERSION}_*.tar.gz oras-install/
+
+            - name: Login to GHCR with ORAS
+              run: |
+                  echo ${{ secrets.GITHUB_TOKEN }} | oras login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            - name: Build and Push Singularity Containers
+              run: |
+                  repo_name=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+                  cd workflow/singularity
+                  echo '{"type":"container"}' > config.json
+                  for def_file in */*.def; do
+                    container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
+                    sudo singularity build "${container_name}.sif" "${def_file}"
+                    oras push --artifact-type application/vnd.sylabs.sif.layer.v1.sif --config config.json:application/vnd.sylabs.sif.config.v1+json ghcr.io/${repo_name}/${container_name}:latest "${container_name}.sif:application/vnd.sylabs.sif.layer.v1.sif"
+
+                  done

@@ -104,8 +104,8 @@ rule filter_hic:
         "results/benchmarks/2.scaffolding/filter_hic/{asmname}.txt"
     threads:
         10
-    singularity:
-        "workflow/singularity/haphic/haphic.f8f7451.sif"
+    container:
+        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
     shell:
         "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
 
@@ -134,8 +134,8 @@ rule ntjoin_plot_hic:
         "results/benchmarks/2.scaffolding/ntjoin_plot/{asmname}.txt"
     threads:
         8
-    singularity:
-        "workflow/singularity/haphic/haphic.f8f7451.sif"
+    container:
+        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
     shell:
         """
         (
