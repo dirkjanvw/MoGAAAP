@@ -16,7 +16,9 @@ rule combine_liftoff_helixer:
 
 rule identify_coding_genes:
     input:
-        gff = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        gff = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+            if PERFORM_ASSEMBLY
+            else get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
         temp = temporary("results/{asmname}/4.annotation/03.combined/{asmname}.coding_ID.list"),

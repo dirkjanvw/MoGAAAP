@@ -1,6 +1,6 @@
 rule blastdb:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        "final_output/{asmname}.full.fa",
     output:
         "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
     log:

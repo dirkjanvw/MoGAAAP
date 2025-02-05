@@ -1,6 +1,6 @@
 rule fcs_gx:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
+        "final_output/{asmname}.full.fa"
     output:
         report = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}.fcs_gx_report.txt",
         taxonomy = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}.taxonomy.rpt",
@@ -43,7 +43,7 @@ rule visualise_fcs_gx:
 
 rule fcs_adaptor:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
+        "final_output/{asmname}.full.fa"
     output:
         cleaned = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/cleaned_sequences/{asmname}.fa",
         calls = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/combined.calls.jsonl",

@@ -28,7 +28,7 @@ rule assemble:
     input:
         expand("final_output/{asmname}.contigs.fa",
             asmname=get_all_accessions()
-        ),
-        get_mummerplot_contigs,
+        ) if PERFORM_ASSEMBLY else [],
+        get_mummerplot_contigs if PERFORM_ASSEMBLY else [],
     output:
         touch("results/assembly.done")

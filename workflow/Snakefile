@@ -4,7 +4,7 @@ from snakemake.utils import validate, min_version
 min_version("8") # Require at least Snakemake 8.0
 
 # Load configuration
-configfile: "config/config.yaml"
+#configfile: "config/config.yaml"
 validate(config, schema="schemas/config.schema.yaml")
 
 # Check if input is assemblies or reads and load accordingly
@@ -48,8 +48,8 @@ wildcard_constraints:
 # Define output of all modules
 rule all:
     input:
-        "results/assembly.done" if PERFORM_ASSEMBLY else [],
-        "results/scaffolding.done" if PERFORM_ASSEMBLY else [],
+        "results/assembly.done",
+        "results/scaffolding.done",
         "results/analysis.done",
         "results/annotation.done",
         "results/quality_assessment.done",

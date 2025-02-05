@@ -1,6 +1,6 @@
 rule kraken2:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        "final_output/{asmname}.full.fa",
     output:
         out = "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.out",
         report = "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.report.txt",

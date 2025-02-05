@@ -4,7 +4,10 @@ include: "03.mummer.smk"
 
 rule copy_assembly:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
+        lambda wildcards:
+            "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
+            if PERFORM_ASSEMBLY
+            else get_assembly_location(wildcards.asmname),
     output:
         "final_output/{asmname}.full.fa",
     log:
@@ -13,6 +16,20 @@ rule copy_assembly:
         "results/benchmarks/2.scaffolding/copy_assembly/{asmname}.txt"
     shell:
         "cp $(realpath {input}) {output} &> {log}"
+
+rule index_scaffolds:
+    input:
+        "final_output/{asmname}.full.fa"
+    output:
+        "final_output/{asmname}.full.fa.fai"
+    log:
+        "results/logs/2.scaffolding/index_scaffolds/{asmname}.log"
+    benchmark:
+        "results/benchmarks/2.scaffolding/index_scaffolds/{asmname}.txt"
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools faidx {input} &> {log}"
 
 def get_mummerplot_scaffolds(wildcards):
     filelist = []
@@ -35,7 +52,7 @@ rule scaffold:
     input:
         expand("final_output/{asmname}.full.fa",
             asmname = get_all_accessions()),
-        get_mummerplot_scaffolds,
-        get_hic_plots,
+        get_mummerplot_scaffolds if PERFORM_ASSEMBLY else [],
+        get_hic_plots if PERFORM_ASSEMBLY else [],
     output:
         touch("results/scaffolding.done")

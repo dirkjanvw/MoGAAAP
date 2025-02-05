@@ -4,7 +4,9 @@ include: "03.combined.smk"
 
 rule copy_annotation:
     input:
-        full = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        full = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+            if PERFORM_ASSEMBLY
+            else get_annotation_location(wildcards.asmname),
         coding = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
         clean = "results/{asmname}/4.annotation/03.combined/{asmname}.clean.gff",
     output:
