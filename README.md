@@ -289,6 +289,10 @@ in prep.
 
 ## FAQ
 
+### Q: Where can I see what my pipeline is doing?
+A: The pipeline will print the commands it is running to the terminal.
+Alternatively, you could look at `htop` or `top` to see what processes are running.
+
 ### Q: Pipeline crashes at renaming the chromosomes
 A: This issue typically arises when the assembly and reference genome are not collinear because of an evolutionary distance that is too large.
 In this case, the pipeline is not able to accurately discern which reference chromosome corresponds to which assembly scaffold.
