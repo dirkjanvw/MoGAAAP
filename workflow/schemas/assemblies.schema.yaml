@@ -1,0 +1,31 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+
+description: an entry in the assembly sheet
+
+properties:
+    accessionId:
+        type: string
+        description: a unique ID of the accession
+        pattern: "^[a-zA-Z0-9_]+$"
+    assemblyLocation:
+        type: string
+        description: path to the assembly FASTA file
+        pattern: "^.+\\.f(?:|n|ast)a$"
+    annotationLocation:
+        type: string
+        description: path to the assembly GFF3 file
+        pattern: "^.+\\.gff3?$"
+    speciesName:
+        type: string
+        description: species name for naming Helixer genes
+        pattern: "^[a-zA-Z0-9]+$"
+    taxId:
+        type: integer
+        description: NCBI taxonomy ID for the accession
+        minimum: 0
+
+required:
+    - accessionId
+    - assemblyLocation
+    - speciesName
+    - taxId

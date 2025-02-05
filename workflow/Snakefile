@@ -8,22 +8,24 @@ configfile: "config/config.yaml"
 validate(config, schema="schemas/config.schema.yaml")
 
 # Check if input is assemblies or reads and load accordingly
-if config["samples"] and config["assemblies"]:
+if "samples" in config and "assemblies" in config:
     raise ValueError("Both samples and assemblies provided in config file. Please provide only one.")
-elif config["samples"]:
+elif "samples" in config:
     SAMPLES = (
         pd.read_csv(config["samples"], sep="\t", dtype={"accessionId": str})
             .set_index("accessionId", drop=False)
             .sort_index()
     )
     validate(SAMPLES, schema="schemas/samples.schema.yaml")
-elif config["assemblies"]:
+    PERFORM_ASSEMBLY = True
+elif "assemblies" in config:
     ASSEMBLIES = (
         pd.read_csv(config["assemblies"], sep="\t", dtype={"accessionId": str})
             .set_index("accessionId", drop=False)
             .sort_index()
     )
     validate(ASSEMBLIES, schema="schemas/assemblies.schema.yaml")
+    PERFORM_ASSEMBLY = False
 else:
     raise ValueError("No samples or assemblies provided in config file.")
 
@@ -46,8 +48,8 @@ wildcard_constraints:
 # Define output of all modules
 rule all:
     input:
-        "results/assembly.done",
-        "results/scaffolding.done",
+        "results/assembly.done" if PERFORM_ASSEMBLY else [],
+        "results/scaffolding.done" if PERFORM_ASSEMBLY else [],
         "results/analysis.done",
         "results/annotation.done",
         "results/quality_assessment.done",
