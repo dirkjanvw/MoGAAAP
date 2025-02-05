@@ -6,7 +6,7 @@ rule copy_assembly:
     input:
         "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
     output:
-        protected("final_output/{asmname}.full.fa"),
+        "final_output/{asmname}.full.fa",
     log:
         "results/logs/2.scaffolding/copy_assembly/{asmname}.log"
     benchmark:

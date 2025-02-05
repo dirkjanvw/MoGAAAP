@@ -6,7 +6,7 @@ rule copy_contigs:
     input:
         expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"]),
     output:
-        protected("final_output/{asmname}.contigs.fa"),
+        "final_output/{asmname}.contigs.fa",
     log:
         "results/logs/2.scaffolding/copy_contigs/{asmname}.log"
     benchmark:
