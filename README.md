@@ -88,19 +88,19 @@ All fields to fill in are well-documented in the provided `config/config.yaml` f
 
 The `config/samples.tsv` has the following columns to fill in (one row per sample):
 
-| Column name   | Description                                                                                                                                                          |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId` | The accession ID of the sample. This name has to be unique.                                                                                                          |
-| `hifi`        | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                         |
-| `ont`         | OPTIONAL. The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                |
-| `illumina_1`  | OPTIONAL. The path to the forward Illumina reads in FASTQ format.                                                                                                    |
-| `illumina_2`  | OPTIONAL. The path to the reverse Illumina reads in FASTQ format.                                                                                                    |
-| `hic_1`       | OPTIONAL. The path to the forward Hi-C reads in FASTQ format.                                                                                                        |
-| `hic_2`       | OPTIONAL. The path to the reverse Hi-C reads in FASTQ format.                                                                                                        |
-| `haplotypes`  | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. NB: currently only 1 or 2 is supported. |
-| `speciesName` | A name for the species that is used by Helixer to name novel genes.                                                                                                  |
-| `taxId`       | The NCBI taxonomy ID of the species.                                                                                                                                 |
-| `referenceId` | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.         |
+| Column name   | Description                                                                                                                                                              |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId` | The accession ID of the sample. This name has to be unique.                                                                                                              |
+| `hifi`        | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
+| `ont`         | OPTIONAL. The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                    |
+| `illumina_1`  | OPTIONAL. The path to the forward Illumina reads in FASTQ format.                                                                                                        |
+| `illumina_2`  | OPTIONAL. The path to the reverse Illumina reads in FASTQ format.                                                                                                        |
+| `hic_1`       | OPTIONAL. The path to the forward Hi-C reads in FASTQ format.                                                                                                            |
+| `hic_2`       | OPTIONAL. The path to the reverse Hi-C reads in FASTQ format.                                                                                                            |
+| `haplotypes`  | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. **NB**: currently only 1 or 2 is supported. |
+| `speciesName` | A name for the species that is used by Helixer to name novel genes.                                                                                                      |
+| `taxId`       | The NCBI taxonomy ID of the species.                                                                                                                                     |
+| `referenceId` | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.             |
 
 Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
@@ -229,7 +229,7 @@ In our experience, increasing the value for `ntjoin_w` resolves most issues when
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 If Hi-C reads were provided, the Hi-C contact map is also produced for visual inspection of the `ntJoin` scaffolding process.
-*N.B.:* It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
+**NB**: It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
 The reason for this is that none of the currently available algorithms for Hi-C scaffolding can guarantee a correct assembly, and we believe that the reference-guided scaffolding is more reliable for automated pipelines.
 
 #### Next steps
