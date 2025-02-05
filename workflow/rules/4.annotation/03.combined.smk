@@ -16,9 +16,7 @@ rule combine_liftoff_helixer:
 
 rule identify_coding_genes:
     input:
-        gff = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
-            if PERFORM_ASSEMBLY
-            else get_annotation_location(wildcards.asmname),
+        gff = lambda wildcards: get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
         temp = temporary("results/{asmname}/4.annotation/03.combined/{asmname}.coding_ID.list"),
@@ -39,9 +37,7 @@ rule identify_coding_genes:
 
 rule filter_coding_genes:
     input:
-        original = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
-                if PERFORM_ASSEMBLY
-                else get_annotation_location(wildcards.asmname),
+        original = lambda wildcards: get_annotation_location(wildcards.asmname),
         coding_genes = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.list",
         config = "results/{asmname}/agat_config.yaml",
     output:
@@ -57,9 +53,7 @@ rule filter_coding_genes:
 
 rule remove_attributes_gff:
     input:
-        original = lambda wildcards: "results/{asmname}/4.annotation/03.combined/{asmname}.gff"
-                    if PERFORM_ASSEMBLY
-                    else get_annotation_location(wildcards.asmname),
+        original = lambda wildcards: get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
         temporary("results/{asmname}/4.annotation/03.combined/{asmname}.no_attr.gff"),
