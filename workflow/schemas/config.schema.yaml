@@ -136,6 +136,10 @@ properties:
         description: path to a temporary directory for fast IO
         pattern: "^.*$"
         default: "/tmp/snakemake_tmp"
+    custom_singularity:
+        type: boolean
+        description: whether custom (ghcr.io) singularity containers can be used
+        default: true
 
 required:
     - samples
