@@ -31,7 +31,7 @@ rule sans:
     threads:
         min(workflow.cores - 10, 10)
     container:
-        "workflow/singularity/sans/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0:latest"
     shell:
         "SANS -i {input} -o {output.splits} -f weakly -v -k {wildcards.k} -T {threads} -b {wildcards.bootstrap} &> {log}"
 
@@ -50,6 +50,6 @@ rule sans_to_nexus:
     benchmark:
         "results/benchmarks/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.nexus.txt"
     container:
-        "workflow/singularity/sans/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0:latest"
     shell:
         "sans2conf_nexus.py {input.splits} {input.bootstrap} {input.filelist} > {output} 2> {log}"

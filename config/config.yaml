@@ -9,10 +9,6 @@
 # ID should be defined.
 samples: "config/samples.tsv"
 
-# Whether custom singularity containers can be used. If set to false, not all
-# output will be available.
-custom_singularity: true
-
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
 
@@ -91,3 +87,4 @@ jvm: "-Xmx100g -Xms100g" #java virtual machine settings
 tmpdir: "/dev/shm/" #temporary directory for fast IO
 nucmer_maxgap: 1000 #maximum gap size for nucmer
 nucmer_minmatch: 1000 #minimum match size for nucmer
+custom_singularity: true # Whether custom singularity containers can be used.
