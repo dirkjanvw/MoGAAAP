@@ -305,6 +305,11 @@ From our own experience, increasing the value for `ntjoin_w` resolves most issue
 Also, it is important to keep in mind that this pipeline is not meant to create a perfect assembly, but to provide a starting point for human curation.
 So feel free to adjust the pipeline or the assembly to your own needs!
 
+### Q: Pipeline keeps crashing at kraken2
+A: This is likely due to not enough available memory.
+Kraken2 is a memory-heavy process that needs to fit its entire database in memory.
+This requires up to 500 GB of RAM that has to be available to the process.
+
 ### Q: Pipeline crashes mid-run
 A: This is intended Snakemake behaviour: if any job fails, the pipeline will only finish current running jobs and then exit.
 As for the reason of stopping, please check the log file of the job that failed.
