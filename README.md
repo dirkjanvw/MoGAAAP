@@ -85,8 +85,10 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 ## Configuration
 All configuration of the pipeline is done in the `config/config.yaml` file, and samples are registered in the `config/samples.tsv` file.
 All fields to fill in are well-documented in the provided `config/config.yaml` file and should be self-explanatory.
+Please see `config/examples/` for examples of filled-in configuration files.
+Both configuration YAML and sample TSV sheet are validated against a built-in schema that throws an error if the files are not correctly filled in.
 
-The `config/samples.tsv` has the following columns to fill in (one row per sample):
+The sample TSV sheet has the following columns to fill in (one row per sample):
 
 | Column name   | Description                                                                                                                                                              |
 |---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -101,8 +103,6 @@ The `config/samples.tsv` has the following columns to fill in (one row per sampl
 | `speciesName` | A name for the species that is used by Helixer to name novel genes.                                                                                                      |
 | `taxId`       | The NCBI taxonomy ID of the species.                                                                                                                                     |
 | `referenceId` | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.             |
-
-Both `config/config.yaml` and `config/samples.tsv` files validated against a built-in schema that throws an error if the files are not correctly filled in.
 
 ## Running the pipeline
 
@@ -137,7 +137,7 @@ Several important `snakemake` parameters are important when running this pipelin
 The following resources (apart from CPUs) might be heavily used by the pipeline:
 - `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
   It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
-  Default: 1000 (GB).
+  Default: 500 (GB).
 - `helixer`: The number of Helixer jobs that can run at the same time.
   It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
   Default: 1.
