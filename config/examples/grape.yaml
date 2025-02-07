@@ -1,0 +1,90 @@
+# This file contains the full configuration for the pipeline in YAML format.
+# Make sure to fill out at least everything that is not labelled as optional.
+# All strings that start with "resources" should be relative or absolute paths
+# on your machine that are readable by Snakemake.
+
+# All samples should be defined in a TSV file. In this file, a unique
+# accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
+# paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
+# ID should be defined.
+samples: "config/samples.tsv"
+
+# Assembly settings
+assembler: "hifiasm"  #supported assemblers: hifiasm, verkko
+
+# All filtering and scaffolding parameters
+min_contig_len: 10000
+ntjoin_k: 52
+ntjoin_w: 40000
+
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
+reference_genomes:
+    PNT2T:
+        genome: "resources/grape/genome/GCF_030704535.1_ASM3070453v1_genomic.fna"
+        annotation: "resources/grape/annotation/GCF_030704535.1_ASM3070453v1_genomic.gff"
+        chromosomes:
+            1: "NC_081805.1"
+            2: "NC_081806.1"
+            3: "NC_081807.1"
+            4: "NC_081808.1"
+            5: "NC_081809.1"
+            6: "NC_081810.1"
+            7: "NC_081811.1"
+            8: "NC_081812.1"
+            9: "NC_081813.1"
+            10: "NC_081814.1"
+            11: "NC_081815.1"
+            12: "NC_081816.1"
+            13: "NC_081817.1"
+            14: "NC_081818.1"
+            15: "NC_081819.1"
+            16: "NC_081820.1"
+            17: "NC_081821.1"
+            18: "NC_081822.1"
+            19: "NC_081823.1"
+
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one protein or nucleotide query is
+# required for the module to run (organellar sequences count as nucleotide
+# queries).
+# Contigs with a more than 50% of its length covered by an organellar sequence
+# will be separated from the scaffolded assembly output (not for QC, though).
+# For the protein queries, the query should be a single exon domain as it
+# is searched in the genome and not in the proteome.
+prot_queries:
+    NBS_domain: "resources/arabidopsis/NBS_HMM.amac"
+organellar:
+    chloroplast: "resources/grape/genome/chloroplast.fasta"
+    mitochondrion: "resources/grape/genome/mitochondrion.fasta"
+telomere_motif: "CCCTAAA"
+
+# Annotation settings
+helixer_model: "resources/land_plant_v0.3_a_0080.h5"
+helixer_max_gene_length: 64152
+
+# Quality assessment settings
+k_qa: 21  #optimal k-mer size for quality assessment
+gxdb: "/local/fcs/gxdb"  #path to gxdb for fcs-gx
+pantools_grouping: 3  #grouping relaxation setting for pantools
+odb: "eudicots_odb10"  #ODB database for busco
+kraken2_nt: "/path/to/kraken2/nt"  #kraken2 database
+OMAdb: "/path/to/oma_databases/LUCA.h5"  #OMA database for orthologs
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive and will only be used for QC.
+set:
+    grape_all:
+        - Manicure_Finger
+        - Muscat_Hamburg
+        - Shine_Muscat
+        - Baimunage
+        - Hongmunage
+        - Wolley
+
+# General settings; only change if you know what you are doing
+jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
+tmpdir: "/dev/shm/tmp_grape"  #temporary directory for fast IO
+nucmer_maxgap: 1000  #maximum gap size for nucmer
+nucmer_minmatch: 1000  #minimum match size for nucmer

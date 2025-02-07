@@ -4,3 +4,4 @@
 !.gitignore
 !example.assemblies.tsv
 !example.assemblies.yaml
+!examples/

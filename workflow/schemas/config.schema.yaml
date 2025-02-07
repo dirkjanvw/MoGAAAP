@@ -51,7 +51,7 @@ properties:
                 genome:
                     type: string
                     description: path to the reference genome
-                    pattern: "^.+\\.fn?a$"
+                    pattern: "^.*\\.f(?:|n|ast)a?$"
                 annotation:
                     type: string
                     description: path to the reference genome annotation
@@ -154,7 +154,7 @@ properties:
         default: 1000
     custom_singularity:
         type: boolean
-        description: whether custom singularity containers can be used
+        description: whether custom (ghcr.io) singularity containers can be used
         default: true
 
 oneOf:

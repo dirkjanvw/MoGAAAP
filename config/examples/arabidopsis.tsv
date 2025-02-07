@@ -1,0 +1,33 @@
+accessionId	hifi	ont	hic_1	hic_2	illumina_1	illumina_2	haplotypes	speciesName	taxId	referenceId
+01_col	resources/arabidopsis/HiFi/CRR591656.fastq.gz		resources/arabidopsis/HiC/SRR20242239_1.fastq.gz	resources/arabidopsis/HiC/SRR20242239_2.fastq.gz			1	Athaliana	3702	TAIR10
+02_tibet	resources/arabidopsis/HiFi/CRR591657.fastq.gz				resources/arabidopsis/Illumina/CRR624285_f1.fq.gz	resources/arabidopsis/Illumina/CRR624285_r2.fq.gz	1	Athaliana	3702	TAIR10
+03_yilong	resources/arabidopsis/HiFi/CRR591658.fastq.gz				resources/arabidopsis/Illumina/CRR624284_f1.fq.gz	resources/arabidopsis/Illumina/CRR624284_r2.fq.gz	1	Athaliana	3702	TAIR10
+04_bor_1	resources/arabidopsis/HiFi/CRR591659.fastq.gz						1	Athaliana	3702	TAIR10
+05_cdm_0	resources/arabidopsis/HiFi/CRR591660.fastq.gz						1	Athaliana	3702	TAIR10
+08_kondara	resources/arabidopsis/HiFi/CRR591662.fastq.gz						1	Athaliana	3702	TAIR10
+12_li_of_095	resources/arabidopsis/HiFi/CRR591665.fastq.gz						1	Athaliana	3702	TAIR10
+13_got_22	resources/arabidopsis/HiFi/CRR591666.fastq.gz						1	Athaliana	3702	TAIR10
+14_st_0	resources/arabidopsis/HiFi/CRR591667.fastq.gz						1	Athaliana	3702	TAIR10
+15_kelsterbach_2	resources/arabidopsis/HiFi/CRR591668.fastq.gz						1	Athaliana	3702	TAIR10
+19_kz_9	resources/arabidopsis/HiFi/CRR591671.fastq.gz						1	Athaliana	3702	TAIR10
+20_ll_0	resources/arabidopsis/HiFi/CRR591672.fastq.gz						1	Athaliana	3702	TAIR10
+21_ms_0	resources/arabidopsis/HiFi/CRR591673.fastq.gz						1	Athaliana	3702	TAIR10
+23_sij_1	resources/arabidopsis/HiFi/CRR591675.fastq.gz						1	Athaliana	3702	TAIR10
+24_hs_0	resources/arabidopsis/HiFi/CRR591676.fastq.gz						1	Athaliana	3702	TAIR10
+25_per_1	resources/arabidopsis/HiFi/CRR591677.fastq.gz						1	Athaliana	3702	TAIR10
+26_nz_1	resources/arabidopsis/HiFi/CRR591678.fastq.gz						1	Athaliana	3702	TAIR10
+27_belmonte_4_94	resources/arabidopsis/HiFi/CRR591679.fastq.gz						1	Athaliana	3702	TAIR10
+29_sij_2	resources/arabidopsis/HiFi/CRR591680.fastq.gz						1	Athaliana	3702	TAIR10
+30_tu_sb30_3	resources/arabidopsis/HiFi/CRR591681.fastq.gz						1	Athaliana	3702	TAIR10
+31_mammo_1	resources/arabidopsis/HiFi/CRR591682.fastq.gz						1	Athaliana	3702	TAIR10
+33_sha	resources/arabidopsis/HiFi/CRR591683.fastq.gz						1	Athaliana	3702	TAIR10
+36_pra_6	resources/arabidopsis/HiFi/CRR591684.fastq.gz						1	Athaliana	3702	TAIR10
+37_pu_2_23	resources/arabidopsis/HiFi/CRR591685.fastq.gz						1	Athaliana	3702	TAIR10
+38_dra_2	resources/arabidopsis/HiFi/CRR591686.fastq.gz						1	Athaliana	3702	TAIR10
+39_ah_7	resources/arabidopsis/HiFi/CRR591687.fastq.gz						1	Athaliana	3702	TAIR10
+40_etna_2	resources/arabidopsis/HiFi/CRR591688.fastq.gz						1	Athaliana	3702	TAIR10
+41_sorbo	resources/arabidopsis/HiFi/CRR591689.fastq.gz						1	Athaliana	3702	TAIR10
+42_arb_0	resources/arabidopsis/HiFi/CRR591690.fq.gz						1	Athaliana	3702	TAIR10
+43_elk_1	resources/arabidopsis/HiFi/CRR591691.fq.gz						1	Athaliana	3702	TAIR10
+44_ket_10	resources/arabidopsis/HiFi/CRR591692.fq.gz						1	Athaliana	3702	TAIR10
+45_meh_0	resources/arabidopsis/HiFi/CRR591693.fq.gz						1	Athaliana	3702	TAIR10
