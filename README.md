@@ -331,6 +331,10 @@ The current workaround is to run:
 sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
 ```
 
+### Q: My chromosomes are not named correctly
+A: Please double check the names of the chromosomes in the reference genome you provided and the names of the chromosomes in the configuration YAML file.
+We use strict matching to rename the chromosomes, so the names have to be exactly the same.
+
 ### Q: Should I use BLASTN or seqtk for the telomere search?
 A: While `seqtk` is more accurate in the boundaries of the telomere search, it cannot identify telomeres that are not at the ends of the chromosomes.
 Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
