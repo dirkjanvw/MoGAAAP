@@ -19,7 +19,7 @@ rule ntsynt:
         """
         (
         divergence=$(awk '{{for (i=2;i<=NF;i++){{if ($i>d){{d=$i;}}}}}} END{{printf "%.2f",d*100;}}' {input.divergence})
-        ln -s $(realpath {input.genomes}) $(dirname {output.blocks})/
+        ln -sf $(realpath {input.genomes}) $(dirname {output.blocks})/
         cd $(dirname {output.blocks})
         ntSynt -p {wildcards.asmset}.k{wildcards.mink}.w{wildcards.minw} -k {wildcards.mink} -w {wildcards.minw} -d ${{divergence}} -f -t {threads} $(for file in {input.genomes}; do basename ${{file}}; done)
         ) &> {log}

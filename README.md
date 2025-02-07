@@ -1,7 +1,7 @@
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
-This repository contains a Snakemake pipeline for the assembly, scaffolding, analysis, annotation and quality assessment of HiFi-based assemblies.
-Although developed for a project in lettuce, the pipeline is designed to work with any organism.
-The pipeline will work with both HiFi and ONT data, although only the former is required.
+This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
+Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
+The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
 ## Index
 - [Downloading the pipeline](#downloading-pipeline)
@@ -28,7 +28,7 @@ git pull
 ```
 
 ## Installing dependencies
-The pipeline will work on any Linux system where `conda`/`mamba` and `singularity`/`apptainer` are installed.
+The pipeline will work on any Linux system where Snakemake, `conda`/`mamba` and `singularity`/`apptainer` are installed.
 
 ### Conda/mamba
 If not installed already, `conda`/`mamba` can be installed by following these instructions:
@@ -77,7 +77,7 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 
 | Database            | Download instructions                                                                                                                            |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Helixer model       | [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                                                     |
+| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                |
 | GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX) (I only tested the Cloud instructions) |
 | Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                     |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
@@ -86,30 +86,30 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 By default, all configuration of the pipeline is done in the `config/config.yaml` YAML file, and samples are registered in a TSV file.
 Please see the example `config/example.yaml` and `config/example.tsv` files for an example of how to fill in these files.
 All fields to fill in are well-documented in the provided `config/example.yaml` file and should be self-explanatory.
+Please see `config/examples/` for examples of filled-in configuration files.
+Both configuration YAML and sample TSV sheet are validated against a built-in schema that throws an error if the files are not correctly filled in.
 
-The sample TSV file has the following columns to fill in (one row per sample):
+The sample TSV sheet has the following columns to fill in (one row per sample):
 
-| Column name   | Description                                                                                                                                                          |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId` | The accession ID of the sample. This name has to be unique.                                                                                                          |
-| `hifi`        | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                         |
-| `ont`         | OPTIONAL. The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                |
-| `illumina_1`  | OPTIONAL. The path to the forward Illumina reads in FASTQ format.                                                                                                    |
-| `illumina_2`  | OPTIONAL. The path to the reverse Illumina reads in FASTQ format.                                                                                                    |
-| `hic_1`       | OPTIONAL. The path to the forward Hi-C reads in FASTQ format.                                                                                                        |
-| `hic_2`       | OPTIONAL. The path to the reverse Hi-C reads in FASTQ format.                                                                                                        |
-| `haplotypes`  | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. NB: currently only 1 or 2 is supported. |
-| `speciesName` | A name for the species that is used by Helixer to name novel genes.                                                                                                  |
-| `taxId`       | The NCBI taxonomy ID of the species.                                                                                                                                 |
-| `referenceId` | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the YAML file.                         |
-
-Both configuration YAML and sample TSV files are validated against a built-in schema that throws an error if the files are not correctly filled in.
+| Column name   | Description                                                                                                                                                              |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId` | The accession ID of the sample. This name has to be unique.                                                                                                              |
+| `hifi`        | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
+| `ont`         | OPTIONAL. The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                    |
+| `illumina_1`  | OPTIONAL. The path to the forward Illumina reads in FASTQ format.                                                                                                        |
+| `illumina_2`  | OPTIONAL. The path to the reverse Illumina reads in FASTQ format.                                                                                                        |
+| `hic_1`       | OPTIONAL. The path to the forward Hi-C reads in FASTQ format.                                                                                                            |
+| `hic_2`       | OPTIONAL. The path to the reverse Hi-C reads in FASTQ format.                                                                                                            |
+| `haplotypes`  | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. **NB**: currently only 1 or 2 is supported. |
+| `speciesName` | A name for the species that is used by Helixer to name novel genes.                                                                                                      |
+| `taxId`       | The NCBI taxonomy ID of the species.                                                                                                                                     |
+| `referenceId` | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.             |
 
 ## Running the pipeline
 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
-- `assemble`: This module will only assembly the reads into contigs.
+- `assemble`: This module will only assemble the reads into contigs.
 - `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
@@ -138,7 +138,7 @@ Several important `snakemake` parameters are important when running this pipelin
 The following resources (apart from CPUs) might be heavily used by the pipeline:
 - `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
   It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
-  Default: 1000 (GB).
+  Default: 500 (GB).
 - `helixer`: The number of Helixer jobs that can run at the same time.
   It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
   Default: 1.
@@ -231,6 +231,8 @@ Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolde
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 If Hi-C reads were provided, the Hi-C contact map is also produced for visual inspection of the `ntJoin` scaffolding process.
+**NB**: It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
+The reason for this is that none of the currently available algorithms for Hi-C scaffolding can guarantee a correct assembly, and we believe that the reference-guided scaffolding is more reliable for automated pipelines.
 
 #### Next steps
 As the assembly as outputted by this module is used as starting point for the analyse, annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
@@ -289,6 +291,10 @@ in prep.
 
 ## FAQ
 
+### Q: Where can I see what my pipeline is doing?
+A: The pipeline will print the commands it is running to the terminal.
+Alternatively, you could look at `htop` or `top` to see what processes are running.
+
 ### Q: Pipeline crashes at renaming the chromosomes
 A: This issue typically arises when the assembly and reference genome are not collinear because of an evolutionary distance that is too large.
 In this case, the pipeline is not able to accurately discern which reference chromosome corresponds to which assembly scaffold.
@@ -300,6 +306,11 @@ A: This issue can have multiple causes, but the most common one is that the `ntJ
 From our own experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
 Also, it is important to keep in mind that this pipeline is not meant to create a perfect assembly, but to provide a starting point for human curation.
 So feel free to adjust the pipeline or the assembly to your own needs!
+
+### Q: Pipeline keeps crashing at kraken2
+A: This is likely due to not enough available memory.
+Kraken2 is a memory-heavy process that needs to fit its entire database in memory.
+This requires up to 500 GB of RAM that has to be available to the process.
 
 ### Q: Pipeline crashes mid-run
 A: This is intended Snakemake behaviour: if any job fails, the pipeline will only finish current running jobs and then exit.
@@ -322,9 +333,13 @@ The current workaround is to run:
 sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
 ```
 
+### Q: My chromosomes are not named correctly
+A: Please double check the names of the chromosomes in the reference genome you provided and the names of the chromosomes in the configuration YAML file.
+We use strict matching to rename the chromosomes, so the names have to be exactly the same.
+
 ### Q: Should I use BLASTN or seqtk for the telomere search?
 A: While `seqtk` is more accurate in the boundaries of the telomere search, it cannot identify telomeres that are not at the ends of the chromosomes.
-Therefore, we recommend to also run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
+Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.

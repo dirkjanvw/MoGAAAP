@@ -3,6 +3,6 @@ use-singularity: True
 printshellcmds: True
 cores: all
 resources:
-  gbmem: 1000
+  gbmem: 500
   helixer: 1
   pantools: 1
