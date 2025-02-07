@@ -5,150 +5,155 @@ description: snakemake configuration file
 type: object
 
 properties:
-  samples:
-    type: string
-    description: path to the sample sheet
-    pattern: "^.+\\.tsv$"
-
-  assembler:
-    type: string
-    description: assembler to use; supported assemblers are hifiasm, verkko
-    pattern: "^(hifiasm|verkko)$"
-    default: "hifiasm"
-
-  scaffolder:
-    type: string
-    description: scaffolder to use; supported scaffolders are ntjoin, ragtag
-    pattern: "^(ntjoin|ragtag)$"
-    default: "ntjoin"
-
-  min_contig_len:
-    type: integer
-    description: minimum contig length for filtering the assembly
-    minimum: 0
-  ntjoin_k:
-    type: integer
-    description: k-mer size for ntjoin
-    minimum: 0
-    default: 52
-  ntjoin_w:
-    type: integer
-    description: window size for ntjoin
-    minimum: 0
-    default: 16000
-
-  reference_genomes:
-    type: object
-    description: information about the reference genomes
-    additionalProperties:
-      type: object
-      properties:
-        genome:
-          type: string
-          description: path to the reference genome
-          pattern: "^.+\\.fn?a$"
-        annotation:
-          type: string
-          description: path to the reference genome annotation
-          pattern: "^.*\\.gff3?$"
-        chromosomes:
-          type: object
-          description: chromosomes of the reference genome
-          additionalProperties:
-            type: string
-            pattern: "^[a-zA-Z0-9_\\-\\.\\*:]+$"
-
-  prot_queries:
-    type: object
-    description: path to protein queries for blast search
-    additionalProperties:
-      type: string
-      pattern: "^.+$"
-  nucl_queries:
-    type: object
-    description: path to nucleotide queries for blast search
-    additionalProperties:
-      type: string
-      pattern: "^.+$"
-  organellar:
-    type: object
-    description: path to organellar queries for blast search
-    additionalProperties:
-      type: string
-      pattern: "^.+$"
-  telomere_motif:
-    type: string
-    description: telomere motif (typically CCCTAAA for plants or CCCTAA for animals)
-    pattern: "^[ACGT]+$"
-
-  helixer_model:
-    type: string
-    description: path to the Helixer model
-    pattern: "^.+\\.h5$"
-  helixer_max_gene_length:
-    type: integer
-    description: maximum gene length for Helixer
-    minimum: 0
-
-  k_qa:
-    type: integer
-    description: optimal k-mer size for quality assessment
-    minimum: 0
-    default: 21
-  gxdb:
-    type: string
-    description: path to the gxdb database for fcs-gx
-    pattern: "^.+$"
-  pantools_grouping:
-    type: integer
-    description: grouping relaxation setting for pantools
-    pattern: "^[1-8]$"
-    default: 3
-  odb:
-    type: string
-    description: ODB database for busco
-    pattern: "^.+_odb[0-9]+$"
-  kraken2_nt:
-    type: string
-    description: path to the kraken2 database
-    pattern: "^.+$"
-  OMAdb:
-    type: string
-    description: path to the OMA database
-    pattern: "^.+\\.h5$"
-
-  set:
-    type: object
-    description: sets of accession IDs for plotting in the report
-    additionalProperties:
-      type: array
-      items:
+    samples:
         type: string
-        pattern: "^[a-zA-Z0-9_]+$"
+        description: path to the sample sheet
+        pattern: "^.+\\.tsv$"
 
-  jvm:
-    type: string
-    description: Java virtual machine settings
-    pattern: "^.*$"
-    default: "-Xmx100g -Xms100g"
-  tmpdir:
-    type: string
-    description: path to a temporary directory for fast IO
-    pattern: "^.*$"
-    default: "/tmp/snakemake_tmp"
+    assembler:
+        type: string
+        description: assembler to use; supported assemblers are hifiasm, verkko
+        pattern: "^(hifiasm|verkko)$"
+        default: "hifiasm"
+
+    scaffolder:
+        type: string
+        description: scaffolder to use; supported scaffolders are ntjoin, ragtag
+        pattern: "^(ntjoin|ragtag)$"
+        default: "ntjoin"
+
+    min_contig_len:
+        type: integer
+        description: minimum contig length for filtering the assembly
+        minimum: 0
+    ntjoin_k:
+        type: integer
+        description: k-mer size for ntjoin
+        minimum: 0
+        default: 52
+    ntjoin_w:
+        type: integer
+        description: window size for ntjoin
+        minimum: 0
+        default: 16000
+
+    reference_genomes:
+        type: object
+        description: information about the reference genomes
+        additionalProperties:
+            type: object
+            properties:
+                genome:
+                    type: string
+                    description: path to the reference genome
+                    pattern: "^.*\\.f(?:|n|ast)a?$"
+                annotation:
+                    type: string
+                    description: path to the reference genome annotation
+                    pattern: "^.*\\.gff3?$"
+                chromosomes:
+                    type: object
+                    description: chromosomes of the reference genome
+                    additionalProperties:
+                        type: string
+                        pattern: "^[a-zA-Z0-9_\\-\\.\\*:]+$"
+
+    prot_queries:
+        type: object
+        description: path to protein queries for blast search
+        additionalProperties:
+            type: string
+            pattern: "^.+$"
+    nucl_queries:
+        type: object
+        description: path to nucleotide queries for blast search
+        additionalProperties:
+            type: string
+            pattern: "^.+$"
+    organellar:
+        type: object
+        description: path to organellar queries for blast search
+        additionalProperties:
+            type: string
+            pattern: "^.+$"
+    telomere_motif:
+        type: string
+        description: telomere motif (typically CCCTAAA for plants or CCCTAA for animals)
+        pattern: "^[ACGT]+$"
+
+    helixer_model:
+        type: string
+        description: path to the Helixer model
+        pattern: "^.+\\.h5$"
+    helixer_max_gene_length:
+        type: integer
+        description: maximum gene length for Helixer
+        minimum: 0
+
+    k_qa:
+        type: integer
+        description: optimal k-mer size for quality assessment
+        minimum: 0
+        default: 21
+    gxdb:
+        type: string
+        description: path to the gxdb database for fcs-gx
+        pattern: "^.+$"
+    pantools_grouping:
+        type: integer
+        description: grouping relaxation setting for pantools
+        pattern: "^[1-8]$"
+        default: 3
+    odb:
+        type: string
+        description: ODB database for busco
+        pattern: "^.+_odb[0-9]+$"
+    kraken2_nt:
+        type: string
+        description: path to the kraken2 database
+        pattern: "^.+$"
+    OMAdb:
+        type: string
+        description: path to the OMA database
+        pattern: "^.+\\.h5$"
+
+    set:
+        type: object
+        description: sets of accession IDs for plotting in the report
+        additionalProperties:
+            type: array
+            items:
+                type: string
+                pattern: "^[a-zA-Z0-9_]+$"
+
+    jvm:
+        type: string
+        description: Java virtual machine settings
+        pattern: "^.*$"
+        default: "-Xmx100g -Xms100g"
+    tmpdir:
+        type: string
+        description: path to a temporary directory for fast IO
+        pattern: "^.*$"
+        default: "/tmp/snakemake_tmp"
+    custom_singularity:
+        type: boolean
+        description: whether custom (ghcr.io) singularity containers can be used
+        default: true
 
 required:
-  - samples
-  - assembler
-  - scaffolder
-  - min_contig_len
-  - reference_genomes
-  - organellar
-  - telomere_motif
-  - helixer_model
-  - helixer_max_gene_length
-  - gxdb
-  - odb
-  - kraken2_nt
-  - OMAdb
-  - set
+    - samples
+    - assembler
+    - scaffolder
+    - min_contig_len
+    - reference_genomes
+    - organellar
+    - nucl_queries
+    - telomere_motif
+    - helixer_model
+    - helixer_max_gene_length
+    - gxdb
+    - odb
+    - kraken2_nt
+    - OMAdb
+    - set
