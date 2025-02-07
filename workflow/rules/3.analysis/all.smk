@@ -15,8 +15,8 @@ rule copy_separated_genome:
         nuclear = "results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.fa",
         organellar = expand("results/{{asmname}}/3.analysis/09.separate_genome/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
     output:
-        nuclear = protected("final_output/{asmname}.nuclear.fa"),
-        organellar = protected(expand("final_output/{{asmname}}.{organelle}.fa", organelle = config["organellar"])),
+        nuclear = "final_output/{asmname}.nuclear.fa",
+        organellar = expand("final_output/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
     log:
         "results/logs/3.analysis/copy_separated_genome/{asmname}.log"
     benchmark:

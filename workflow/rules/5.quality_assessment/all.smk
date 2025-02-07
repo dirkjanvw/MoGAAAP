@@ -132,11 +132,11 @@ def get_statistics_output(wildcards):
 rule qa:
     input:
         # individual outputs
-        get_merqury_output,  #merqury
+        get_merqury_output if PERFORM_ASSEMBLY else [],  #merqury
         expand("results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
         expand("results/{asmname}/5.quality_assessment/03.fcs/{asmname}.fcs_gx_report.html", asmname=get_all_accessions()),  #fcs-gx
         expand("results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.html", asmname=get_all_accessions()),  #fcs-adaptor
-        get_multiqc_output,  #mapping
+        get_multiqc_output if PERFORM_ASSEMBLY else [],  #mapping
 
         # grouped outputs
         get_pantools_output,  #pantools

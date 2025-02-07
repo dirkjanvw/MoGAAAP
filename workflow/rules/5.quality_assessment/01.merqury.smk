@@ -25,7 +25,7 @@ rule meryl:
 rule merqury:
     input:
         meryl = "results/{asmname}/5.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl",
-        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        genome = "final_output/{asmname}.full.fa",
     output:
         temporary(directory("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.meryl")), #relatively fast to compute and takes up a lot of space
         bed = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_only.bed",
