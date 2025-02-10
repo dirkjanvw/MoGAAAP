@@ -54,7 +54,7 @@ Make sure to install either Singularity version 4.0 or higher or Apptainer versi
 
 #### Singularity/Apptainer environment variables
 **NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
-The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
+The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile` (don't forget to source the file after changing):
 - `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
 - `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
 
