@@ -43,13 +43,17 @@ reference_genomes:
             5: "Chr5"
             6: "Chr6"
 
-# All protein and nucleotide queries that need to be run for the assembly
-# analysis module. The key should be the name of the query and the value should
-# be the path to the query. At least one protein or nucleotide query is
-# required for the module to run (organellar sequences count as nucleotide
-# queries).
 # Contigs with a more than 50% of its length covered by an organellar sequence
 # will be separated from the scaffolded assembly output (not for QC, though).
+organellar:
+    chloroplast: "resources/blast_queries/chloroplast.fasta"
+    mitochondrion: "resources/blast_queries/mitochondrion.fasta"
+
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one nucleotide query is required. We highly
+# recommend to use a 100 times repeat of the telomere motif as a query to
+# identify telomeres not only at the ends of the chromosomes.
 # For the protein queries, the query should be a single exon domain as it
 # is searched in the genome and not in the proteome.
 prot_queries:
@@ -57,9 +61,8 @@ prot_queries:
 nucl_queries:
     ribosome: "resources/blast_queries/ribosome.fasta"
     telomere: "resources/blast_queries/telomere.fasta" #for blastn: should be a 100x repeat of the telomere motif to identify telomeres anywhere in the genome
-organellar:
-    chloroplast: "resources/blast_queries/chloroplast.fasta"
-    mitochondrion: "resources/blast_queries/mitochondrion.fasta"
+
+# The expected telomere motif for telomere identification by seqtk.
 telomere_motif: "CCCTAAA" #for seqtk: it only identifies the motif at the end of a chromosome
 
 # Annotation settings
@@ -87,3 +90,4 @@ jvm: "-Xmx100g -Xms100g" #java virtual machine settings
 tmpdir: "/dev/shm/" #temporary directory for fast IO
 nucmer_maxgap: 1000 #maximum gap size for nucmer
 nucmer_minmatch: 1000 #minimum match size for nucmer
+custom_singularity: true # Whether custom singularity containers can be used.

@@ -1,0 +1,104 @@
+# This file contains the full configuration for the pipeline in YAML format.
+# Make sure to fill out at least everything that is not labelled as optional.
+# All strings that start with "resources" should be relative or absolute paths
+# on your machine that are readable by Snakemake.
+
+# All samples should be defined in a TSV file. In this file, a unique
+# accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
+# paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
+# ID should be defined.
+samples: "config/samples.tsv"
+
+# Assembly settings
+assembler: "hifiasm"  #supported assemblers: hifiasm, verkko
+
+# All filtering and scaffolding parameters
+min_contig_len: 10000
+ntjoin_k: 52
+ntjoin_w: 16000
+
+# All reference genomes and chromosomes. The reference genome ID in the samples
+# sheet should match the key in this section.
+reference_genomes:
+    TAIR10:
+        genome: "resources/arabidopsis/genome/GCF_000001735.4_TAIR10.1_genomic.fna"
+        annotation: "resources/arabidopsis/annotation/Araport11_GFF3_genes_transposons.current.renamed.gff"
+        chromosomes:
+            1: "NC_003070.9"
+            2: "NC_003071.7"
+            3: "NC_003074.8"
+            4: "NC_003075.7"
+            5: "NC_003076.8"
+
+# All protein and nucleotide queries that need to be run for the assembly
+# analysis module. The key should be the name of the query and the value should
+# be the path to the query. At least one protein or nucleotide query is
+# required for the module to run (organellar sequences count as nucleotide
+# queries).
+# Contigs with a more than 50% of its length covered by an organellar sequence
+# will be separated from the scaffolded assembly output (not for QC, though).
+# For the protein queries, the query should be a single exon domain as it
+# is searched in the genome and not in the proteome.
+prot_queries:
+    NBS_domain: "resources/arabidopsis/NBS_HMM.amac"
+nucl_queries:
+    telomere: "resources/arabidopsis/genome/telomere.fasta"
+organellar:
+    chloroplast: "resources/arabidopsis/genome/chloroplast.fasta"
+    mitochondrion: "resources/arabidopsis/genome/mitochondrion.fasta"
+telomere_motif: "CCCTAAA"
+
+# Annotation settings
+helixer_model: "resources/land_plant_v0.3_a_0080.h5"
+helixer_max_gene_length: 64152
+
+# Quality assessment settings
+k_qa: 21  #optimal k-mer size for quality assessment
+gxdb: "/local/fcs/gxdb"  #path to gxdb for fcs-gx
+pantools_grouping: 3  #grouping relaxation setting for pantools
+odb: "brassicales_odb10"  #ODB database for busco
+kraken2_nt: "/path/to/kraken2/nt"  #kraken2 database
+OMAdb: "/path/to/oma_databases/LUCA.h5"  #OMA database for orthologs
+
+# A section to define groups of accessions for plotting together in report. This
+# list is order sensitive and will only be used for QC.
+set:
+    arabidopsis_all:
+        - 01_col
+        - 02_tibet
+        - 03_yilong
+        - 04_bor_1
+        - 05_cdm_0
+        - 08_kondara
+        - 12_li_of_095
+        - 13_got_22
+        - 14_st_0
+        - 15_kelsterbach_2
+        - 19_kz_9
+        - 20_ll_0
+        - 21_ms_0
+        - 23_sij_1
+        - 24_hs_0
+        - 25_per_1
+        - 26_nz_1
+        - 27_belmonte_4_94
+        - 29_sij_2
+        - 30_tu_sb30_3
+        - 31_mammo_1
+        - 33_sha
+        - 36_pra_6
+        - 37_pu_2_23
+        - 38_dra_2
+        - 39_ah_7
+        - 40_etna_2
+        - 41_sorbo
+        - 42_arb_0
+        - 43_elk_1
+        - 44_ket_10
+        - 45_meh_0
+
+# General settings; only change if you know what you are doing
+jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
+tmpdir: "/dev/shm/tmp_arabidopsis"  #temporary directory for fast IO
+nucmer_maxgap: 1000  #maximum gap size for nucmer
+nucmer_minmatch: 1000  #minimum match size for nucmer

@@ -1,3 +1,9 @@
+def singularity_enabled():
+    """
+    Returns a boolean for whether custom singularity containers may be used.
+    """
+    return config["custom_singularity"]
+
 def get_all_accessions():
     """
     Return all accession IDs.

@@ -15,7 +15,7 @@ rule busco_download:
 rule busco_proteome:
     input:
         proteome = "results/{asmname}/5.quality_assessment/proteome.pep.fa",
-        download = rules.busco_download.output,
+        download = ancient(rules.busco_download.output),
     output:
         "results/{asmname}/5.quality_assessment/06.busco_proteome/{asmbase}_proteome/short_summary.specific.{odb}.{asmbase}_proteome.txt",
     log:
@@ -32,7 +32,7 @@ rule busco_proteome:
 rule busco_genome:
     input:
         genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
-        download = rules.busco_download.output,
+        download = ancient(rules.busco_download.output),
     output:
         "results/{asmname}/5.quality_assessment/06.busco_genome/{asmbase}_genome/short_summary.specific.{odb}.{asmbase}_genome.txt",
     log:

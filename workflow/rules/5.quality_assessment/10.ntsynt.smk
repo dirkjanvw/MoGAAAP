@@ -19,7 +19,7 @@ rule ntsynt:
         """
         (
         divergence=$(awk '{{for (i=2;i<=NF;i++){{if ($i>d){{d=$i;}}}}}} END{{printf "%.2f",d*100;}}' {input.divergence})
-        ln -s $(realpath {input.genomes}) $(dirname {output.blocks})/
+        ln -sf $(realpath {input.genomes}) $(dirname {output.blocks})/
         cd $(dirname {output.blocks})
         ntSynt -p {wildcards.asmset}.k{wildcards.mink}.w{wildcards.minw} -k {wildcards.mink} -w {wildcards.minw} -d ${{divergence}} -f -t {threads} $(for file in {input.genomes}; do basename ${{file}}; done)
         ) &> {log}
@@ -59,6 +59,6 @@ rule visualise_ntsynt:
     params:
         minlen = 10000000 #minimum length for a block
     container:
-        "workflow/singularity/ntSynt/ntSynt.visualization_scripts.v1.0.0.sif"
+        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt.visualization_scripts.v1.0.0:latest"
     shell:
         "workflow/scripts/ntSynt.v1.0.0/plot_synteny_blocks_gggenomes.R -s {input.sequence_lengths} -l {input.links} -p $(echo {output} | rev | cut -d '.' -f 2- | rev) &> {log}"

@@ -1,0 +1,4 @@
+accessionId	hifi	ont	illumina_1	illumina_2	hic_1	hic_2	haplotypes	speciesName	taxId	referenceId
+HG002	resources/human/SRR26402938.fastq.gz				resources/human/SRR11347815_1.fastq.gz	resources/human/SRR11347815_2.fastq.gz	2	Hsapiens	9606	GRCh38
+HG003	resources/human/SRR26402937.fastq.gz						2	Hsapiens	9606	GRCh38
+HG004	resources/human/SRR26402936.fastq.gz						2	Hsapiens	9606	GRCh38
