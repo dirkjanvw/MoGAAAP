@@ -83,8 +83,9 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
 
 ## Configuration
-All configuration of the pipeline is done in the `config/config.yaml` file, and samples are registered in the `config/samples.tsv` file.
-All fields to fill in are well-documented in the provided `config/config.yaml` file and should be self-explanatory.
+By default, all configuration of the pipeline is done in the `config/config.yaml` YAML file, and samples are registered in a TSV file.
+Please see the example `config/example.yaml` and `config/example.tsv` files for an example of how to fill in these files.
+All fields to fill in are well-documented in the provided `config/example.yaml` file and should be self-explanatory.
 Please see `config/examples/` for examples of filled-in configuration files.
 Both configuration YAML and sample TSV sheet are validated against a built-in schema that throws an error if the files are not correctly filled in.
 
@@ -120,7 +121,7 @@ All modules except for `annotate` have visual output that can be inspected in an
 For more information about these modules, see [Explaining the pipeline](#explaining-the-pipeline).
 
 ### Important parameters
-Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default (in `workflow/profiles/default/config.yaml`).
+Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default.
 
 | Parameter              | Optionality            | Description                                                               |
 |------------------------|------------------------|---------------------------------------------------------------------------|
@@ -223,8 +224,9 @@ The only solution in that case would be to choose another (more closely related)
 Scaffolding is performed using `ntJoin`, which uses a minimizer-based reference-guided scaffolding method.
 If by visual inspection collinearity between the assembly and reference genome was found, the scaffolding module generally runs without issues.
 Should any error occur, please read the corresponding log file of the step that produced the error.
-In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the config file.
+In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the configuration YAML file.
 In our experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
+Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolder` parameter in the configuration YAML file.
 
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
@@ -272,7 +274,7 @@ The quality assessment steps in this module can be roughly divided into two cate
 Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
 Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
-Any groups can be defined in the configuration file and a genome may occur in multiple groups.
+Any groups can be defined in the configuration YAML file and a genome may occur in multiple groups.
 
 #### Next steps
 The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
