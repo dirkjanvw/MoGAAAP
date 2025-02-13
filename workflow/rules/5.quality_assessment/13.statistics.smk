@@ -52,8 +52,6 @@ rule individual_statistics_no_assembly:
         coding_annotation = "final_output/{asmname}.full.coding.gff",
     output:
         assembly = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assembly.tsv",
-        chromosomes = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.assigned_sequences.tsv",
-        unassigned = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.unassigned_sequences.tsv",
         tsv = "results/{asmname}/5.quality_assessment/13.statistics/{asmname}.small.tsv"
     log:
         "results/logs/5.quality_assessment/individual_statistics_no_assembly/{asmname}.log"
