@@ -4,7 +4,7 @@ from snakemake.utils import validate, min_version
 min_version("8") # Require at least Snakemake 8.0
 
 # Load configuration
-configfile: "config/config.yaml"
+#configfile: "config/config.yaml"
 validate(config, schema="schemas/config.schema.yaml")
 
 # Load samples
