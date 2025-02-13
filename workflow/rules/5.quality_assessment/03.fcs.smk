@@ -47,7 +47,7 @@ rule fcs_adaptor:
     input:
         "final_output/{asmname}.full.fa"
     output:
-        cleaned = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/cleaned_sequences/{asmname}.fa",
+        cleaned = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/cleaned_sequences/{asmname}.full.fa",
         calls = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/combined.calls.jsonl",
         fcslog = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs.log",
         fcsadaptorlog = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs_adaptor.log",
