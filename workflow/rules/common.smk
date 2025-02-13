@@ -9,14 +9,11 @@ def get_all_accessions():
     Return all accession IDs.
     If haplotypes > 1, return "{accessionId}.hap{hap}" for each haplotype.
     """
-    if PERFORM_ASSEMBLY:
-        return [
-            accession if haplotypes == 1 else f"{accession}.hap{hap}"
-            for accession, haplotypes in zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
-            for hap in range(1,haplotypes + 1)
-        ]
-    else:
-        return ASSEMBLIES["accessionId"]
+    return [
+        accession if haplotypes == 1 else f"{accession}.hap{hap}"
+        for accession, haplotypes in zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
+        for hap in range(1,haplotypes + 1)
+    ]
 
 def get_clean_accession_id(asmname):
     """
@@ -34,16 +31,13 @@ def get_all_accessions_from_asmset(asmset, minimum=2):
     """
     Return all accession IDs for a given set, while taking care of haplotypes if needed
     """
-    if PERFORM_ASSEMBLY:
-        all_accessions = zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
-        accessions = [
-            accession if haplotypes == 1 else f"{accession}.hap{hap}"
-            for accession, haplotypes in all_accessions
-            for hap in range(1,haplotypes + 1)
-            if accession in config["set"][asmset]
-        ]
-    else:
-        accessions = [accession for accession in ASSEMBLIES["accessionId"] if accession in config["set"][asmset]]
+    all_accessions = zip(SAMPLES["accessionId"], SAMPLES["haplotypes"])
+    accessions = [
+        accession if haplotypes == 1 else f"{accession}.hap{hap}"
+        for accession, haplotypes in all_accessions
+        for hap in range(1,haplotypes + 1)
+        if accession in config["set"][asmset]
+    ]
     if len(accessions) < minimum:
         print(f'WARNING: set "{asmset}" appears to contain only {len(accessions)} entry! Treating as if empty.')
         accessions = []
@@ -88,44 +82,32 @@ def get_haplotypes(wildcards):
     return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["haplotypes"].values.item())
 
 def get_haplotype_information(asmname):
-    if PERFORM_ASSEMBLY:
-        return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["haplotypes"].values.item())
-    else:
-        return 1
+    return int(SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["haplotypes"].values.item())
 
 def get_species_name(wildcards):
-    if PERFORM_ASSEMBLY:
-        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["speciesName"].values.item()
-    else:
-        return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["speciesName"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["speciesName"].values.item()
 
 def get_taxid(wildcards):
-    if PERFORM_ASSEMBLY:
-        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["taxId"].values.item()
-    else:
-        return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["taxId"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["taxId"].values.item()
 
 def get_reference_id(asmname):
-    if PERFORM_ASSEMBLY:
-        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
-    else:
-        return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
+
+def has_assembly_location(asmname):
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].isnull().values.item()
 
 def get_assembly_location(asmname):
-    return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].values.item()
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].values.item()
 
 def has_annotation_location(asmname):
-    return not ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
 
 def get_annotation_location(asmname):
     """
     Obtain the annotation location for a given asmname within the annotation module.
     NB: DO NOT USE THIS FUNCTION TO OBTAIN THE ACTUAL ANNOTATION FILE, "final_output/{asmname}.full.gff" SHOULD BE USED INSTEAD.
     """
-    if PERFORM_ASSEMBLY:
-        return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+    if has_annotation_location(asmname):
+        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
     else:
-        if has_annotation_location(asmname):
-            return ASSEMBLIES[ASSEMBLIES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
-        else:
-            return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+        return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"

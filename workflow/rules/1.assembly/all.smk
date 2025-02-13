@@ -19,16 +19,17 @@ def get_mummerplot_contigs(wildcards):
     if singularity_enabled():
         minlen = config["min_contig_len"]
         for asmname in get_all_accessions():
-            reference = get_reference_id(asmname)
-            filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp")
-            filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp")
+            if not has_assembly_location(asmname):
+                reference = get_reference_id(asmname)
+                filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.gp")
+                filelist.append(f"results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp")
     return filelist
 
 rule assemble:
     input:
         expand("final_output/{asmname}.contigs.fa",
-            asmname=get_all_accessions()
-        ) if PERFORM_ASSEMBLY else [],
-        get_mummerplot_contigs if PERFORM_ASSEMBLY else [],
+            asmname=[asmname for asmname in get_all_accessions() if not has_assembly_location(asmname)]
+        ),
+        get_mummerplot_contigs,
     output:
         touch("results/assembly.done")

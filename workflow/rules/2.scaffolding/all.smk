@@ -6,7 +6,7 @@ rule copy_assembly:
     input:
         lambda wildcards:
             "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
-            if PERFORM_ASSEMBLY
+            if not has_assembly_location(wildcards.asmname)
             else get_assembly_location(wildcards.asmname),
     output:
         "final_output/{asmname}.full.fa",
@@ -35,16 +35,17 @@ def get_mummerplot_scaffolds(wildcards):
     filelist = []
     if singularity_enabled():
         for asmname in get_all_accessions():
-            reference = get_reference_id(asmname)
-            filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp")
-            filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.large.gp")
+            if not has_assembly_location(asmname):
+                reference = get_reference_id(asmname)
+                filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp")
+                filelist.append(f"results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.large.gp")
     return filelist
 
 def get_hic_plots(wildcards):
     filelist = []
     if singularity_enabled():
         for asmname in get_all_accessions():
-            if has_hic(asmname):
+            if has_hic(asmname) and not has_assembly_location(asmname):
                 filelist.append(f"results/{asmname}/2.scaffolding/01.{config['scaffolder']}/contact_map.pdf")
     return filelist
 
@@ -52,7 +53,7 @@ rule scaffold:
     input:
         expand("final_output/{asmname}.full.fa",
             asmname = get_all_accessions()),
-        get_mummerplot_scaffolds if PERFORM_ASSEMBLY else [],
-        get_hic_plots if PERFORM_ASSEMBLY else [],
+        get_mummerplot_scaffolds,
+        get_hic_plots,
     output:
         touch("results/scaffolding.done")

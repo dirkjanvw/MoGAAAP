@@ -74,11 +74,18 @@ rule individual_statistics_no_assembly:
         ) &> {log}
         """
 
+def get_invididual_statistics(wildcards):
+    filelist = []
+    for asmname in get_all_accessions_from_asmset(wildcards.asmset, 1):
+        if has_assembly_location(asmname):
+            filelist.append(f"results/{asmname}/5.quality_assessment/13.statistics/{asmname}.small.tsv")
+        else:
+            filelist.append(f"results/{asmname}/5.quality_assessment/13.statistics/{asmname}.full.tsv")
+    return filelist
+
 rule overall_statistics:
     input:
-        lambda wildcards: expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.full.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1))
-            if PERFORM_ASSEMBLY
-            else expand("results/{asmname}/5.quality_assessment/13.statistics/{asmname}.small.tsv", asmname=get_all_accessions_from_asmset(wildcards.asmset, 1)),
+        get_invididual_statistics,
     output:
         "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     log:
@@ -86,7 +93,7 @@ rule overall_statistics:
     benchmark:
         "results/benchmarks/5.quality_assessment/overall_statistics/{asmset}.txt"
     shell:
-        "awk 'NR==1 || FNR>1' {input} > {output} 2> {log}"
+        "./workflow/scripts/merge_tsv_files.sh {input} > {output} 2> {log}"
 
 rule visualise_overall_statistics:
     input:

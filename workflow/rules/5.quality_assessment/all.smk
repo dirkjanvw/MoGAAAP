@@ -19,18 +19,19 @@ def get_merqury_output(wildcards):
 
     # HiFi
     for asmname in get_all_accessions():
-        all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.qv.html")  #per sequence qv
-        all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #spectra-cn
+        if not has_assembly_location(asmname):
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item():
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item() and not has_assembly_location(asmname):
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.qv.html")  #per sequence qv
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item() and not has_assembly_location(asmname):
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.qv.html")  #per sequence qv
             all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.spectra-cn.fl.png")  #spectra-cn
 
@@ -39,8 +40,9 @@ def get_merqury_output(wildcards):
 def get_multiqc_output(wildcards):
     all_output = []
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
-            all_output.append(f"results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html")  #mapping
+        if not has_assembly_location(asmname):
+            if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
+                all_output.append(f"results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html")  #mapping
     return all_output
 
 def get_pantools_output(wildcards):
@@ -132,11 +134,11 @@ def get_statistics_output(wildcards):
 rule qa:
     input:
         # individual outputs
-        get_merqury_output if PERFORM_ASSEMBLY else [],  #merqury
+        get_merqury_output,  #merqury
         expand("results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
         expand("results/{asmname}/5.quality_assessment/03.fcs/{asmname}.fcs_gx_report.html", asmname=get_all_accessions()),  #fcs-gx
         expand("results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.html", asmname=get_all_accessions()),  #fcs-adaptor
-        get_multiqc_output if PERFORM_ASSEMBLY else [],  #mapping
+        get_multiqc_output,  #mapping
 
         # grouped outputs
         get_pantools_output,  #pantools
