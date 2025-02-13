@@ -51,7 +51,7 @@ rule circos_karyotype:
     benchmark:
         "results/benchmarks/3.analysis/circos_karyotype/{asmname}.txt"
     shell:
-        "awk '$1!~/Chr[0-9]+/{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
+        "awk 'c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
 def get_circos_files(wildcards):
     prot_files = []
