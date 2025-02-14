@@ -50,8 +50,8 @@ rule circos_karyotype:
         "results/logs/3.analysis/circos_karyotype/{asmname}.log"
     benchmark:
         "results/benchmarks/3.analysis/circos_karyotype/{asmname}.txt"
-    shell:
-        "awk 'c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
+    shell: #circos has a maximum of 200 sequences it can show, so limit to either "Chr[0-9]+" containing sequences or the first 100 sequences
+        "awk '$1!~/Chr[0-9]+/ || FNR > 100{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
 def get_circos_files(wildcards):
     prot_files = []
