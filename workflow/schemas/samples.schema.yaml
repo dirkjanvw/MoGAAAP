@@ -63,7 +63,7 @@ required:
     - taxId
     - referenceId
 
-oneOf:
+anyOf:
     - required: ["hifi"]
     - required: ["assemblyLocation"]
 
