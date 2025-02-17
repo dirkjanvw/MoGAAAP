@@ -51,6 +51,9 @@ def get_best_wgstype(asmname):
         return "Illumina"
     return "HiFi"
 
+def has_hifi(asmname): #false is only possible when an assembly is provided
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hifi"].isnull().values.item()
+
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
 

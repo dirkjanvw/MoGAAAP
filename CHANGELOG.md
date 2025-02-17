@@ -2,9 +2,6 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## [Unreleased]
 
-TODO:
-- fix order of statistics 
-
 ### Added
 - Add option to use the pipeline without custom built singularity containers (#79).
 

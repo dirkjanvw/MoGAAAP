@@ -70,15 +70,9 @@ oneOf:
 allOf:
     - not:
           anyOf:
-              - required: ["assemblyLocation", "hifi"]
               - required: ["assemblyLocation", "ont"]
-              - required: ["assemblyLocation", "illumina_1"]
-              - required: ["assemblyLocation", "illumina_2"]
               - required: ["assemblyLocation", "hic_1"]
               - required: ["assemblyLocation", "hic_2"]
-              - required: ["annotationLocation", "hifi"]
               - required: ["annotationLocation", "ont"]
-              - required: ["annotationLocation", "illumina_1"]
-              - required: ["annotationLocation", "illumina_2"]
               - required: ["annotationLocation", "hic_1"]
               - required: ["annotationLocation", "hic_2"]
