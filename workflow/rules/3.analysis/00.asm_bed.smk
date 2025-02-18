@@ -1,6 +1,6 @@
 rule asm_bed:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        "final_output/{asmname}.full.fa",
     output:
         asm_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.BED",
         chr_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.BED",

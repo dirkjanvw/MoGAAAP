@@ -1,6 +1,6 @@
 rule helixer:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        "final_output/{asmname}.full.fa",
     output:
         "results/{asmname}/4.annotation/02.helixer/helixer.gff",
     log:

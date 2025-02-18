@@ -25,22 +25,22 @@ rule meryl:
 rule merqury:
     input:
         meryl = "results/{asmname}/5.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl",
-        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        genome = "final_output/{asmname}.full.fa",
     output:
-        temporary(directory("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.meryl")), #relatively fast to compute and takes up a lot of space
-        bed = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_only.bed",
-        wig = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_only.wig",
+        temporary(directory("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full.meryl")), #relatively fast to compute and takes up a lot of space
+        bed = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.bed",
+        wig = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.wig",
         stats = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.completeness.stats",
         distonlyhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.dist_only.hist",
         allqv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.qv",
-        qv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.qv",
-        cnflplot = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.spectra-cn.fl.png",
+        qv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv",
+        cnflplot = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.fl.png",
             category="K-mer completeness",
             caption="../../report/merqury_plot.rst",
             labels={"type": "spectra-cn", "scope": "all sequences", "assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
-        cnhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.spectra-cn.hist",
-        cnlnplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.spectra-cn.ln.png",
-        cnstplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.spectra-cn.st.png",
+        cnhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.hist",
+        cnlnplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.ln.png",
+        cnstplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.st.png",
         asmplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.fl.png",
         asmhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.hist",
         asmlnplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.ln.png",
@@ -66,10 +66,10 @@ rule merqury:
 
 rule visualise_qv:
     input:
-        "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.qv"
+        "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv"
     output:
-        tsv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.qv.tsv",
-        html = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.qv.html",
+        tsv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.tsv",
+        html = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.html",
             category="K-mer completeness",
             caption="../../report/merqury_qv.rst",
             labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
