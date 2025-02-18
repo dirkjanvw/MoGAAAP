@@ -66,7 +66,7 @@ rule individual_statistics_no_assembly_with_merqury:
     shell:
         """
         (
-        printf "Name\\tTotal length\\t#sequences\\tN50\\tQV\\tK-mer completeness\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\n" > {output.tsv}
+        printf "Name\\tTotal length\\t#sequences\\tN50\\tTotal QV\\tK-mer completeness\\t#genes (full)\\t#genes (coding)\\t#transcripts (coding)\\n" > {output.tsv}
         printf "{wildcards.asmname}\\t" >> {output.tsv}
         seqkit stats -abTj1 {input.assembly} > {output.assembly}
         awk 'BEGIN{{FS = "\\t";}} NR==2{{printf "%s\\t%s\\t%s\\t", $5,$4,$13;}}' {output.assembly} >> {output.tsv}
