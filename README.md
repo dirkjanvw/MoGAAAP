@@ -90,24 +90,26 @@ Both configuration YAML and sample TSV sheet are validated against a built-in sc
 
 The sample TSV sheet has the following columns to fill in (one row per sample):
 
-| Column name          | Required | Description                                                                                                                                                              |
-|----------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accessionId`        | Required | The accession ID of the sample. This name has to be unique.                                                                                                              |
-| `assemblyLocation`   | *        | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
-| `annotationLocation` | Optional | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
-| `hifi`               | *        | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
-| `ont`                | Optional | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
-| `illumina_1`         | Optional | The path to the forward Illumina reads in FASTQ format.                                                                                                                  |
-| `illumina_2`         | Optional | The path to the reverse Illumina reads in FASTQ format.                                                                                                                  |
-| `hic_1`              | Optional | The path to the forward Hi-C reads in FASTQ format.                                                                                                                      |
-| `hic_2`              | Optional | The path to the reverse Hi-C reads in FASTQ format.                                                                                                                      |
-| `haplotypes`         | Required | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. **NB**: currently only 1 or 2 is supported. |
-| `speciesName`        | Required | A name for the species that is used by Helixer to name novel genes.                                                                                                      |
-| `taxId`              | Required | The NCBI taxonomy ID of the species.                                                                                                                                     |
-| `referenceId`        | Required | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.             |
+| Column name          | Required? | Description                                                                                                                                                              |
+|----------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `accessionId`        | Required  | The accession ID of the sample. This name has to be unique.                                                                                                              |
+| `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
+| `annotationLocation` | Optional  | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
+| `hifi`               | `*`       | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
+| `ont`                | Optional  | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
+| `illumina_1`         | Optional  | The path to the forward Illumina reads in FASTQ format.                                                                                                                  |
+| `illumina_2`         | Optional  | The path to the reverse Illumina reads in FASTQ format.                                                                                                                  |
+| `hic_1`              | Optional  | The path to the forward Hi-C reads in FASTQ format.                                                                                                                      |
+| `hic_2`              | Optional  | The path to the reverse Hi-C reads in FASTQ format.                                                                                                                      |
+| `haplotypes`         | Required  | The expected number of haplotypes in the assembly. Use 1 for (near) homozygous accessions and 2 for heterozygous accessions. **NB**: currently only 1 or 2 is supported. |
+| `speciesName`        | Required  | A name for the species that is used by Helixer to name novel genes.                                                                                                      |
+| `taxId`              | Required  | The NCBI taxonomy ID of the species.                                                                                                                                     |
+| `referenceId`        | Required  | A unique identifier for the reference genome for which genome (FASTA), annotation (GFF3) and chromosome names are provided in the `config/config.yaml` file.             |
 
 `*`: At least one of these fields is required.
+
 **NB**: If the `assemblyLocation` is provided, no assembly will be performed and the provided assembly will be assumed to be a scaffolded assembly.
+Therefore, `hifi` and `illumina_1`/`illumina_2` will only be used for the quality assessment module, and `ont` and `hic_1`/`hic_2` are not allowed.
 
 ## Running the pipeline
 
