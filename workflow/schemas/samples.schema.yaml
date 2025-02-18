@@ -67,6 +67,10 @@ anyOf:
     - required: ["hifi"]
     - required: ["assemblyLocation"]
 
+dependentRequired:
+    annotationLocation:
+        - assemblyLocation
+
 allOf:
     - not:
           anyOf:
