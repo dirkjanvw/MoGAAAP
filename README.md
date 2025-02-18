@@ -155,18 +155,18 @@ The following resources (apart from CPUs) might be heavily used by the pipeline:
 ### Running the pipeline
 As first step, it is always good to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -n
+snakemake ${MODULE} -n --configfile /path/to/config.yaml
 ```
 
 If everything is alright, the pipeline can be run:
 ```bash
-snakemake ${MODULE}
+snakemake ${MODULE} --configfile /path/to/config.yaml
 ```
 
 ### Reporting
 The pipeline can generate an HTML `report.html` file with the most important results:
 ```bash
-snakemake ${MODULE} --report report.html
+snakemake ${MODULE} --configfile /path/to/config.yaml --report report.html
 ```
 
 ## Output
