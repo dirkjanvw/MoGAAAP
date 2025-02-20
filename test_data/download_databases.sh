@@ -14,8 +14,12 @@ if [ ! -f "land_plant_v0.3_a_0080.h5" ]; then
 fi
 
 # Download kraken2 nt_core
-if [ ! -f "k2_core_nt_20241228.tar.gz" ]; then
+if [ ! -d "nt" ]; then
+    mkdir nt
+    cd nt
     wget "https://genome-idx.s3.amazonaws.com/kraken/k2_core_nt_20241228.tar.gz"
+    tar xzvf k2_core_nt_20241228.tar.gz
+    cd ..
 fi
 
 # Download OMA LUCA
