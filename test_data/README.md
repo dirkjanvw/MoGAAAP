@@ -22,7 +22,7 @@ Run the following command to download all databases into the `test_data` directo
 Normally, it would not be recommended to download them into the `test_data` directory due to speed, but for the purpose of this test, it is fine.
 
 > [!WARNING]
-> This script will download both test data and all databases necessary (>500GB total).
+> This script will download both test data and all databases necessary (>900GB total).
 
 ```bash
 bash test_data/download_databases.sh
