@@ -21,7 +21,8 @@ wget -O chloroplast.fasta "https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nu
 gunzip GCF_000001735.4_TAIR10.1_genomic.fna.gz Araport11_GFF3_genes_transposons.current.gff.gz
 
 # Rename the sequence identifiers of the GFF file
-sed 's/^Chr1/NC_003070.9/g' Araport11_GFF3_genes_transposons.current.gff |\
+iconv -f utf-8 -t utf-8 -c Araport11_GFF3_genes_transposons.current.gff |\
+    sed 's/^Chr1/NC_003070.9/g' |\
     sed 's/^Chr2/NC_003071.7/g' |\
     sed 's/^Chr3/NC_003074.8/g' |\
     sed 's/^Chr4/NC_003075.7/g' |\
