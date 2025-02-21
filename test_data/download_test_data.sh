@@ -18,7 +18,7 @@ wget -O mitochondrion.fasta "https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=
 wget -O chloroplast.fasta "https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&id=NC_000932.1&report=fasta&format=text" #Arabidopsis thaliana Col-0 chloroplast genome
 
 # Unzip the reference files
-gunzip GCF_000001735.4_TAIR10.1_genomic.gff.gz Araport11_GFF3_genes_transposons.current.gff.gz
+gunzip GCF_000001735.4_TAIR10.1_genomic.fna.gz Araport11_GFF3_genes_transposons.current.gff.gz
 
 # Rename the sequence identifiers of the GFF file
 sed 's/^Chr1/NC_003070.9/g' Araport11_GFF3_genes_transposons.current.gff |\
