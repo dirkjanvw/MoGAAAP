@@ -3,6 +3,8 @@ This repository contains a Snakemake pipeline for the assembly, annotation and q
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
 The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
+A test dataset is provided in the `test_data/` directory, including instructions.
+
 ## Index
 - [Downloading the pipeline](#downloading-pipeline)
 - [Installing dependencies](#installing-dependencies)
@@ -75,12 +77,12 @@ conda activate snakemake
 ## Databases
 Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline depends on the existence of a number of databases.
 
-| Database            | Download instructions                                                                                                                            |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                |
-| GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX) (I only tested the Cloud instructions) |
-| Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                     |
-| OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
+| Database            | Download instructions                                                                                                                                                                    |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                                                        |
+| GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX-quickstart#download-the-fcs-gx-database) (I only tested the Cloud instructions) |
+| Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
+| OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
 
 ## Configuration
 All configuration of the pipeline is done in the `config/config.yaml` file, and samples are registered in the `config/samples.tsv` file.

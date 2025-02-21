@@ -1,0 +1,8 @@
+*
+!.gitignore
+!config.yaml
+!download_databases.sh
+!download_test_data.sh
+!NBS_HMM.amac
+!README.md
+!test_samples.tsv
