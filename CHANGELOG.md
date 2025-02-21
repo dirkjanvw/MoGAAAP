@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.6 - 2025-02-21]
 
 ### Added
 - Add `test_data` directory with full end-to-end user test instructions (#86).
