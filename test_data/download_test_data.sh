@@ -29,5 +29,8 @@ sed 's/^Chr1/NC_003070.9/g' Araport11_GFF3_genes_transposons.current.gff |\
     sed 's/^ChrM/NC_037304.1/g' |\
     sed 's/^ChrC/NC_000932.1/g' > Araport11_GFF3_genes_transposons.current.renamed.gff
 
+# Create a telomere fasta file
+echo CCCTAAA | awk '{for (i=1;i<=100;i++){printf "%s",$1;} printf "\n"}' > telomere.fasta
+
 # Return to the main directory
 cd ..
