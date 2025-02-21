@@ -1,0 +1,4 @@
+accessionId	hifi	ont	hic_1	hic_2	illumina_1	illumina_2	haplotypes	speciesName	taxId	referenceId
+43_elk_1	test_data/CRR591691.fq.gz						1	Athaliana	3702	TAIR10
+44_ket_10	test_data/CRR591692.fq.gz						1	Athaliana	3702	TAIR10
+45_meh_0	test_data/CRR591693.fq.gz						1	Athaliana	3702	TAIR10
