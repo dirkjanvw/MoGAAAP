@@ -119,6 +119,10 @@ fabric.properties
 
 
 
+# Specific for poetry
+poetry.lock
+__pycache__/
+
 # Specific for snakemake
 .snakemake/
 *.svg
