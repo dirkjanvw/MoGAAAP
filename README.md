@@ -3,6 +3,8 @@ This repository contains a Snakemake pipeline for the assembly, annotation and q
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
 The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
+A test dataset is provided in the `test_data/` directory, including instructions.
+
 ## Index
 - [Downloading the pipeline](#downloading-pipeline)
 - [Installing dependencies](#installing-dependencies)
@@ -54,7 +56,7 @@ Make sure to install either Singularity version 4.0 or higher or Apptainer versi
 
 #### Singularity/Apptainer environment variables
 **NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
-The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile`:
+The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile` (don't forget to source the file after changing):
 - `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
 - `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
 
@@ -75,12 +77,12 @@ conda activate snakemake
 ## Databases
 Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline depends on the existence of a number of databases.
 
-| Database            | Download instructions                                                                                                                            |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                |
-| GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX) (I only tested the Cloud instructions) |
-| Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                     |
-| OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                         |
+| Database            | Download instructions                                                                                                                                                                    |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Helixer model       | Download a relevant `.h5` model from [Helixer GitHub](https://github.com/weberlab-hhu/Helixer/blob/main/resources/model_list.csv)                                                        |
+| GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX-quickstart#download-the-fcs-gx-database) (I only tested the Cloud instructions) |
+| Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
+| OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
 
 ## Configuration
 By default, all configuration of the pipeline is done in the `config/config.yaml` YAML file, and samples are registered in a TSV file.
@@ -112,8 +114,8 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `assemble`: This module will only assemble the reads into contigs.
 - `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
-- `annotate`: This module will generate a quick-and-dirty annotation of the assembly using `liftoff` and `helixer`.
-- `qa`: This module will perform quality assessment of the scaffolded assembly and the quick-and-dirty annotation.
+- `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`.
+- `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
 - `all`: This module will run all the above modules.
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
@@ -176,14 +178,14 @@ The `final_output` directory contains the following files:
 | `${accessionId}.full.fa`         | The scaffolded assembly produced by the `scaffold` module.                                                                    |
 | `${accessionId}.nuclear.fa`      | The scaffolded assembly produced by the `scaffold` module, but only nuclear contigs as obtained from the `analyse` module.    |
 | `${accessionId}.${organelle}.fa` | The scaffolded assembly produced by the `scaffold` module, but only organellar contigs as obtained from the `analyse` module. |
-| `${accessionId}.full.gff`        | The quick-and-dirty annotation produced by the `annotate` module; belongs to `${accessionId}.full.fa`.                        |
-| `${accessionId}.full.coding.gff` | The quick-and-dirty annotation produced by the `annotate` module, but only coding genes; belongs to `${accessionId}.full.fa`. |
+| `${accessionId}.full.gff`        | The provisional annotation produced by the `annotate` module; belongs to `${accessionId}.full.fa`.                            |
+| `${accessionId}.full.coding.gff` | The provisional annotation produced by the `annotate` module, but only coding genes; belongs to `${accessionId}.full.fa`.     |
 
 ## Explaining the pipeline
 Assembling a genome from raw data to a final usable resource is a process that is hard to automate.
 We believe that this process always necessesitates human curation.
 However, large parts can easily be automated, which is why we created this pipeline.
-This pipeline performs the assembly, scaffolding and renaming of genomic data as well as an initial quick-and-dirty structural annotation.
+This pipeline performs the assembly, scaffolding and renaming of genomic data as well as an initial provisional structural annotation.
 Importantly, both genome assembly and annotation are subjected to quality assessment, providing a direct starting point for the curation of the assembly.
 Furthermore, each part of the process (module) can be run separately after which its output can be inspected before continuing to the next step.
 
@@ -258,7 +260,7 @@ Feel free to copy the config files produced by this pipeline and adjust to your 
 
 #### Overview
 Proper structural genome annotation would take too long and is not a problem that is solved for automation yet.
-Therefore, we implemented a "quick-and-dirty" annotation in this pipeline by combing the results of `liftoff` and `helixer`.
+Therefore, we implemented a "quick-and-dirty" provisional annotation in this pipeline by combing the results of `liftoff` and `helixer`.
 `helixer` will run on the GPU if it's available, otherwise it will run on CPU (which is known to be a lot slower).
 In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
 

@@ -1,6 +1,11 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [0.2.6 - 2025-02-21]
+
+### Added
+- Add `test_data` directory with full end-to-end user test instructions (#86).
+
+## [0.2.5 - 2025-02-10]
 
 ### Added
 - Add option to use the pipeline without custom built singularity containers (#79).
@@ -8,6 +13,7 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Changed
 - No longer require sudo rights for setup (#81).
+- Added some more information to README about the pipeline (#82).
 
 ## [0.2.4 - 2025-01-20]
 

@@ -5,10 +5,11 @@ from os import path
 min_version("8") # Require at least Snakemake 8.0
 
 # Load configuration
-if path.exists("config/config.yaml"):
-    configfile: "config/config.yaml"
 if not config:
-    raise ValueError("No configuration file found.")
+    if path.exists("config/config.yaml"):
+        configfile: "config/config.yaml"
+    if not config:
+        raise ValueError("No configuration file found.")
 validate(config, schema="schemas/config.schema.yaml")
 
 # Load samples
