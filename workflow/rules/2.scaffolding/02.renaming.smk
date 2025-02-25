@@ -202,17 +202,3 @@ rule sort_scaffolds:
         "../../envs/seqkit.yaml"
     shell:
         "seqkit sort -n {input} > {output} 2> {log}"
-
-rule index_scaffolds:
-    input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa"
-    output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.fai"
-    log:
-        "results/logs/2.scaffolding/index_scaffolds/{asmname}.log"
-    benchmark:
-        "results/benchmarks/2.scaffolding/index_scaffolds/{asmname}.txt"
-    conda:
-        "../../envs/samtools.yaml"
-    shell:
-        "samtools faidx {input} &> {log}"

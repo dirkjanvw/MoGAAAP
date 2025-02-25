@@ -9,6 +9,10 @@ properties:
         type: string
         description: path to the sample sheet
         pattern: "^.+\\.tsv$"
+    assemblies:
+        type: string
+        description: path to the assembly sheet
+        pattern: "^.+\\.tsv$"
 
     assembler:
         type: string
@@ -26,6 +30,7 @@ properties:
         type: integer
         description: minimum contig length for filtering the assembly
         minimum: 0
+        default: 10000
     ntjoin_k:
         type: integer
         description: k-mer size for ntjoin
@@ -89,11 +94,12 @@ properties:
         type: integer
         description: maximum gene length for Helixer
         minimum: 0
+        default: 64152
 
     k_qa:
         type: integer
         description: optimal k-mer size for quality assessment
-        minimum: 0
+        minimum: 1
         default: 21
     gxdb:
         type: string
@@ -136,6 +142,16 @@ properties:
         description: path to a temporary directory for fast IO
         pattern: "^.*$"
         default: "/tmp/snakemake_tmp"
+    nucmer_maxgap:
+        type: integer
+        description: maximum gap size for nucmer
+        minimum: 1
+        default: 1000
+    nucmer_minmatch:
+        type: integer
+        description: minimum match size for nucmer
+        minimum: 1
+        default: 1000
     custom_singularity:
         type: boolean
         description: whether custom (ghcr.io) singularity containers can be used

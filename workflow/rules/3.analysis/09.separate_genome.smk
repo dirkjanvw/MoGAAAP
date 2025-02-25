@@ -1,6 +1,6 @@
 rule extract_organelle:
     input:
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        assembly = "final_output/{asmname}.full.fa",
         asm_coverage = "results/{asmname}/3.analysis/07.bcovbln/{organelle}.vs.{asmname}.asm.coverage",
     output:
         txt = temporary("results/{asmname}/3.analysis/09.separate_genome/{asmname}.{organelle}.txt"),
@@ -23,7 +23,7 @@ rule extract_organelle:
 
 rule extract_nuclear:
     input:
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        assembly = "final_output/{asmname}.full.fa",
         organelles = expand("results/{{asmname}}/3.analysis/09.separate_genome/{{asmname}}.{organelle}.fa", organelle=config["organellar"]),
     output:
         txt = temporary("results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.txt"),

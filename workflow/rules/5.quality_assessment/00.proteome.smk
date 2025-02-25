@@ -1,7 +1,7 @@
 rule get_proteome:
     input:
-        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
-        annotation = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        genome = "final_output/{asmname}.full.fa",
+        annotation = "final_output/{asmname}.full.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
         "results/{asmname}/5.quality_assessment/proteome.pep.fa",

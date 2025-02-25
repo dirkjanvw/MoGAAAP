@@ -1,6 +1,6 @@
 rule mash_distance:
     input:
-        lambda wildcards: expand("results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
+        lambda wildcards: expand("final_output/{asmname}.full.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
         tsv = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.tsv",
         csv = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.csv",

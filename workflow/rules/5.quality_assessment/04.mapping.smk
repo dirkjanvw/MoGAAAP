@@ -18,13 +18,13 @@ rule sample_illumina:
 
 rule bwa_index_genome:
     input:
-        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        genome = "final_output/{asmname}.full.fa",
     output:
-        index1 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.0123",
-        index2 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.amb",
-        index3 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.ann",
-        index4 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.bwt.2bit.64",
-        index5 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.pac",
+        index1 = "final_output/{asmname}.full.fa.0123",
+        index2 = "final_output/{asmname}.full.fa.amb",
+        index3 = "final_output/{asmname}.full.fa.ann",
+        index4 = "final_output/{asmname}.full.fa.bwt.2bit.64",
+        index5 = "final_output/{asmname}.full.fa.pac",
     log:
         "results/logs/5.quality_assessment/bwa_index_genome/{asmname}.log"
     benchmark:
@@ -36,12 +36,12 @@ rule bwa_index_genome:
 
 rule map_illumina:
     input:
-        genome = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
-        index1 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.0123",
-        index2 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.amb",
-        index3 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.ann",
-        index4 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.bwt.2bit.64",
-        index5 = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa.pac",
+        genome = "final_output/{asmname}.full.fa",
+        index1 = "final_output/{asmname}.full.fa.0123",
+        index2 = "final_output/{asmname}.full.fa.amb",
+        index3 = "final_output/{asmname}.full.fa.ann",
+        index4 = "final_output/{asmname}.full.fa.bwt.2bit.64",
+        index5 = "final_output/{asmname}.full.fa.pac",
         forward = "results/{asmname}/5.quality_assessment/04.mapping/input/illumina_1.fq.gz",
         backward = "results/{asmname}/5.quality_assessment/04.mapping/input/illumina_2.fq.gz",
     output:
