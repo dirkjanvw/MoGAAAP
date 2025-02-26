@@ -11,6 +11,7 @@
 
 import click
 from importlib.metadata import version
+import multiprocessing, psutil
 from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap
 
 
@@ -25,6 +26,7 @@ def cli():
     short_help='Initialise a new MoGAAAP pipeline')
 @click.option('--workdir', '-d',
     default='.',
+    show_default=True,
     help='Working directory for MoGAAAP')
 def init(workdir):
     """Initialise a new MoGAAAP pipeline"""
@@ -36,9 +38,11 @@ def init(workdir):
     short_help='Configure the MoGAAAP pipeline')
 @click.option('--workdir', '-d',
     default='.',
+    show_default=True,
     help='Working directory for MoGAAAP')
 @click.option('--configfile', '-c',
     default='config/config.yaml',
+    show_default=True,
     help='Configuration file for MoGAAAP')
 def configure(workdir, configfile):
     """Configure the MoGAAAP pipeline"""
@@ -46,15 +50,59 @@ def configure(workdir, configfile):
     configure_mogaaap(workdir, configfile)
 
 
-@cli.command('run',
-    short_help='Run the MoGAAAP pipeline and create a report')
+def validate_targets(ctx, param, value):
+    """
+    Validate that the targets are valid (i.e. one of: all, assembly, scaffold,
+        analyse, annotate, qa)
+    """
+
+    valid_targets = ['all', 'assembly', 'scaffold', 'analyse', 'annotate', 'qa']
+
+    for target in value:
+        if target not in valid_targets:
+            raise click.BadParameter(f'Invalid target: {target}')
+
+    return value
+
+
+@cli.command('run')
 @click.option('--workdir', '-d',
     default='.',
+    show_default=True,
     help='Working directory for MoGAAAP')
-def run(workdir):
-    """Run the MoGAAAP pipeline and create a report"""
+@click.option('--configfile', '-c',
+    default='config/config.yaml',
+    show_default=True,
+    type=click.Path(exists=True),
+    help='Configuration YAML file for MoGAAAP')
+@click.option('--reportfile', '-r',
+    default='report.html',
+    show_default=True,
+    help='Report file for MoGAAAP')
+@click.option('--cores', '-j',
+    default=multiprocessing.cpu_count(),
+    show_default=True,
+    help='Number of cores to use')
+@click.option('--memory', '-m',
+    default=round(psutil.virtual_memory().total / (1024 ** 3)),
+    show_default=True,
+    help='Amount of memory to use in GB')
+@click.option('--dryrun', '-n',
+    is_flag=True,
+    help='Dry run the pipeline')
+@click.option('--other', '-o',
+    help='Other options to pass to Snakemake')
+@click.argument('targets',
+    nargs=-1,
+    required=False,
+    callback=validate_targets)
+def run(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
+    """Run the MoGAAAP pipeline and create a report.
+    You may select the target of the pipeline by specifying the target name(s) as arguments.
+    Possible TARGETS are: all, assembly, scaffold, analyse, annotate, qa (default: all).
+    """
 
-    run_mogaaap(workdir)
+    run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets)
 
 
 def main():
