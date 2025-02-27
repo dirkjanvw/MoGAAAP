@@ -43,11 +43,13 @@ def init_mogaaap(workdir):
     # Print further instructions
     click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}',
         fg='blue')
-    click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/ before',
+    click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/',
         fg='blue')
-    click.secho('        running the pipeline by hand or using `mogaaap configure`',
+    click.secho('        before running the pipeline by hand or using `mogaaap configure`',
         fg='blue')
-    click.secho(f'[INFO ] See {workdir}/config/example.yaml for an example configuration',
+    click.secho(f'[INFO ] See {workdir}/config/example.yaml',
+                fg='blue')
+    click.secho('        for an example configuration',
             fg='blue')
 
     return
@@ -196,7 +198,7 @@ def run_command(cmd):
 
 def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     targets):
-    click.secho('Running the MoGAAAP pipeline', fg='blue')
+    click.secho(f'[INFO ] Running the MoGAAAP pipeline at {workdir}', fg='blue')
 
     # Check if the configfile exists
     if not os.path.exists(configfile):
