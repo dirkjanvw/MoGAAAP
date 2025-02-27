@@ -11,7 +11,7 @@
 
 import click
 from importlib.metadata import version
-import multiprocessing, psutil
+import multiprocessing, psutil, os
 from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap
 
 
@@ -30,6 +30,8 @@ def cli():
     help='Working directory for MoGAAAP')
 def init(workdir):
     """Initialise a new MoGAAAP pipeline"""
+
+    workdir = os.path.abspath(workdir)
 
     init_mogaaap(workdir)
 
@@ -87,6 +89,18 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
     chloroplast, telomere, odb, helixer_model, gxdb, omadb, kraken2db):
     """Configure the MoGAAAP pipeline"""
 
+    workdir = os.path.abspath(workdir)
+    samples = os.path.abspath(samples)
+    reference_fasta = os.path.abspath(reference_fasta)
+    reference_gff = os.path.abspath(reference_gff)
+    mitochondrion = os.path.abspath(mitochondrion)
+    if chloroplast:
+        chloroplast = os.path.abspath(chloroplast)
+    helixer_model = os.path.abspath(helixer_model)
+    gxdb = os.path.abspath(gxdb)
+    omadb = os.path.abspath(omadb)
+    kraken2db = os.path.abspath(kraken2db)
+
     configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         mitochondrion, chloroplast, telomere, odb, helixer_model, gxdb, omadb,
         kraken2db)
@@ -123,11 +137,11 @@ def validate_targets(ctx, param, value):
     show_default=True,
     help='Report file for MoGAAAP')
 @click.option('--cores', '-j',
-    default=multiprocessing.cpu_count(),
+    default=multiprocessing.cpu_count(), # all available cores
     show_default=True,
     help='Number of cores to use')
 @click.option('--memory', '-m',
-    default=round(psutil.virtual_memory().total / (1024 ** 3)),
+    default=round(psutil.virtual_memory().total / (1024 ** 3) / 2), # half of total memory
     show_default=True,
     help='Amount of memory to use in GB')
 @click.option('--dryrun', '-n',
@@ -144,6 +158,10 @@ def run(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
     You may select the target of the pipeline by specifying the target name(s) as arguments.
     Possible TARGETS are: all, assembly, scaffold, analyse, annotate, qa (default: all).
     """
+
+    workdir = os.path.abspath(workdir)
+    configfile = os.path.abspath(configfile)
+    reportfile = os.path.abspath(reportfile)
 
     run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets)
 

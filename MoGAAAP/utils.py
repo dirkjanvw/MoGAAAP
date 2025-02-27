@@ -6,6 +6,7 @@ from yaml import dump
 from math import log
 
 
+# Define globally to make sure init has the correct paths
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 WORKFLOW_DIR = os.path.join(BASE_DIR, 'workflow')
 CONFIG_DIR = os.path.join(BASE_DIR, 'config')
