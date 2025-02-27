@@ -30,7 +30,8 @@ git pull
 ```
 
 ## Installing dependencies
-The pipeline will work on any Linux system where Snakemake, `conda`/`mamba` and `singularity`/`apptainer` are installed.
+The pipeline will work on any Linux system.
+First, we will install `conda` to manage all other dependencies.
 
 ### Conda/mamba
 If not installed already, `conda`/`mamba` can be installed by following these instructions:
@@ -49,29 +50,34 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-### Singularity/Apptainer
-This installation process requires root access, but typically a server admin can install it for you if it is not already installed.
-If not installed already, Singularity/Apptainer can be installed by following the instructions on their website: [apptainer.org](https://apptainer.org/docs/user/latest/quick_start.html).
-Make sure to install either Singularity version 4.0 or higher or Apptainer version 1.3 or higher.
-
-#### Singularity/Apptainer environment variables
-**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
-The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile` (don't forget to source the file after changing):
-- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
-- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
-
-It is also recommended to set the following environment variable:
-- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
-
-### Snakemake
-Snakemake can be installed using `conda`/`mamba`:
+### Other dependencies
+The pipeline depends on several other software packages that can be installed using `conda`/`mamba`:
 ```bash
-mamba create -c conda-forge -c bioconda -n snakemake snakemake=8
+mamba create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poetry
 ```
 
-Then activate the environment before running the pipeline:
+> [!NOTE]
+> For apptainer to work as expected, some environment variables need to be set.
+> The following ones are required to be set in your `.bashrc` (don't forget to source the file after changing):
+> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+> - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
+> - `APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+
+Then make sure to activate the environment before running the pipeline:
 ```bash
-conda activate snakemake
+conda activate mogaaap
+```
+
+### Install MoGAAAP wrapper script
+To simplify running MoGAAAP, we package MoGAAAP in a wrapper script.
+This can be installed system-wide by running:
+```bash
+poetry install
+```
+
+To check if the wrapper script is installed correctly, run:
+```bash
+MoGAAAP --help
 ```
 
 ## Databases

@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Add wrapper script to initialise, configure and run MoGAAAP (#80).
+
 ## [0.2.6 - 2025-02-21]
 
 ### Added
@@ -9,7 +14,6 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Added
 - Add option to use the pipeline without custom built singularity containers (#79).
-- Add wrapper script to create configuration and run MoGAAAP (#80).
 
 ### Changed
 - No longer require sudo rights for setup (#81).
