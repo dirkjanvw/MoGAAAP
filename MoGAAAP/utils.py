@@ -202,14 +202,14 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
 
     # Check if the configfile exists
     if not os.path.exists(configfile):
-        if not os.path.exists(os.path.join(workdir, configfile)):
-            click.secho(f'[ERROR] Configuration file {configfile} does not exist',
+        if not os.path.exists(os.path.join(workdir, 'config', 'config.yaml')):
+            click.secho('[ERROR] Configuration file config/config.yaml does not exist',
                 fg='red')
-            click.secho(f'[ERROR] Checked {os.path.abspath(configfile)} and {os.path.abspath(os.path.join(workdir, configfile))}',
+            click.secho(f'[ERROR] Checked {os.path.abspath(configfile)} and {os.path.abspath(os.path.join(workdir, "config", "config.yaml"))}',
                 fg='red')
             return
         else:
-            configfile = os.path.join(workdir, configfile)
+            configfile = os.path.abspath(os.path.join(workdir, 'config', 'config.yaml'))
 
     # Check if Snakemake and Singularity (or Apptainer) are available
     if not shutil.which('snakemake'):
