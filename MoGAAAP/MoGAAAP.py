@@ -40,14 +40,55 @@ def init(workdir):
     default='.',
     show_default=True,
     help='Working directory for MoGAAAP')
-@click.option('--configfile', '-c',
-    default='config/config.yaml',
+@click.option('--samples', '-s',
+    required=True,
+    type=click.Path(exists=True),
+    help='TSV file with sample information')
+@click.option('--reference-fasta', '-f',
+    required=True,
+    type=click.Path(exists=True),
+    help='Reference FASTA file')
+@click.option('--reference-gff', '-g',
+    required=True,
+    type=click.Path(exists=True),
+    help='Reference GFF file')
+@click.option('--mitochondrion', '-m',
+    required=True,
+    type=click.Path(exists=True),
+    help='Mitochondrion FASTA file')
+@click.option('--chloroplast', '-c',
+    type=click.Path(exists=True),
+    help='Chloroplast FASTA file')
+@click.option('--telomere', '-t',
+    default='CCCTAAA',
     show_default=True,
-    help='Configuration file for MoGAAAP')
-def configure(workdir, configfile):
+    help='Telomere motif')
+@click.option('--odb', '-b',
+    required=True,
+    help='ODB name for BUSCO')
+@click.option('--helixer-model', '-e',
+    required=True,
+    type=click.Path(exists=True),
+    help='Helixer model weights file')
+@click.option('--gxdb', '-x',
+    required=True,
+    type=click.Path(exists=True),
+    help='GXDB database location')
+@click.option('--omadb', '-o',
+    required=True,
+    type=click.Path(exists=True),
+    help='OMA database location')
+@click.option('--kraken2db', '-k',
+    required=True,
+    type=click.Path(exists=True),
+    help='kraken2 database location')
+def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
+    chloroplast, telomere, odb, helixer_model, gxdb, omadb, kraken2db):
     """Configure the MoGAAAP pipeline"""
 
-    configure_mogaaap(workdir, configfile)
+    configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
+        mitochondrion, chloroplast, telomere, odb, helixer_model, gxdb, omadb,
+        kraken2db)
 
 
 def validate_targets(ctx, param, value):
