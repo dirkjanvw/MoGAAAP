@@ -42,10 +42,12 @@ def init_mogaaap(workdir):
     # Print further instructions
     click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}',
         fg='blue')
-    click.secho(f'[INFO ] Please configure the YAML and TSV files in {workdir}/config/ before',
+    click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/ before',
         fg='blue')
     click.secho('        running the pipeline by hand or using `mogaaap configure`',
         fg='blue')
+    click.secho(f'[INFO ] See {workdir}/config/example.yaml for an example configuration',
+            fg='blue')
 
     return
 
@@ -103,7 +105,7 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
     # and check if it's part of the referenceId column in the samples
     reference_name = os.path.basename(reference_fasta).split('.')[0]
     if reference_name not in reference_names:
-        click.secho(f'[WARN ] Reference genome "{reference_name}" not found in {samples}',
+        click.secho(f'[WARN ] Reference genome "{reference_name}" not found in {samples}; only found {", ".join(reference_names)}',
             fg='yellow')
     if len(reference_names) > 1:
         click.secho(f'[WARN ] Multiple reference genomes found in {samples}: {", ".join(reference_names)}',
@@ -176,7 +178,7 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         fg='blue')
     click.secho('        for more information on the configuration options',
         fg='blue')
-    click.secho('[INFO ] Please run the pipeline using `mogaaap run`',
+    click.secho('[INFO ] After finishing the configuration, run the pipeline using `mogaaap run`',
         fg='blue')
 
 
@@ -195,10 +197,16 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     targets):
     click.secho('Running the MoGAAAP pipeline', fg='blue')
 
-    # Check if the workflow directory exists
-    if not os.path.exists(os.path.join(workdir, 'workflow')):
-        click.secho('[ERROR] Workflow directory does not exist', fg='red')
-        return
+    # Check if the configfile exists
+    if not os.path.exists(configfile):
+        if not os.path.exists(os.path.join(workdir, configfile)):
+            click.secho(f'[ERROR] Configuration file {configfile} does not exist',
+                fg='red')
+            click.secho(f'[ERROR] Checked {os.path.abspath(configfile)} and {os.path.abspath(os.path.join(workdir, configfile))}',
+                fg='red')
+            return
+        else:
+            configfile = os.path.join(workdir, configfile)
 
     # Check if Snakemake and Singularity (or Apptainer) are available
     if not shutil.which('snakemake'):

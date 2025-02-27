@@ -39,6 +39,7 @@ def init(workdir):
 @click.option('--workdir', '-d',
     default='.',
     show_default=True,
+    type=click.Path(exists=True),
     help='Working directory for MoGAAAP')
 @click.option('--samples', '-s',
     required=True,
@@ -106,15 +107,16 @@ def validate_targets(ctx, param, value):
     return value
 
 
-@cli.command('run')
+@cli.command('run',
+    short_help='Run the MoGAAAP pipeline and create a report')
 @click.option('--workdir', '-d',
     default='.',
     show_default=True,
+    type=click.Path(exists=True),
     help='Working directory for MoGAAAP')
 @click.option('--configfile', '-c',
     default='config/config.yaml',
     show_default=True,
-    type=click.Path(exists=True),
     help='Configuration YAML file for MoGAAAP')
 @click.option('--reportfile', '-r',
     default='report.html',
