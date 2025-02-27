@@ -29,9 +29,8 @@ Should you notice that bugs have been fixed on GitHub or a new feature implement
 git pull
 ```
 
-## Installing dependencies
-The pipeline will work on any Linux system.
-First, we will install `conda` to manage all other dependencies.
+## Installing MoGAAAP
+MoGAAAP will work on any Linux system and only requires `conda` to manage all other dependencies.
 
 ### Conda/mamba
 If not installed already, `conda`/`mamba` can be installed by following these instructions:
@@ -81,7 +80,9 @@ MoGAAAP --help
 ```
 
 ## Databases
-Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline depends on the existence of a number of databases.
+Next, this pipeline depends on the existence of a number of databases.
+Please be aware that these databases are large and require a lot of storage space.
+At the time of writing (February 2025), the total size of the databases is around 900GB.
 
 | Database            | Download instructions                                                                                                                                                                    |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
