@@ -1,6 +1,7 @@
 import click
 import os
 import shutil
+import subprocess
 
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -44,7 +45,30 @@ def init_mogaaap(workdir):
 
 
 def configure_mogaaap(workdir, configfile):
-    click.secho('Configuring the MoGAAAP pipeline', fg='blue')
+    click.secho('[INFO ] Configuring the MoGAAAP pipeline', fg='blue')
+
+    # Check if the workflow directory exists
+    if not os.path.exists(os.path.join(workdir, 'workflow')):
+        click.secho('[ERROR] Workflow directory does not exist', fg='red')
+        return
+
+    # Check if the configfile already exists
+    if os.path.exists(os.path.join(workdir, configfile)):
+        click.secho('[WARN ] Configuration file already exists; overwriting', fg='yellow')
+
+    # Print further instructions
+    click.secho(f'[INFO ] Configured the MoGAAAP pipeline at {workdir}', fg='blue')
+    click.secho('[INFO ] Please run the pipeline using `mogaaap run`', fg='blue')
+
+
+def run_command(cmd):
+    click.secho(f'[INFO ] Running the following command: {cmd}', fg='blue')
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        click.secho(f'[ERROR] Command failed with exit code {e.returncode}', fg='red')
+        return False
+    return True
 
 
 def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
@@ -64,8 +88,8 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, t
         return
 
     # Build the Snakemake command
-    snakemake_cmd = ['snakemake', '--snakefile', os.path.join(workdir, 'workflow', 'Snakefile')]
-    snakemake_cmd.extend(['--configfile', configfile])
+    snakemake_cmd = ['snakemake', '--directory', workdir]
+    snakemake_cmd.extend(['--configfile', os.path.abspath(configfile)])
     snakemake_cmd.extend(['--cores', str(cores)])
     snakemake_cmd.extend(['--resources', f'gbmem={memory}'])
     if other:
@@ -76,4 +100,24 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, t
         snakemake_cmd.extend(targets)
 
     # Run the Snakemake command
-    click.secho(f'[INFO ] Running the following command: {" ".join(snakemake_cmd)}', fg='blue')
+    if not run_command(snakemake_cmd):
+        return
+
+    # If it is a dryrun, return now
+    if dryrun:
+        return
+
+    # Build the Snakemake command with the report flag
+    report_cmd = snakemake_cmd + ['--report', reportfile + '.tmp']
+    fix_report_cmd = ['sed', '-E', 's/([^l]) h-screen/\1/g', reportfile + '.tmp', '>', reportfile]
+
+    # Run the Snakemake command with the report flag
+    if not run_command(report_cmd):
+        return
+    if not run_command(fix_report_cmd):
+        return
+
+    # Print further instructions
+    click.secho('[INFO ] Finished running the MoGAAAP pipeline', fg='blue')
+    click.secho(f'[INFO ] Report available at {reportfile}', fg='blue')
+    click.secho(f'[INFO ] Final output available at {os.path.join(workdir, "final_output")}', fg='blue')
