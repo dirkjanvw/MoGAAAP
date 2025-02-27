@@ -51,6 +51,9 @@ def get_best_wgstype(asmname):
         return "Illumina"
     return "HiFi"
 
+def has_hifi(asmname): #false is only possible when an assembly is provided
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hifi"].isnull().values.item()
+
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
 
@@ -92,3 +95,22 @@ def get_taxid(wildcards):
 
 def get_reference_id(asmname):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
+
+def has_assembly_location(asmname):
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].isnull().values.item()
+
+def get_assembly_location(asmname):
+    return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].values.item()
+
+def has_annotation_location(asmname):
+    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
+
+def get_annotation_location(asmname):
+    """
+    Obtain the annotation location for a given asmname within the annotation module.
+    NB: DO NOT USE THIS FUNCTION TO OBTAIN THE ACTUAL ANNOTATION FILE, "final_output/{asmname}.full.gff" SHOULD BE USED INSTEAD.
+    """
+    if has_annotation_location(asmname):
+        return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
+    else:
+        return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"

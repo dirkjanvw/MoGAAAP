@@ -2,7 +2,7 @@ rule liftoff:
     input:
         ref_annotation = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["annotation"],
         ref_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        assembly = "final_output/{asmname}.full.fa",
     output:
         ref_annotation = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),  #to prevent write permission issues
         ref_genome = temporary("results/{asmname}/4.annotation/01.liftoff/reference.fa"),  #to prevent write permission issues
@@ -28,7 +28,7 @@ rule liftoff:
 rule fix_cds_phase_liftoff_gff_polished:
     input:
         polished = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        assembly = "final_output/{asmname}.full.fa",
         config = "results/{asmname}/agat_config.yaml",
     output:
         "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",

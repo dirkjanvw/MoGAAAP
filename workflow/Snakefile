@@ -71,4 +71,3 @@ onerror:
     MoGAAAP workflow failed.
     Please check the provided error message and log file of the rule that failed above carefully before reporting any issues at https://github.com/dirkjanvw/MoGAAAP/issues for help.
     """)
-
