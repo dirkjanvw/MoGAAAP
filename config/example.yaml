@@ -84,6 +84,7 @@ set:
         - accessionA
         - accessionB
         - accessionC
+        - accessionD
 
 # General settings; only change if you know what you are doing
 jvm: "-Xmx100g -Xms100g" #java virtual machine settings

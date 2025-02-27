@@ -19,28 +19,30 @@ def get_merqury_output(wildcards):
 
     # HiFi
     for asmname in get_all_accessions():
-        all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.qv.html")  #per sequence qv
-        all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.spectra-cn.fl.png")  #spectra-cn
+        if not has_assembly_location(asmname):
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.full.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/hifi/{asmname}_vs_hifi.{asmname}.full.spectra-cn.fl.png")  #spectra-cn
 
     # ONT (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item():
-            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.qv.html")  #per sequence qv
-            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.spectra-cn.fl.png")  #spectra-cn
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item() and not has_assembly_location(asmname):
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.full.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/ont/{asmname}_vs_ont.{asmname}.full.spectra-cn.fl.png")  #spectra-cn
 
     # Illumina (optional)
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
-            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.qv.html")  #per sequence qv
-            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.spectra-cn.fl.png")  #spectra-cn
+        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item() and not has_assembly_location(asmname):
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.full.qv.html")  #per sequence qv
+            all_output.append(f"results/{asmname}/5.quality_assessment/01.merqury/{k}/illumina/{asmname}_vs_illumina.{asmname}.full.spectra-cn.fl.png")  #spectra-cn
 
     return all_output
 
 def get_multiqc_output(wildcards):
     all_output = []
     for asmname in get_all_accessions():
-        if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
-            all_output.append(f"results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html")  #mapping
+        if not has_assembly_location(asmname):
+            if not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item():
+                all_output.append(f"results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html")  #mapping
     return all_output
 
 def get_pantools_output(wildcards):

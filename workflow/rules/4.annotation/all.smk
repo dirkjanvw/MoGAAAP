@@ -4,13 +4,13 @@ include: "03.combined.smk"
 
 rule copy_annotation:
     input:
-        full = "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        full = lambda wildcards: get_annotation_location(wildcards.asmname),
         coding = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
         clean = "results/{asmname}/4.annotation/03.combined/{asmname}.clean.gff",
     output:
-        full = protected("final_output/{asmname}.full.gff"),
-        coding = protected("final_output/{asmname}.full.coding.gff"),
-        clean = protected("final_output/{asmname}.full.clean.gff"),
+        full = "final_output/{asmname}.full.gff",
+        coding = "final_output/{asmname}.full.coding.gff",
+        clean = "final_output/{asmname}.full.clean.gff",
     log:
         "results/logs/4.annotation/copy_annotation/{asmname}.log"
     benchmark:
