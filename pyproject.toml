@@ -14,7 +14,7 @@ pyyaml = "^6.0"
 psutil = "^7.0"
 
 [tool.poetry.scripts]
-mogaaap = "MoGAAAP.MoGAAAP:main"
+MoGAAAP = "MoGAAAP.MoGAAAP:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
