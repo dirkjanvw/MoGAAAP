@@ -3,6 +3,8 @@ This repository contains a Snakemake pipeline for the assembly, annotation and q
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
 The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
+Additionally, MoGAAAP is set up in a modular way, allowing for any combination of assembly, annotation and quality assessment steps.
+
 A test dataset is provided in the `test_data/` directory, including instructions.
 
 ## Index
