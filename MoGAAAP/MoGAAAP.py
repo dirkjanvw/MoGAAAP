@@ -15,7 +15,23 @@ import multiprocessing, psutil, os
 from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+class OrderedGroup(click.Group):
+    def __init__(self, name=None, commands=None, **attrs):
+        super().__init__(name, commands, **attrs)
+        self.order = []
+
+    def command(self, *args, **kwargs):
+        def decorator(f):
+            cmd = super(OrderedGroup, self).command(*args, **kwargs)(f)
+            self.order.append(cmd.name)
+            return cmd
+        return decorator
+
+    def list_commands(self, ctx):
+        return self.order
+
+
+@click.group(cls=OrderedGroup, context_settings=dict(help_option_names=["-h", "--help"]))
 @click.version_option(version=version("MoGAAAP"))
 def cli():
     """This is a wrapper script around the MoGAAAP Snakemake workflow."""
