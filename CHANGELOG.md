@@ -3,6 +3,7 @@ All notable changes to MoGAAAP will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Add wrapper script to initialise, configure and run MoGAAAP (#80).
 - Add option to use the pipeline for already existing assemblies (#83).
 
 ### Changed

@@ -7,35 +7,26 @@ Additionally, MoGAAAP is set up in a modular way, allowing for any combination o
 
 A test dataset is provided in the `test_data/` directory, including instructions.
 
+
+
 ## Index
-- [Downloading the pipeline](#downloading-pipeline)
-- [Installing dependencies](#installing-dependencies)
-- [Required databases](#databases)
-- [Configuring the pipeline](#configuration)
-- [Running the pipeline](#running-the-pipeline)
+- [Setup](#setup)
+- [Initialise the pipeline](#initialise-the-pipeline)
+- [Configure the pipeline](#configure-the-pipeline)
+- [Run the pipeline](#run-the-pipeline)
 - [Output](#output)
 - [Explaining the pipeline](#explaining-the-pipeline)
 - [Citation](#citation)
 - [FAQ](#faq)
 
-## Downloading pipeline
-The pipeline can be obtained via:
-```bash
-git clone https://github.com/dirkjanvw/MoGAAAP.git
-cd MoGAAAP/
-```
 
-### (Optional) updating pipeline
-Should you notice that bugs have been fixed on GitHub or a new feature implemented in the pipeline, updating the pipeline is as simple as running the following in the `MoGAAAP/` directory:
-```bash
-git pull
-```
 
-## Installing dependencies
-The pipeline will work on any Linux system where Snakemake, `conda`/`mamba` and `singularity`/`apptainer` are installed.
+## Setup
+To install MoGAAAP, you'll need a Linux machine with `conda` installed.
+For now, MoGAAAP can only installed by hand but we are working on a more user-friendly installation through bioconda.
 
-### Conda/mamba
-If not installed already, `conda`/`mamba` can be installed by following these instructions:
+### Conda
+If not installed already, `conda` can be installed by following these instructions:
 ```bash
 # install miniforge
 curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
@@ -51,33 +42,41 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-### Singularity/Apptainer
-This installation process requires root access, but typically a server admin can install it for you if it is not already installed.
-If not installed already, Singularity/Apptainer can be installed by following the instructions on their website: [apptainer.org](https://apptainer.org/docs/user/latest/quick_start.html).
-Make sure to install either Singularity version 4.0 or higher or Apptainer version 1.3 or higher.
-
-#### Singularity/Apptainer environment variables
-**NB**: For Singularity/Apptainer to work properly, some environment variables need to be set.
-The following ones are required to be set in your `.profile`, `.bashrc` or `.bash_profile` (don't forget to source the file after changing):
-- `SINGULARITY_BIND`/`APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
-- `SINGULARITY_NV`/`APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
-
-It is also recommended to set the following environment variable:
-- `SINGULARITY_CACHEDIR`/`APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
-
-### Snakemake
-Snakemake can be installed using `conda`/`mamba`:
+### Install dependencies
+The pipeline depends on several other software packages that can be installed using `conda`:
 ```bash
-mamba create -c conda-forge -c bioconda -n snakemake snakemake=8
+conda create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poetry
 ```
 
-Then activate the environment before running the pipeline:
+> [!NOTE]
+> For apptainer to work as expected, some environment variables need to be set.
+> The following ones are required to be set in your `.bashrc` (don't forget to source the file after changing):
+> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+> - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
+> - `APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+
+Then make sure to activate the environment before running the pipeline:
 ```bash
-conda activate snakemake
+conda activate mogaaap
 ```
 
-## Databases
-Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline depends on the existence of a number of databases.
+### Install MoGAAAP
+Now that the dependencies are installed, the pipeline can be installed via:
+```bash
+git clone https://github.com/dirkjanvw/MoGAAAP.git
+cd MoGAAAP/
+poetry install
+```
+
+To check if MoGAAAP is installed correctly, run:
+```bash
+MoGAAAP --help
+```
+
+### Download databases
+Next, download the databases that are required for the pipeline to run.
+Please be aware that these databases are large and require a lot of storage space.
+At the time of writing (February 2025), the total size of the databases is around 900GB.
 
 | Database            | Download instructions                                                                                                                                                                    |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -86,12 +85,25 @@ Next to Snakemake, `conda`/`mamba` and `singularity`/`apptainer`, this pipeline 
 | Kraken2 nt database | Download `nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
 
-## Configuration
-All configuration of the pipeline is done in the `config/config.yaml` file, and samples are registered in the `config/samples.tsv` file.
-All fields to fill in are well-documented in the provided `config/config.yaml` file and should be self-explanatory.
-Please see `config/examples/` for examples of filled-in configuration files.
-Both configuration YAML and sample TSV sheet are validated against a built-in schema that throws an error if the files are not correctly filled in.
 
+
+## Initialise the pipeline
+Before running the pipeline, the pipeline has to be initialised.
+This will create a working directory for MoGAAAP to run in.
+```bash
+MoGAAAP init -d working_directory
+```
+
+In the rest of this README, we will use `working_directory` as the working directory.
+
+
+
+## Configure the pipeline
+
+### Sample sheet
+Before configuring the pipeline, a sample sheet (in TSV format) has to be created.
+In this TSV file, each row represents a sample.
+An example of this file can be found in `working_directory/config/example.tsv` but it is recommendable to create a new TSV file with the same header.
 The sample TSV sheet has the following columns to fill in (one row per sample):
 
 | Column name          | Required? | Description                                                                                                                                                              |
@@ -115,7 +127,21 @@ The sample TSV sheet has the following columns to fill in (one row per sample):
 **NB**: If the `assemblyLocation` is provided, no assembly will be performed and the provided assembly will be assumed to be a scaffolded assembly.
 Therefore, `hifi` and `illumina_1`/`illumina_2` will only be used for the quality assessment module, and `ont` and `hic_1`/`hic_2` are not allowed.
 
-## Running the pipeline
+### Configuration YAML
+We can now create the configuration YAML file for MoGAAAP.
+An example of this file is provided in `working_directory/config/example.yaml` and also see `config/examples/` for more examples of filled-in configuration files.
+There are two ways of generating a configuration YAML file:
+1. Copy the example file and fill in the fields.
+2. Run the following command to generate a configuration YAML file:
+```bash
+MoGAAAP configure  # see --help for all options that are required
+```
+
+While the command can be a great help, it is recommended to always double-check the generated configuration YAML file and compare it to the example file.
+
+
+
+## Run the pipeline
 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
@@ -124,61 +150,39 @@ Several modules are available in this pipeline (will be referred to later as `${
 - `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
 - `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`.
 - `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
-- `all`: This module will run all the above modules.
+- `all`: This module will run all the above modules (DEFAULT).
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
 All modules except for `annotate` have visual output that can be inspected in an HTML report file (see at [Reporting](#reporting)).
 For more information about these modules, see [Explaining the pipeline](#explaining-the-pipeline).
 
-### Important parameters
-Several important `snakemake` parameters are important when running this pipeline, but most have already been set by default (in `workflow/profiles/default/config.yaml`).
-
-| Parameter              | Optionality            | Description                                                               |
-|------------------------|------------------------|---------------------------------------------------------------------------|
-| `-n`                   | Optional               | Do a dry-run of the pipeline.                                             |
-| `-p`                   | Set by default to True | Print the shell commands that are being executed.                         |
-| `-c`/`--cores`         | Set by default to all  | Number of CPUs to use.                                                    |
-| `--use-conda`          | Set by default to True | Use `conda`/`mamba` to manage dependencies.                               |
-| `--conda-prefix`       | Optional               | Path where the `conda` environments will be stored.                       |
-| `--use-singularity`    | Set by default to True | Use `singularity`/`apptainer` to manage containers.                       |
-| `--singularity-prefix` | Optional               | Path where the `singularity` images will be stored.                       |
-| `--resources`          | Set by default         | Information about system resources; see below at [Resources](#resources). |
-
-### Resources
-The following resources (apart from CPUs) might be heavily used by the pipeline:
-- `gbmem`: The amount of memory in GB that RAM-heavy jobs in the pipeline can use.
-  It is recommended to keep this on the lower side as only some jobs of the pipeline use this (to keep RAM for other jobs), but at least 500 GB is required.
-  Default: 500 (GB).
-- `helixer`: The number of Helixer jobs that can run at the same time.
-  It is recommended to always keep this at 1 (small server), 2 (large server) or the number of GPUs divided by 2 (GPU server).
-  Default: 1.
-- `pantools`: The number of PanTools jobs that can run at the same time.
-  It is recommended to always keep this at 1, to prevent file collisions.
-  Default: 1.
-
 ### Running the pipeline
-As first step, it is always good to do a dry-run to check if everything is set up correctly:
+Before running the pipeline, it is good practice to do a dry-run to check if everything is set up correctly:
 ```bash
-snakemake ${MODULE} -n --configfile /path/to/config.yaml
+MoGAAAP run -d working_directory ${MODULE} -n
 ```
 
-If everything is alright, the pipeline can be run:
+If no errors are shown, MoGAAAP can be run using the following command:
 ```bash
-snakemake ${MODULE} --configfile /path/to/config.yaml
+MoGAAAP run -d working_directory ${MODULE}
 ```
 
-### Reporting
-The pipeline can generate an HTML `report.html` file with the most important results:
-```bash
-snakemake ${MODULE} --configfile /path/to/config.yaml --report report.html
-```
+It is generally recommendable to set the `--cores` and `--memory` flags to what is available on your system.
+Please also check out the other options available by running `MoGAAAP run --help`.
+
+> [!NOTE]
+> Please note that the pipeline can also be run manually by running the Snakemake command directly within the working directory.
+> If you're familiar with the Snakemake CLI, this is a good way to use MoGAAAP after the initial setup.
+> A good starting point is to run `snakemake -n` to see what the pipeline would do without actually running it.
+
+
 
 ## Output
 Next to the [report](#reporting) generated by Snakemake, the most important outputs of the pipeline are the genome assembly and annotation.
-These can be found in the directory `final_output`.
-(All temporary files are stored in the `results` directory.)
+These can be found in the directory `working_directory/final_output`.
+(All temporary files are stored in the `working_directory/results` directory.)
 
-The `final_output` directory contains the following files:
+The `working_directory/final_output` directory contains the following files:
 
 | File name                        | Description                                                                                                                   |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
@@ -188,6 +192,8 @@ The `final_output` directory contains the following files:
 | `${accessionId}.${organelle}.fa` | The scaffolded assembly produced by the `scaffold` module, but only organellar contigs as obtained from the `analyse` module. |
 | `${accessionId}.full.gff`        | The provisional annotation produced by the `annotate` module; belongs to `${accessionId}.full.fa`.                            |
 | `${accessionId}.full.coding.gff` | The provisional annotation produced by the `annotate` module, but only coding genes; belongs to `${accessionId}.full.fa`.     |
+
+
 
 ## Explaining the pipeline
 Assembling a genome from raw data to a final usable resource is a process that is hard to automate.
@@ -234,8 +240,9 @@ The only solution in that case would be to choose another (more closely related)
 Scaffolding is performed using `ntJoin`, which uses a minimizer-based reference-guided scaffolding method.
 If by visual inspection collinearity between the assembly and reference genome was found, the scaffolding module generally runs without issues.
 Should any error occur, please read the corresponding log file of the step that produced the error.
-In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the config file.
+In most cases, the error may be resolved by choosing different values for the `ntjoin_k` and `ntjoin_w` in the configuration YAML file.
 In our experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
+Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolder` parameter in the configuration YAML file.
 
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
@@ -283,7 +290,7 @@ The quality assessment steps in this module can be roughly divided into two cate
 Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
 Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
-Any groups can be defined in the configuration file and a genome may occur in multiple groups.
+Any groups can be defined in the configuration YAML file and a genome may occur in multiple groups.
 
 #### Next steps
 The report (see [Reporting](#reporting)) produced by this module is the most useful output of the pipeline for human curation.
@@ -297,6 +304,8 @@ If you use MoGAAAP in your work, please cite this work as:
 ```bibtex
 in prep.
 ```
+
+
 
 ## FAQ
 
@@ -333,7 +342,7 @@ If they are set and the error persists, please report it as an issue on this Git
 
 ### Q: A job that uses singularity fails for no apparent reason
 A: This is likely due to missing environment variables for Singularity/Apptainer.
-See [Singularity/Apptainer](#singularityapptainer-environment-variables) for more information on which environment variables need to be set.
+See the note under [Install dependencies](#install-dependencies) for more information on which environment variables need to be set.
 
 ### Q: Report HTML cuts off the top of the page
 A: This is a known issue of the Snakemake report HTML.
