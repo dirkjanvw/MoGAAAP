@@ -45,7 +45,7 @@ def init_mogaaap(workdir):
         fg='blue')
     click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/',
         fg='blue')
-    click.secho('        before running the pipeline by hand or using `mogaaap configure`',
+    click.secho('        before running the pipeline by hand or using `MoGAAAP configure`',
         fg='blue')
     click.secho(f'[INFO ] See {workdir}/config/example.yaml',
                 fg='blue')
@@ -63,6 +63,7 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
     # Check if the workflow directory exists
     if not os.path.exists(os.path.join(workdir, 'workflow')):
         click.secho('[ERROR] Workflow directory does not exist', fg='red')
+        click.secho('[ERROR] Did you run `MoGAAAP init`?', fg='red')
         return
 
     # Check if the configfile already exists
@@ -181,7 +182,7 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         fg='blue')
     click.secho('        for more information on the configuration options',
         fg='blue')
-    click.secho('[INFO ] After finishing the configuration, run the pipeline using `mogaaap run`',
+    click.secho('[INFO ] After finishing the configuration, run the pipeline using `MoGAAAP run`',
         fg='blue')
 
 
@@ -206,6 +207,8 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
             click.secho('[ERROR] Configuration file config/config.yaml does not exist',
                 fg='red')
             click.secho(f'[ERROR] Checked {os.path.abspath(configfile)} and {os.path.abspath(os.path.join(workdir, "config", "config.yaml"))}',
+                fg='red')
+            click.secho('[ERROR] Did you run `MoGAAAP init`?',
                 fg='red')
             return
         else:
