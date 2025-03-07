@@ -170,6 +170,11 @@ MoGAAAP run -d working_directory ${MODULE}
 It is generally recommendable to set the `--cores` and `--memory` flags to what is available on your system.
 Please also check out the other options available by running `MoGAAAP run --help`.
 
+> [!NOTE]
+> Please note that the pipeline can also be run manually by running the Snakemake command directly within the working directory.
+> If you're familiar with the Snakemake CLI, this is a good way to use MoGAAAP after the initial setup.
+> A good starting point is to run `snakemake -n` to see what the pipeline would do without actually running it.
+
 
 
 ## Output
