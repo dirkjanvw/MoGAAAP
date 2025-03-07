@@ -225,6 +225,8 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
 
     # Build the Snakemake command
     snakemake_cmd = ['snakemake', '--directory', workdir, '--snakefile', os.path.join(workdir, 'workflow', 'Snakefile')]
+    if targets:
+        snakemake_cmd.extend(targets)
     snakemake_cmd.extend(['--nolock'])
     snakemake_cmd.extend(['--configfile', os.path.abspath(configfile)])
     snakemake_cmd.extend(['--cores', str(cores)])
@@ -233,8 +235,6 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
         snakemake_cmd.extend(other)
     if dryrun:
         snakemake_cmd.append('--dryrun')
-    if targets:
-        snakemake_cmd.extend(targets)
 
     # Run the Snakemake command
     if not run_command(snakemake_cmd):
