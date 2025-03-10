@@ -186,13 +186,16 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         fg='blue')
 
 
-def run_command(cmd):
+def run_command(cmd, output_file=None):
     click.secho(f'[INFO ] Running the following command: {cmd}', fg='blue')
     try:
-        subprocess.run(cmd, check=True)
+        if output_file:
+            with open(output_file, 'w') as outfile:
+                subprocess.run(cmd, check=True, stdout=outfile)
+        else:
+            subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
-        click.secho(f'[ERROR] Command failed with exit code {e.returncode}',
-            fg='red')
+        click.secho(f'[ERROR] Command failed with exit code {e.returncode}', fg='red')
         return False
     return True
 
@@ -245,14 +248,17 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
         return
 
     # Build the Snakemake command with the report flag
-    report_cmd = snakemake_cmd + ['--report', reportfile + '.tmp']
+    report_cmd = snakemake_cmd + ['--report', reportfile + '.tmp.html']
     fix_report_cmd = ['sed', '-E', 's/([^l]) h-screen/\1/g',
-        reportfile + '.tmp', '>', reportfile]
+        reportfile + '.tmp.html']
+    remove_tmp_cmd = ['rm', reportfile + '.tmp.html']
 
     # Run the Snakemake command with the report flag
     if not run_command(report_cmd):
         return
-    if not run_command(fix_report_cmd):
+    if not run_command(fix_report_cmd, output_file=reportfile):
+        return
+    if not run_command(remove_tmp_cmd):
         return
 
     # Print further instructions
