@@ -24,6 +24,10 @@ rule sans:
     output:
         splits = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
         bootstrap = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        nexus = report("results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
+            category="Phylogeny",
+            caption="../../report/sans.rst",
+            labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
         "results/logs/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.log"
     benchmark:
@@ -31,25 +35,6 @@ rule sans:
     threads:
         min(workflow.cores - 10, 10)
     container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0:latest"
+        "oras://ghcr.io/dirkjanvw/mogaaap/sans.v1.0.0:latest"
     shell:
-        "SANS -i {input} -o {output.splits} -f weakly -v -k {wildcards.k} -T {threads} -b {wildcards.bootstrap} &> {log}"
-
-rule sans_to_nexus:
-    input:
-        filelist = "results/{asmset}/5.quality_assessment/11.sans.list",
-        splits = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
-    output:
-        report("results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
-            category="Phylogeny",
-            caption="../../report/sans.rst",
-            labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
-    log:
-        "results/logs/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.nexus.log"
-    benchmark:
-        "results/benchmarks/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.nexus.txt"
-    container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/sans.968e2d35be2a9f7fca75f664b004ef9cb32dd3e0:latest"
-    shell:
-        "sans2conf_nexus.py {input.splits} {input.bootstrap} {input.filelist} > {output} 2> {log}"
+        "SANS -i {input} -o {output.splits} -X {output.nexus} -f weakly -v -k {wildcards.k} -T {threads} -b {wildcards.bootstrap} &> {log}"
