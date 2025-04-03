@@ -145,10 +145,8 @@ While the command can be a great help, it is recommended to always double-check 
 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
-- `assemble`: This module will only assemble the reads into contigs.
-- `scaffold`: This module will scaffold the contigs using `ntJoin` against a provided reference genome.
-- `analyse`: This module will analyse the assembly for provided genes, sequences and contamination.
-- `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`.
+- `assemble`: This module will only assemble the reads into contigs and subsequently scaffold the contigs using `ntJoin` against a provided reference genome.
+- `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`, and optionally analyse user-defined queries.
 - `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
 - `all`: This module will run all the above modules (DEFAULT).
 
@@ -187,9 +185,9 @@ The `working_directory/final_output` directory contains the following files:
 | File name                        | Description                                                                                                                   |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | `${accessionId}.contigs.fa`      | The contigs produced by the `assemble` module.                                                                                |
-| `${accessionId}.full.fa`         | The scaffolded assembly produced by the `scaffold` module.                                                                    |
-| `${accessionId}.nuclear.fa`      | The scaffolded assembly produced by the `scaffold` module, but only nuclear contigs as obtained from the `analyse` module.    |
-| `${accessionId}.${organelle}.fa` | The scaffolded assembly produced by the `scaffold` module, but only organellar contigs as obtained from the `analyse` module. |
+| `${accessionId}.full.fa`         | The scaffolded assembly produced by the `assemble` module.                                                                    |
+| `${accessionId}.nuclear.fa`      | The scaffolded assembly produced by the `assemble` module, but only nuclear contigs as obtained from the `annotate` module.    |
+| `${accessionId}.${organelle}.fa` | The scaffolded assembly produced by the `assemble` module, but only organellar contigs as obtained from the `annotate` module. |
 | `${accessionId}.full.gff`        | The provisional annotation produced by the `annotate` module; belongs to `${accessionId}.full.fa`.                            |
 | `${accessionId}.full.coding.gff` | The provisional annotation produced by the `annotate` module, but only coding genes; belongs to `${accessionId}.full.fa`.     |
 
@@ -205,16 +203,13 @@ Furthermore, each part of the process (module) can be run separately after which
 
 ```mermaid
 graph TD;
-    assemble-->scaffold;
-    scaffold-->analyse;
-    scaffold-->annotate;
-    scaffold-->qa;
+    assemble-->annotate;
     annotate-->qa;
 ```
 
 ### Assemble module
 
-#### Overview
+#### Contigging
 In the assemble module, HiFi reads are assembled using `hifiasm`.
 If ONT reads are given, these are used in the assembly process using the `--ul` parameter of `hifiasm`.
 Also, if Hi-C reads are given, these are used in the assembly process.
@@ -234,9 +229,7 @@ This can be checked in the dotplot created from the `nucmer` alignment.
 If there is no sign of collinearity between the two, reference-guided scaffolding will be impossible.
 The only solution in that case would be to choose another (more closely related) reference genome.
 
-### Scaffold module
-
-#### Overview
+#### Scaffolding
 Scaffolding is performed using `ntJoin`, which uses a minimizer-based reference-guided scaffolding method.
 If by visual inspection collinearity between the assembly and reference genome was found, the scaffolding module generally runs without issues.
 Should any error occur, please read the corresponding log file of the step that produced the error.
@@ -254,9 +247,19 @@ The reason for this is that none of the currently available algorithms for Hi-C 
 As the assembly as outputted by this module is used as starting point for the analyse, annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
 Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
-### Analyse module
+### Annotate module
 
-#### Overview
+#### Gene annotation
+Proper structural genome annotation would take too long and is not a problem that is solved for automation yet.
+Therefore, we implemented a "quick-and-dirty" provisional annotation in this pipeline by combing the results of `liftoff` and `helixer`.
+`helixer` will run on the GPU if it's available, otherwise it will run on CPU (which is known to be a lot slower).
+In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
+
+#### Next steps
+Although this module generally runs for the longest time, no visual output is produced; only GFF3 file (one unfiltered and one with only coding genes) belonging to the scaffolded assembly.
+This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QA.
+
+#### Custom annotation
 The purpose of the analyse module is to create a genome-wide overview of the newly created assembly.
 It does this by running several user-defined queries (including organelle search) against the assembly using BLAST as well as a search for the telomere repeat sequence (please see [this note in the FAQ](#q-should-i-use-blastn-or-seqtk-for-the-telomere-search) for more information on telomere identification).
 The results of these queries are visualised in an HTML report file.
@@ -269,18 +272,6 @@ The resulting tables in the report may be used to filter out unwanted sequences 
 Circos plots are notoriously hard to automate and that is no different for this pipeline.
 Although a `circos` plot should always be produced, it typically doesn't look quite right yet.
 Feel free to copy the config files produced by this pipeline and adjust to your own plotting needs.
-
-### Annotate module
-
-#### Overview
-Proper structural genome annotation would take too long and is not a problem that is solved for automation yet.
-Therefore, we implemented a "quick-and-dirty" provisional annotation in this pipeline by combing the results of `liftoff` and `helixer`.
-`helixer` will run on the GPU if it's available, otherwise it will run on CPU (which is known to be a lot slower).
-In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
-
-#### Next steps
-Although this module generally runs for the longest time, no visual output is produced; only GFF3 file (one unfiltered and one with only coding genes) belonging to the scaffolded assembly.
-This GFF3 file, together with the FASTA file from the scaffold module are the only inputs for the final module: QA.
 
 ### QA module
 
@@ -308,6 +299,9 @@ in prep.
 
 
 ## FAQ
+
+> [!NOTE]
+> The FAQ still has to be updated with the refactor of the modules in the pipeline.
 
 ### Q: Where can I see what my pipeline is doing?
 A: The pipeline will print the commands it is running to the terminal.

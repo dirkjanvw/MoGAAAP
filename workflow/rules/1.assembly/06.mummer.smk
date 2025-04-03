@@ -2,24 +2,24 @@ rule get_reference:
     input:
         lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
     output:
-        temporary("results/{asmname}/2.scaffolding/03.mummer/{reference}.fa"),
+        temporary("results/{asmname}/1.assembly/06.mummer/{reference}.fa"),
     log:
-        "results/logs/2.scaffolding/get_reference/{asmname}/{reference}.log"
+        "results/logs/1.assembly/get_reference/{asmname}/{reference}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/get_reference/{asmname}/{reference}.txt"
+        "results/benchmarks/1.assembly/get_reference/{asmname}/{reference}.txt"
     shell:
         "cp {input} {output} &> {log}"
 
 rule mummer:
     input:
-        reference = "results/{asmname}/2.scaffolding/03.mummer/{reference}.fa",
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        reference = "results/{asmname}/1.assembly/06.mummer/{reference}.fa",
+        assembly = "results/{asmname}/1.assembly/05.renaming/{asmname}.fa",
     output:
-        "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
+        "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.delta",
     log:
-        "results/logs/2.scaffolding/mummer/{reference}/{asmname}.vs.{reference}.log"
+        "results/logs/1.assembly/mummer/{reference}/{asmname}.vs.{reference}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/mummer/{reference}/{asmname}.vs.{reference}.txt"
+        "results/benchmarks/1.assembly/mummer/{reference}/{asmname}.vs.{reference}.txt"
     params:
         nucmer_maxgap = config["nucmer_maxgap"],
         nucmer_minmatch = config["nucmer_minmatch"],
@@ -32,23 +32,23 @@ rule mummer:
 
 rule dotplot:
     input:
-        delta = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.delta",
-        reference = "results/{asmname}/2.scaffolding/03.mummer/{reference}.fa",
+        delta = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.delta",
+        reference = "results/{asmname}/1.assembly/06.mummer/{reference}.fa",
     output:
-        gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
-        rplot = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.rplot",
-        fplot = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.fplot",
-        filterfile = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.filter",
-        png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.png",
+        gp = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.gp",
+        rplot = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.rplot",
+        fplot = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.fplot",
+        filterfile = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.filter",
+        png = report("results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.png",
             category="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",
                     "size": "default",
                     "stage": "scaffolds"}),
     log:
-        "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.log"
+        "results/logs/1.assembly/dotplot/{asmname}/{asmname}.vs.{reference}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.txt"
+        "results/benchmarks/1.assembly/dotplot/{asmname}/{asmname}.vs.{reference}.txt"
     container:
         "oras://ghcr.io/dirkjanvw/mogaaap/mummer-4.0.0rc1:latest"
     shell:  #assumes input and output are in same directory
@@ -61,21 +61,21 @@ rule dotplot:
 
 rule dotplot_large:
     input:
-        gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.gp",
-        rplot = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.rplot",
-        fplot = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.fplot",
+        gp = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.gp",
+        rplot = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.rplot",
+        fplot = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.fplot",
     output:
-        gp = "results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.large.gp",
-        png = report("results/{asmname}/2.scaffolding/03.mummer/{asmname}.vs.{reference}.plot.large.png",
+        gp = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.large.gp",
+        png = report("results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.large.png",
             category="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",
                     "size": "large",
                     "stage": "scaffolds"}),
     log:
-        "results/logs/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.large.log"
+        "results/logs/1.assembly/dotplot/{asmname}/{asmname}.vs.{reference}.large.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/dotplot/{asmname}/{asmname}.vs.{reference}.large.txt"
+        "results/benchmarks/1.assembly/dotplot/{asmname}/{asmname}.vs.{reference}.large.txt"
     container:
         "oras://ghcr.io/dirkjanvw/mogaaap/mummer-4.0.0rc1:latest"
     shell:

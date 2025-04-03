@@ -1,21 +1,21 @@
 rule create_ntjoin_renaming_table:
     input:
-        agp = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        agp = expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        mxdot = expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
+        mxdot = expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{{reference}}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.ntjoin.conversion.tsv",
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.vs.{reference}.ntjoin.conversion.tsv",
     log:
-        "results/logs/2.scaffolding/create_ntjoin_renaming_table/{asmname}.vs.{reference}.log"
+        "results/logs/1.assembly/create_ntjoin_renaming_table/{asmname}.vs.{reference}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/create_ntjoin_renaming_table/{asmname}.vs.{reference}.txt"
+        "results/benchmarks/1.assembly/create_ntjoin_renaming_table/{asmname}.vs.{reference}.txt"
     params:
         num_chr = lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]),
     shell: # I found the following awk commands to get a quick list of what chromosomes belong together (based on https://github.com/bcgsc/ntJoin/issues/63):
@@ -32,15 +32,15 @@ rule create_ntjoin_renaming_table:
 
 rule create_ragtag_renaming_table:
     input:
-        agp = expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{{reference}}.min{minlen}/ragtag.scaffold.agp",
+        agp = expand("results/{{asmname}}/1.assembly/04.ragtag/{{asmname}}.vs.{{reference}}.min{minlen}/ragtag.scaffold.agp",
             minlen=config["min_contig_len"],
         ),
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.vs.{reference}.ragtag.conversion.tsv",
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.vs.{reference}.ragtag.conversion.tsv",
     log:
-        "results/logs/2.scaffolding/create_ragtag_renaming_table/{asmname}.vs.{reference}.log"
+        "results/logs/1.assembly/create_ragtag_renaming_table/{asmname}.vs.{reference}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/create_ragtag_renaming_table/{asmname}.vs.{reference}.txt"
+        "results/benchmarks/1.assembly/create_ragtag_renaming_table/{asmname}.vs.{reference}.txt"
     shell:
         """
         (
@@ -52,20 +52,20 @@ rule create_ragtag_renaming_table:
 
 rule visualise_scaffold_renaming:
     input:
-        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{{scaffolder}}.conversion.tsv",
+        table = lambda wildcards: expand("results/{{asmname}}/1.assembly/05.renaming/{{asmname}}.vs.{reference}.{{scaffolder}}.conversion.tsv",
             reference=get_reference_id(wildcards.asmname),
         ),
     output:
-        report("results/{asmname}/2.scaffolding/02.renaming/{asmname}.{scaffolder}.html",
+        report("results/{asmname}/1.assembly/05.renaming/{asmname}.{scaffolder}.html",
             category="Hi-C",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
                     "algorithm": "{scaffolder} (conversion table)"}
         ),
     log:
-        "results/logs/2.scaffolding/visualise_scaffold_renaming/{asmname}.{scaffolder}.log"
+        "results/logs/1.assembly/visualise_scaffold_renaming/{asmname}.{scaffolder}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/visualise_scaffold_renaming/{asmname}.{scaffolder}.txt"
+        "results/benchmarks/1.assembly/visualise_scaffold_renaming/{asmname}.{scaffolder}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:
@@ -79,14 +79,14 @@ rule visualise_scaffold_renaming:
 
 def get_scaffolds(wildcards):
     if config["scaffolder"] == "ntjoin":
-        return expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
+        return expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         )
     elif config["scaffolder"] == "ragtag":
-        return expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
+        return expand("results/{{asmname}}/1.assembly/04.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         )
@@ -96,16 +96,16 @@ def get_scaffolds(wildcards):
 rule renaming_scaffolds:
     input:
         all = get_scaffolds,
-        table = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/02.renaming/{{asmname}}.vs.{reference}.{scaffolder}.conversion.tsv",
+        table = lambda wildcards: expand("results/{{asmname}}/1.assembly/05.renaming/{{asmname}}.vs.{reference}.{scaffolder}.conversion.tsv",
             reference=get_reference_id(wildcards.asmname),
             scaffolder=config["scaffolder"],
         ),
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.unoriented.fa"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.unoriented.fa"
     log:
-        "results/logs/2.scaffolding/renaming_scaffolds/{asmname}.log"
+        "results/logs/1.assembly/renaming_scaffolds/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/renaming_scaffolds/{asmname}.txt"
+        "results/benchmarks/1.assembly/renaming_scaffolds/{asmname}.txt"
     params:
         chroms = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"],
     script:
@@ -113,13 +113,13 @@ rule renaming_scaffolds:
 
 rule obtain_chromosomes:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.unoriented.fa"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.unoriented.fa"
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.fa"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.fa"
     log:
-        "results/logs/2.scaffolding/obtain_chromosomes/{asmname}.log"
+        "results/logs/1.assembly/obtain_chromosomes/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/obtain_chromosomes/{asmname}.txt"
+        "results/benchmarks/1.assembly/obtain_chromosomes/{asmname}.txt"
     conda:
         "../../envs/seqkit.yaml"
     shell:
@@ -127,15 +127,15 @@ rule obtain_chromosomes:
 
 rule rough_mashmap:
     input:
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.fa",
+        assembly = "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.fa",
         reference = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
     output:
-        reference = temporary("results/{asmname}/2.scaffolding/02.renaming/reference.fa"),
-        out = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out",
+        reference = temporary("results/{asmname}/1.assembly/05.renaming/reference.fa"),
+        out = "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out",
     log:
-        "results/logs/2.scaffolding/rough_mashmap/{asmname}.log"
+        "results/logs/1.assembly/rough_mashmap/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/rough_mashmap/{asmname}.txt"
+        "results/benchmarks/1.assembly/rough_mashmap/{asmname}.txt"
     params:
         segment = 100000,
     threads:
@@ -154,29 +154,29 @@ rule rough_mashmap:
 
 rule find_wrong_orientation:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.mashmap.out"
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.txt"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.txt"
     log:
-        "results/logs/2.scaffolding/find_wrong_orientation/{asmname}.log"
+        "results/logs/1.assembly/find_wrong_orientation/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/find_wrong_orientation/{asmname}.txt"
+        "results/benchmarks/1.assembly/find_wrong_orientation/{asmname}.txt"
     shell:
         "awk 'BEGIN{{FS = OFS = \"\\t\";}} $5==\"+\"{{plus[$1]+=($4-$3); minus[$1]+=0;}} $5==\"-\"{{plus[$1]+=0; minus[$1]+=($4-$3);}} END{{for (seq in plus){{if (plus[seq]<minus[seq]){{print seq;}}}}}}' {input} > {output} 2> {log}"
 
 rule orient_chromosomes:
     input:
-        assembly = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.unoriented.fa",
-        unoriented = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.chr.unsorted.unoriented.txt",
+        assembly = "results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.unoriented.fa",
+        unoriented = "results/{asmname}/1.assembly/05.renaming/{asmname}.chr.unsorted.unoriented.txt",
     output:
-        correct = temporary("results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.correct.fa.tmp"),
-        unoriented = temporary("results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.unoriented.fa.tmp"),
-        oriented = temporary("results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.oriented.fa.tmp"),
-        combined = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.fa",
+        correct = temporary("results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.correct.fa.tmp"),
+        unoriented = temporary("results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.unoriented.fa.tmp"),
+        oriented = temporary("results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.oriented.fa.tmp"),
+        combined = "results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.fa",
     log:
-        "results/logs/2.scaffolding/orient_chromosomes/{asmname}.log"
+        "results/logs/1.assembly/orient_chromosomes/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/orient_chromosomes/{asmname}.txt"
+        "results/benchmarks/1.assembly/orient_chromosomes/{asmname}.txt"
     conda:
         "../../envs/seqkit.yaml"
     shell:
@@ -191,13 +191,13 @@ rule orient_chromosomes:
 
 rule sort_scaffolds:
     input:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.unsorted.fa"
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.unsorted.fa"
     output:
-        "results/{asmname}/2.scaffolding/02.renaming/{asmname}.fa",
+        "results/{asmname}/1.assembly/05.renaming/{asmname}.fa",
     log:
-        "results/logs/2.scaffolding/sort_scaffolds/{asmname}.log"
+        "results/logs/1.assembly/sort_scaffolds/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/sort_scaffolds/{asmname}.txt"
+        "results/benchmarks/1.assembly/sort_scaffolds/{asmname}.txt"
     conda:
         "../../envs/seqkit.yaml"
     shell:

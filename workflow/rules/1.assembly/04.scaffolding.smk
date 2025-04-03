@@ -3,18 +3,18 @@ rule ntjoin:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
         contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
     output:
-        all = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
-        assigned = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
-        unassigned = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa",
-        agp = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
-        mxdot = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
-        contigscount = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv",
-        path = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.path",
-        unassignedbed = "results/{asmname}/2.scaffolding/01.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv.unassigned.bed",
+        all = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
+        assigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
+        unassigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa",
+        agp = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        mxdot = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
+        contigscount = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv",
+        path = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.path",
+        unassignedbed = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv.unassigned.bed",
     log:
-        "results/logs/2.scaffolding/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.log"
+        "results/logs/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.txt"
+        "results/benchmarks/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.txt"
     threads:
         5
     conda:
@@ -34,17 +34,17 @@ rule ragtag:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
         contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
     output:
-        agp = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
-        paf = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
-        paflog = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf.log",
-        confidence = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.confidence.txt",
-        err = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.err",
-        fasta = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
-        stats = "results/{asmname}/2.scaffolding/01.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.stats",
+        agp = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
+        paf = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
+        paflog = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf.log",
+        confidence = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.confidence.txt",
+        err = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.err",
+        fasta = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
+        stats = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.stats",
     log:
-        "results/logs/2.scaffolding/ragtag/{asmname}.vs.{reference}.min{minlen}.log"
+        "results/logs/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/ragtag/{asmname}.vs.{reference}.min{minlen}.txt"
+        "results/benchmarks/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.txt"
     threads:
         5
     conda:
@@ -62,9 +62,9 @@ rule bwa_index_contigs:
         index4 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.bwt.2bit.64",
         index5 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.pac",
     log:
-        "results/logs/2.scaffolding/bwa_index_contigs/{asmname}.min{minlen}.log"
+        "results/logs/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/bwa_index_contigs/{asmname}.min{minlen}.txt"
+        "results/benchmarks/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.txt"
     conda:
         "../../envs/mapping.yaml"
     shell:
@@ -81,11 +81,11 @@ rule map_hic:
         forward = get_hic_1,
         backward = get_hic_2,
     output:
-        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
     log:
-        "results/logs/2.scaffolding/map_hic/{asmname}.log"
+        "results/logs/1.assembly/map_hic/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/map_hic/{asmname}.txt"
+        "results/benchmarks/1.assembly/map_hic/{asmname}.txt"
     threads:
         10
     conda:
@@ -95,13 +95,13 @@ rule map_hic:
 
 rule filter_hic:
     input:
-        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
     output:
-        "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
     log:
-        "results/logs/2.scaffolding/filter_hic/{asmname}.log"
+        "results/logs/1.assembly/filter_hic/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/filter_hic/{asmname}.txt"
+        "results/benchmarks/1.assembly/filter_hic/{asmname}.txt"
     threads:
         10
     container:
@@ -111,27 +111,27 @@ rule filter_hic:
 
 rule ntjoin_plot_hic:
     input:
-        agp = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
-        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
-        pdf = report("results/{asmname}/2.scaffolding/01.ntjoin/contact_map.pdf",
+        pdf = report("results/{asmname}/1.assembly/04.ntjoin/contact_map.pdf",
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
                     "algorithm": "ntjoin (contact map)"}
         ),
-        pkl = "results/{asmname}/2.scaffolding/01.ntjoin/contact_matrix.pkl",
+        pkl = "results/{asmname}/1.assembly/04.ntjoin/contact_matrix.pkl",
     log:
-        "results/logs/2.scaffolding/ntjoin_plot/{asmname}.log"
+        "results/logs/1.assembly/ntjoin_plot/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/ntjoin_plot/{asmname}.txt"
+        "results/benchmarks/1.assembly/ntjoin_plot/{asmname}.txt"
     threads:
         8
     container:
@@ -148,22 +148,22 @@ rule ntjoin_plot_hic:
 
 use rule ntjoin_plot_hic as ragtag_plot_hic with:
     input:
-        agp = lambda wildcards: expand("results/{{asmname}}/2.scaffolding/01.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
+        agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ragtag/{{asmname}}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         ),
-        bam = "results/{asmname}/2.scaffolding/01.hic/{asmname}.hic.sorted.filtered.bam",
-        table = "results/{asmname}/2.scaffolding/02.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
-        pdf = report("results/{asmname}/2.scaffolding/01.ragtag/contact_map.pdf",
+        pdf = report("results/{asmname}/1.assembly/04.ragtag/contact_map.pdf",
             category="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
                     "algorithm": "ragtag (contact map)"}
         ),
-        pkl = "results/{asmname}/2.scaffolding/01.ragtag/contact_matrix.pkl",
+        pkl = "results/{asmname}/1.assembly/04.ragtag/contact_matrix.pkl",
     log:
-        "results/logs/2.scaffolding/ragtag_plot/{asmname}.log"
+        "results/logs/1.assembly/ragtag_plot/{asmname}.log"
     benchmark:
-        "results/benchmarks/2.scaffolding/ragtag_plot/{asmname}.txt"
+        "results/benchmarks/1.assembly/ragtag_plot/{asmname}.txt"
