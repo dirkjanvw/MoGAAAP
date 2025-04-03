@@ -61,7 +61,7 @@ organellar:
 telomere_motif: "CCCTAAA"
 
 # Annotation settings
-helixer_model: "land_plant"
+helixer_model: "land_plant" #choose between land_plant, vertebrate, invertebrate, fungi
 helixer_max_gene_length: 64152
 
 # Quality assessment settings

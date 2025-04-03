@@ -67,7 +67,7 @@ organellar:
 telomere_motif: "AACCCT"
 
 # Annotation settings
-helixer_model: "vertebrate"
+helixer_model: "vertebrate" #choose between land_plant, vertebrate, invertebrate, fungi
 helixer_max_gene_length: 64152
 
 # Quality assessment settings
