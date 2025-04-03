@@ -1,6 +1,24 @@
+rule helixer_download_model:
+    output:
+        temporary(directory("helixer_models")),
+    log:
+        "results/logs/4.annotation/helixer_download_model.log"
+    params:
+        helixer_model = config["helixer_model"],
+    container:
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8"
+    shell:
+        """
+        (
+        mkdir {output}
+        fetch_helixer_models.py --lineage {params.helixer_model} --custom-path {output}
+        ) &> {log}
+        """
+
 rule helixer:
     input:
-        "final_output/{asmname}.full.fa",
+        genome = "final_output/{asmname}.full.fa",
+        helixer_model = rules.helixer_download_model.output,
     output:
         "results/{asmname}/4.annotation/02.helixer/helixer.gff",
     log:
@@ -8,7 +26,6 @@ rule helixer:
     benchmark:
         "results/benchmarks/4.annotation/helixer/{asmname}.txt"
     params:
-        helixer_model = config["helixer_model"],
         subseqlen = config["helixer_max_gene_length"],
         species = lambda wildcards: get_species_name(wildcards),
     threads:
@@ -16,6 +33,6 @@ rule helixer:
     resources:
         helixer = 1
     container:
-        "docker://gglyptodon/helixer-docker:helixer_v0.3.2_cuda_11.8.0-cudnn8"
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8"
     shell:
-        "Helixer.py --fasta-path {input} --gff-output-path {output} --species {params.species} --subsequence-length {params.subseqlen} --model-filepath {params.helixer_model} &> {log}"
+        "Helixer.py --fasta-path {input.genome} --gff-output-path {output} --species {params.species} --subsequence-length {params.subseqlen} --downloaded-model-path {input.helixer_model} &> {log}"
