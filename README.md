@@ -145,7 +145,7 @@ While the command can be a great help, it is recommended to always double-check 
 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
-- `assemble`: This module will only assemble the reads into contigs and subsequently scaffold the contigs using `ntJoin` against a provided reference genome.
+- `assemble`: This module will assemble the reads into contigs and subsequently scaffold the contigs using `ntJoin` against a provided reference genome.
 - `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`, and optionally analyse user-defined queries.
 - `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
 - `all`: This module will run all the above modules (DEFAULT).
@@ -204,6 +204,7 @@ Furthermore, each part of the process (module) can be run separately after which
 ```mermaid
 graph TD;
     assemble-->annotate;
+    assemble-->qa;
     annotate-->qa;
 ```
 
@@ -226,7 +227,7 @@ In some preliminary tests, we found that `verkko` doesn't work well with heteroz
 #### Next steps
 Since the next step after assembly is the scaffolding process, there has to be collinearity between the assembly and the reference genome.
 This can be checked in the dotplot created from the `nucmer` alignment.
-If there is no sign of collinearity between the two, reference-guided scaffolding will be impossible.
+If there is no sign of collinearity between the two, reference-guided scaffolding will be hard/impossible.
 The only solution in that case would be to choose another (more closely related) reference genome.
 
 #### Scaffolding
@@ -240,17 +241,18 @@ Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolde
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 If Hi-C reads were provided, the Hi-C contact map is also produced for visual inspection of the `ntJoin` scaffolding process.
+
 **NB**: It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
 The reason for this is that none of the currently available algorithms for Hi-C scaffolding can guarantee a correct assembly, and we believe that the reference-guided scaffolding is more reliable for automated pipelines.
 
 #### Next steps
-As the assembly as outputted by this module is used as starting point for the analyse, annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
+As the assembly as outputted by this module is used as starting point for the annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
 Please carefully look at the `nucmer` alignment plot to check that the assembly looks as expected before continuing to a next module.
 
 ### Annotate module
 
 #### Gene annotation
-Proper structural genome annotation would take too long and is not a problem that is solved for automation yet.
+Proper evidence-based structural gene annotation would take too long and is a problem that is not solved for fast automation yet.
 Therefore, we implemented a "quick-and-dirty" provisional annotation in this pipeline by combing the results of `liftoff` and `helixer`.
 `helixer` will run on the GPU if it's available, otherwise it will run on CPU (which is known to be a lot slower).
 In case of overlap in features between `liftoff` and `helixer`, we take the `liftoff` annotation.
@@ -288,7 +290,7 @@ The report (see [Reporting](#reporting)) produced by this module is the most use
 It contains visual output for each of the quality assessment steps performed in this module including a description on how to interpret the results.
 It also calculates various statistics that are reported on in the report.
 Importantly, the qa module does not do any filtering of the assembly or annotation, only reporting.
-Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, subsetting the input data, etc.
+Next steps could include (but are not limited to) removal of contaminants, discovery of sample swaps, cleaning the input data, etc.
 
 ## Citation
 If you use MoGAAAP in your work, please cite this work as:
@@ -310,12 +312,13 @@ Alternatively, you could look at `htop` or `top` to see what processes are runni
 ### Q: Pipeline crashes at renaming the chromosomes
 A: This issue typically arises when the assembly and reference genome are not collinear because of an evolutionary distance that is too large.
 In this case, the pipeline is not able to accurately discern which reference chromosome corresponds to which assembly scaffold.
-This lack of collinearity should also be visible in the MUMmerplots created by the `assemble` module.
-The only solution in this case would be to choose another (more closely related) reference genome and re-run the `assemble` module to check if this new reference genome is collinear with the assembly before continuing with the `scaffold` module.
+This lack of collinearity should also be visible in the contig MUMmerplots created by the `assemble` module.
+The only solution within MoGAAAP in this case would be to choose another (more closely related) reference genome and re-run the `assemble` module; or use `ragtag` as scaffolder instead of `ntJoin`.
 
 ### Q: Pipeline creates scaffolds that are obviously wrong
 A: This issue can have multiple causes, but the most common one is that the `ntJoin` parameters are not set correctly.
 From our own experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
+Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolder` parameter in the configuration YAML file.
 Also, it is important to keep in mind that this pipeline is not meant to create a perfect assembly, but to provide a starting point for human curation.
 So feel free to adjust the pipeline or the assembly to your own needs!
 
@@ -331,8 +334,8 @@ The name of the log file will be printed in the terminal output of the pipeline.
 If the error is not clear, please open an issue on this GitHub page.
 
 ### Q: The pipeline cannot find software X
-A: This is likely happening because the `--use-conda` and `--use-singularity` flags are not set.
-If they are set and the error persists, please report it as an issue on this GitHub page.
+A: This would indicate an error on our side of determining the correct dependencies for the pipeline.
+If the error persists, please report it as an issue on this GitHub page.
 
 ### Q: A job that uses singularity fails for no apparent reason
 A: This is likely due to missing environment variables for Singularity/Apptainer.
