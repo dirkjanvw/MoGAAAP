@@ -103,7 +103,8 @@ rule multiqc:
         get_wgs_flagstat
     output:
         report("results/{asmname}/5.quality_assessment/04.multiqc/multiqc_report.html",
-            category="Mapping",
+            category="Quality assessment",
+            subcategory="Mapping",
             caption="../../report/mapping.rst",
             labels={"type": "multiqc", "assembly": "{asmname}"}),
     log:

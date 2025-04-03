@@ -49,7 +49,8 @@ rule visualise_ntsynt:
         sequence_lengths = "results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
     output:
         report("results/{asmset}/5.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
-            category="Collinearity",
+            category="Quality assessment",
+            subcategory="Collinearity",
             caption="../../report/ntsynt.rst",
             labels={"type": "ntSynt", "set": "{asmset}", "k": "{mink}", "w": "{minw}"}),
     log:

@@ -26,7 +26,8 @@ rule visualise_fcs_gx:
     output:
         tsv = "results/{asmname}/5.quality_assessment/03.fcs/{asmname}.fcs_gx_report.tsv",
         html = report("results/{asmname}/5.quality_assessment/03.fcs/{asmname}.fcs_gx_report.html",
-            category="Contamination",
+            category="Quality assessment",
+            subcategory="Contamination",
             caption="../../report/fcs-gx.rst",
             labels={"type": "fcs-gx", "assembly": "{asmname}"}),
     log:
@@ -72,7 +73,8 @@ rule visualise_fcs_adaptor:
         "results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.txt"
     output:
         report("results/{asmname}/5.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.html",
-            category="Contamination",
+            category="Quality assessment",
+            subcategory="Contamination",
             caption="../../report/fcs-adaptor.rst",
             labels={"type": "fcs-adaptor", "assembly": "{asmname}"}),
     log:

@@ -19,7 +19,8 @@ rule pangrowth_hist_plot:
         "results/{asmset}/5.quality_assessment/12.pangrowth/{k}/hist.txt",
     output:
         report("results/{asmset}/5.quality_assessment/12.pangrowth/{k}/hist.pdf",
-            category="Pangrowth",
+            category="Quality assessment",
+            subcategory="Pangrowth",
             caption="../../report/pangrowth_hist.rst",
             labels={"type": "histogram", "set": "{asmset}", "k": "{k}"}),
     log:
@@ -50,7 +51,8 @@ rule pangrowth_growth_plot:
         "results/{asmset}/5.quality_assessment/12.pangrowth/{k}/growth.txt",
     output:
         report("results/{asmset}/5.quality_assessment/12.pangrowth/{k}/growth.pdf",
-            category="Pangrowth",
+            category="Quality assessment",
+            subcategory="Pangrowth",
             caption="../../report/pangrowth_growth.rst",
             labels={"type": "growth", "set": "{asmset}", "k": "{k}"}),
     log:
@@ -81,7 +83,8 @@ rule pangrowth_core_plot:
         "results/{asmset}/5.quality_assessment/12.pangrowth/{k}/core.txt",
     output:
         report("results/{asmset}/5.quality_assessment/12.pangrowth/{k}/core.pdf",
-            category="Pangrowth",
+            category="Quality assessment",
+            subcategory="Pangrowth",
             caption="../../report/pangrowth_core.rst",
             labels={"type": "core", "set": "{asmset}", "k": "{k}"}),
     log:

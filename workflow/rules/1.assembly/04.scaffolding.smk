@@ -121,7 +121,8 @@ rule ntjoin_plot_hic:
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ntjoin/contact_map.pdf",
-            category="Hi-C",
+            category="assembly",
+            subcategory="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
@@ -156,7 +157,8 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ragtag/contact_map.pdf",
-            category="Hi-C",
+            category="assembly",
+            subcategory="Hi-C",
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",

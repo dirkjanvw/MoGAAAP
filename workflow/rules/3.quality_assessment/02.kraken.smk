@@ -24,7 +24,8 @@ rule krona:
         "results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.out",
     output:
         report("results/{asmname}/5.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html",
-            category="Contamination",
+            category="Quality assessment",
+            subcategory="Contamination",
             caption="../../report/kraken.rst",
             labels={"type": "kraken2", "assembly": "{asmname}"}),
     log:

@@ -60,7 +60,8 @@ rule kmerdb_heatmap:
         "results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash",
     output:
         report("results/{asmset}/5.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash.pdf",
-            category="Phylogeny",
+            category="Quality assessment",
+            subcategory="Phylogeny",
             caption="../../report/kmer-db.rst",
             labels={"type": "kmer-db", "set": "{asmset}", "k": "{k}", "distance": "mash"}),
     log:

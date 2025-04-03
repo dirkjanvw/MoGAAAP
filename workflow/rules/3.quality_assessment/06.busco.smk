@@ -65,7 +65,8 @@ rule busco_plot:
         get_busco_plot_input,
     output:
         report("results/{asmset}/5.quality_assessment/06.busco_plot/busco_figure.png",
-            category="Gene completeness",
+            category="Quality assessment",
+            subcategory="Gene completeness",
             caption="../../report/busco.rst",
             labels={"type": "busco", "set": "{asmset}"}),
     log:

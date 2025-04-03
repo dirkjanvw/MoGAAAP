@@ -134,7 +134,8 @@ rule visualise_overall_statistics:
         "results/{asmset}/5.quality_assessment/13.statistics/{asmset}.tsv",
     output:
         report("results/{asmset}/5.quality_assessment/13.statistics/{asmset}.html",
-            category="General statistics",
+            category="Quality assessment",
+            subcategory="General statistics",
             caption="../../report/statistics.rst",
             labels={"set": "{asmset}"}),
     log:

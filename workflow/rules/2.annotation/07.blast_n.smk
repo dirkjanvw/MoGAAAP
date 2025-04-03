@@ -46,7 +46,7 @@ rule visualise_blast_n:
         "results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.tsv",
     output:
         report("results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.html",
-            category="Analysis",
+            category="Custom annotation",
             caption="../../report/blast.rst",
             labels={"asmname": "{asmname}", "query_name": "{query_name}"}),
     log:

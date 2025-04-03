@@ -103,7 +103,8 @@ rule panproteome_plot_upset:
         "results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/gene_classification/upset/upset_plot.R",
     output:
         report("results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/gene_classification/upset/output/genomes.pdf",
-            category="PanTools",
+            category="Quality assessment",
+            subcategory="PanTools",
             caption="../../report/pantools_upset.rst",
             labels={"type": "upset plot", "set": "{asmset}"}),
     log:
@@ -141,15 +142,18 @@ rule panproteome_plot_pangenome_growth:
         "results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/pangenome_growth.R",
     output:
         report("results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_accessory_unique_growth.png",
-            category="PanTools",
+            category="Quality assessment",
+            subcategory="PanTools",
             caption="../../report/pantools_core_accessory_unique.rst",
             labels={"type": "growth (core, accessory, unique)", "set": "{asmset}"}),
         report("results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_growth.png",
-            category="PanTools",
+            category="Quality assessment",
+            subcategory="PanTools",
             caption="../../report/pantools_core_dispensable.rst",
             labels={"type": "growth (core, dispensable)", "set": "{asmset}"}),
         report("results/{asmset}/5.quality_assessment/05.pantools/panproteome_groups_DB/pangenome_size/gene/core_dispensable_total_growth.png",
-            category="PanTools",
+            category="Quality assessment",
+            subcategory="PanTools",
             caption="../../report/pantools_core_dispensable_total.rst",
             labels={"type": "growth (core, dispensable, total)", "set": "{asmset}"}),
     log:

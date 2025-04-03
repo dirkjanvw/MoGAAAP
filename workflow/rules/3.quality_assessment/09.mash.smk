@@ -26,7 +26,8 @@ rule mash_heatmap:
         "results/{asmset}/5.quality_assessment/09.mash/{asmset}.csv",
     output:
         report("results/{asmset}/5.quality_assessment/09.mash/{asmset}.pdf",
-            category="Phylogeny",
+            category="Quality assessment",
+            subcategory="Phylogeny",
             caption="../../report/mash.rst",
             labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
     log:

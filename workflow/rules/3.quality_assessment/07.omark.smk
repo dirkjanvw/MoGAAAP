@@ -46,7 +46,8 @@ rule omark_plot:
     output:
         tmpdir = temporary(directory("results/{asmset}/5.quality_assessment/07.omark_plot")),
         png = report("results/{asmset}/5.quality_assessment/07.omark_plot.png",
-            category="Gene completeness",
+            category="Quality assessment",
+            subcategory="Gene completeness",
             caption="../../report/omark.rst",
             labels={"type": "omark", "set": "{asmset}"}),
     log:

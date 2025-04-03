@@ -125,7 +125,7 @@ rule circos:
         "results/{asmname}/2.annotation/12.circos/{asmname}.circos.conf",
     output:
         png = report("results/{asmname}/2.annotation/12.circos/{asmname}.circos.png",
-            category="Circos",
+            category="Custom annotation",
             caption="../../report/circos_plot.rst",
             labels={"file": "plot", "assembly": "{asmname}"}),
         svg = "results/{asmname}/2.annotation/12.circos/{asmname}.circos.svg",
