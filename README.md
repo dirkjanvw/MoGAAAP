@@ -302,9 +302,6 @@ in prep.
 
 ## FAQ
 
-> [!NOTE]
-> The FAQ still has to be updated with the refactor of the modules in the pipeline.
-
 ### Q: Where can I see what my pipeline is doing?
 A: The pipeline will print the commands it is running to the terminal.
 Alternatively, you could look at `htop` or `top` to see what processes are running.
