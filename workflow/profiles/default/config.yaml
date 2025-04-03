@@ -1,5 +1,5 @@
 use-conda: True
-use-singularity: False
+use-singularity: True
 printshellcmds: True
 cores: all
 resources:
