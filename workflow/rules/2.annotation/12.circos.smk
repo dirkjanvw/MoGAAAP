@@ -1,10 +1,10 @@
 rule circos_ticks:
     output:
-        "results/{asmname}/3.analysis/08.circos/ticks.conf",
+        "results/{asmname}/2.annotation/12.circos/ticks.conf",
     log:
-        "results/logs/3.analysis/circos_ticks/{asmname}.log"
+        "results/logs/2.annotation/circos_ticks/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/circos_ticks/{asmname}.txt"
+        "results/benchmarks/2.annotation/circos_ticks/{asmname}.txt"
     shell:
         """
         (
@@ -45,11 +45,11 @@ rule circos_karyotype:
     input:
         "final_output/{asmname}.full.fa.fai"
     output:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
+        "results/{asmname}/2.annotation/12.circos/{asmname}.karyotype.txt",
     log:
-        "results/logs/3.analysis/circos_karyotype/{asmname}.log"
+        "results/logs/2.annotation/circos_karyotype/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/circos_karyotype/{asmname}.txt"
+        "results/benchmarks/2.annotation/circos_karyotype/{asmname}.txt"
     shell: #circos has a maximum of 200 sequences it can show, so limit to either "Chr[0-9]+" containing sequences or the first 100 sequences
         "awk '$1!~/Chr[0-9]+/ && FNR > 100{{next;}} c%3==0{{col=\"black\";}} c%3==1{{col=\"dgrey\";}} c%3==2{{col=\"grey\";}} {{print \"chr\", \"-\", $1, $1, \"0\", $2, col; c++;}}' {input} > {output} 2> {log}"
 
@@ -57,33 +57,33 @@ def get_circos_files(wildcards):
     prot_files = []
     if "prot_queries" in config:
         for query in config["prot_queries"]:
-            prot_files.append(f"results/{wildcards.asmname}/3.analysis/06.bcovblp/{query}.vs.{wildcards.asmname}.items.circos")
+            prot_files.append(f"results/{wildcards.asmname}/2.annotation/10.bcovblp/{query}.vs.{wildcards.asmname}.items.circos")
 
     nucl_files = []
     if "nucl_queries" in config:
         for query in config["nucl_queries"]:
-            nucl_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
+            nucl_files.append(f"results/{wildcards.asmname}/2.annotation/11.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
 
     # If you want to add organellar files, uncomment the following lines
     #organellar_files = []
     #if "organellar" in config:
     #    for query in config["organellar"]:
-    #        organellar_files.append(f"results/{wildcards.asmname}/3.analysis/07.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
+    #        organellar_files.append(f"results/{wildcards.asmname}/2.annotation/11.bcovbln/{query}.vs.{wildcards.asmname}.fract.circos")
 
     return prot_files + nucl_files #+ organellar_files
 
 rule circos_configuration:
     input:
         files = get_circos_files,  ### CIRCOS ITEMS ###
-        karyotype = "results/{asmname}/3.analysis/08.circos/{asmname}.karyotype.txt",
-        ticks = "results/{asmname}/3.analysis/08.circos/ticks.conf",
+        karyotype = "results/{asmname}/2.annotation/12.circos/{asmname}.karyotype.txt",
+        ticks = "results/{asmname}/2.annotation/12.circos/ticks.conf",
     output:
-        conf = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
-        overview = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv",
+        conf = "results/{asmname}/2.annotation/12.circos/{asmname}.circos.conf",
+        overview = "results/{asmname}/2.annotation/12.circos/{asmname}.circos.tsv",
     log:
-        "results/logs/3.analysis/circos_configuration/{asmname}.log"
+        "results/logs/2.annotation/circos_configuration/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/circos_configuration/{asmname}.txt"
+        "results/benchmarks/2.annotation/circos_configuration/{asmname}.txt"
     shell:
         """
         (
@@ -105,16 +105,16 @@ rule circos_configuration:
 
 rule visualise_circos_configuration:
     input:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.tsv"
+        "results/{asmname}/2.annotation/12.circos/{asmname}.circos.tsv"
     output:
-        report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.html",
+        report("results/{asmname}/2.annotation/12.circos/{asmname}.circos.html",
             category="Circos",
             caption="../../report/circos_overview.rst",
             labels={"file": "overview", "assembly": "{asmname}"}),
     log:
-        "results/logs/3.analysis/visualise_circos_configuration/{asmname}.log"
+        "results/logs/2.annotation/visualise_circos_configuration/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/visualise_circos_configuration/{asmname}.txt"
+        "results/benchmarks/2.annotation/visualise_circos_configuration/{asmname}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:
@@ -122,17 +122,17 @@ rule visualise_circos_configuration:
 
 rule circos:
     input:
-        "results/{asmname}/3.analysis/08.circos/{asmname}.circos.conf",
+        "results/{asmname}/2.annotation/12.circos/{asmname}.circos.conf",
     output:
-        png = report("results/{asmname}/3.analysis/08.circos/{asmname}.circos.png",
+        png = report("results/{asmname}/2.annotation/12.circos/{asmname}.circos.png",
             category="Circos",
             caption="../../report/circos_plot.rst",
             labels={"file": "plot", "assembly": "{asmname}"}),
-        svg = "results/{asmname}/3.analysis/08.circos/{asmname}.circos.svg",
+        svg = "results/{asmname}/2.annotation/12.circos/{asmname}.circos.svg",
     log:
-        "results/logs/3.analysis/circos/{asmname}.log"
+        "results/logs/2.annotation/circos/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/circos/{asmname}.txt"
+        "results/benchmarks/2.annotation/circos/{asmname}.txt"
     conda:
         "../../envs/circos.yaml"
     shell:

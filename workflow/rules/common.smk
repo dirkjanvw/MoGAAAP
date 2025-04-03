@@ -113,4 +113,4 @@ def get_annotation_location(asmname):
     if has_annotation_location(asmname):
         return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].values.item()
     else:
-        return f"results/{asmname}/4.annotation/03.combined/{asmname}.gff"
+        return f"results/{asmname}/2.annotation/03.combined/{asmname}.gff"

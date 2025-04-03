@@ -1,12 +1,12 @@
 rule blp2bed:
     input:
-        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.m7"
+        "results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.m7"
     output:
-        "results/{asmname}/3.analysis/04.blp2bed/{query_name}.vs.{asmname}.bed"
+        "results/{asmname}/2.annotation/08.blp2bed/{query_name}.vs.{asmname}.bed"
     log:
-        "results/logs/3.analysis/blp2bed/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/2.annotation/blp2bed/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/blp2bed/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/2.annotation/blp2bed/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:
         "../../envs/bedtools.yaml"
     shell:

@@ -1,16 +1,16 @@
 rule bcovbln:
     input:
-        asm_len_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.BED",
-        chr_1Mb_blk = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
-        bed_file = "results/{asmname}/3.analysis/05.bln2bed/{query_name}.vs.{asmname}.bed",
+        asm_len_bed = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Asm_Len.BED",
+        chr_1Mb_blk = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Chr_Len.1Mb.Range",
+        bed_file = "results/{asmname}/2.annotation/09.bln2bed/{query_name}.vs.{asmname}.bed",
     output:
-        asm_coverage = "results/{asmname}/3.analysis/07.bcovbln/{query_name}.vs.{asmname}.asm.coverage",
-        chr_coverage = "results/{asmname}/3.analysis/07.bcovbln/{query_name}.vs.{asmname}.chr.coverage",
-        circos_file = "results/{asmname}/3.analysis/07.bcovbln/{query_name}.vs.{asmname}.fract.circos",
+        asm_coverage = "results/{asmname}/2.annotation/11.bcovbln/{query_name}.vs.{asmname}.asm.coverage",
+        chr_coverage = "results/{asmname}/2.annotation/11.bcovbln/{query_name}.vs.{asmname}.chr.coverage",
+        circos_file = "results/{asmname}/2.annotation/11.bcovbln/{query_name}.vs.{asmname}.fract.circos",
     log:
-        "results/logs/3.analysis/bcovbln/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/2.annotation/bcovbln/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/bcovbln/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/2.annotation/bcovbln/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:
         "../../envs/bedtools.yaml"
     shell:

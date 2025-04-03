@@ -2,11 +2,11 @@ rule identify_telomere:
     input:
         "final_output/{asmname}.full.fa",
     output:
-        "results/{asmname}/3.analysis/10.telo/{asmname}.telo.bed",
+        "results/{asmname}/2.annotation/14.telo/{asmname}.telo.bed",
     log:
-        "results/logs/3.analysis/identify_telomere/{asmname}.log"
+        "results/logs/2.annotation/identify_telomere/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/identify_telomere/{asmname}.txt"
+        "results/benchmarks/2.annotation/identify_telomere/{asmname}.txt"
     params:
         telomere_motif = config["telomere_motif"]
     conda:
@@ -21,16 +21,16 @@ rule identify_telomere:
 
 rule visualise_telomere_locations:
     input:
-        "results/{asmname}/3.analysis/10.telo/{asmname}.telo.bed",
+        "results/{asmname}/2.annotation/14.telo/{asmname}.telo.bed",
     output:
-        report("results/{asmname}/3.analysis/10.telo/{asmname}.telo.html",
+        report("results/{asmname}/2.annotation/14.telo/{asmname}.telo.html",
             category="Analysis",
             caption="../../report/telo.rst",
             labels={"asmname": "{asmname}", "query_name": "telomere"}),
     log:
-        "results/logs/3.analysis/visualise_telomere_locations/{asmname}.log"
+        "results/logs/2.annotation/visualise_telomere_locations/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/visualise_telomere_locations/{asmname}.txt"
+        "results/benchmarks/2.annotation/visualise_telomere_locations/{asmname}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:

@@ -1,13 +1,13 @@
 rule blast_p:
     input:
         query_file = lambda wildcards: config["prot_queries"][wildcards.query_name],
-        blast_db   = "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
+        blast_db   = "results/{asmname}/2.annotation/05.blastdb/{asmname}.BDB",
     output:
-        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.m7"
+        "results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.m7"
     log:
-        "results/logs/3.analysis/blast_p/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/2.annotation/blast_p/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/blast_p/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/2.annotation/blast_p/{asmname}/{query_name}.vs.{asmname}.txt"
     threads:
         12
     conda:
@@ -23,28 +23,28 @@ rule blast_p:
 
 rule blast_p_to_tsv:
     input:
-        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.m7",
+        "results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.m7",
     output:
-        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.tsv",
+        "results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.tsv",
     log:
-        "results/logs/3.analysis/blast_p_to_tsv/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/2.annotation/blast_p_to_tsv/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/blast_p_to_tsv/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/2.annotation/blast_p_to_tsv/{asmname}/{query_name}.vs.{asmname}.txt"
     shell:
         "awk 'BEGIN{{FS = OFS = \"\\t\";}} /^# Fields: /{{$1=substr($1,11); gsub(/, /,\"\\t\",$1); print $1; next;}} /^#/{{next;}} {{print;}}' {input} > {output} 2> {log}"
 
 rule visualise_blast_p:
     input:
-        "results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.tsv",
+        "results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.tsv",
     output:
-        report("results/{asmname}/3.analysis/02.blast_p/{query_name}.vs.{asmname}.html",
+        report("results/{asmname}/2.annotation/06.blast_p/{query_name}.vs.{asmname}.html",
             category="Analysis",
             caption="../../report/blast.rst",
             labels={"asmname": "{asmname}", "query_name": "{query_name}"}),
     log:
-        "results/logs/3.analysis/visualise_blast_p/{asmname}/{query_name}.vs.{asmname}.log"
+        "results/logs/2.annotation/visualise_blast_p/{asmname}/{query_name}.vs.{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/visualise_blast_p/{asmname}/{query_name}.vs.{asmname}.txt"
+        "results/benchmarks/2.annotation/visualise_blast_p/{asmname}/{query_name}.vs.{asmname}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:

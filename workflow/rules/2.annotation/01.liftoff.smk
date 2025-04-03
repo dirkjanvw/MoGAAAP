@@ -4,14 +4,14 @@ rule liftoff:
         ref_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
         assembly = "final_output/{asmname}.full.fa",
     output:
-        ref_annotation = temporary("results/{asmname}/4.annotation/01.liftoff/reference.gff"),  #to prevent write permission issues
-        ref_genome = temporary("results/{asmname}/4.annotation/01.liftoff/reference.fa"),  #to prevent write permission issues
-        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff",
-        polished = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
+        ref_annotation = temporary("results/{asmname}/2.annotation/01.liftoff/reference.gff"),  #to prevent write permission issues
+        ref_genome = temporary("results/{asmname}/2.annotation/01.liftoff/reference.fa"),  #to prevent write permission issues
+        gff = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff",
+        polished = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished",
     log:
-        "results/logs/4.annotation/liftoff/{asmname}.log"
+        "results/logs/2.annotation/liftoff/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/liftoff/{asmname}.txt"
+        "results/benchmarks/2.annotation/liftoff/{asmname}.txt"
     threads:
         10
     conda:
@@ -27,15 +27,15 @@ rule liftoff:
 
 rule fix_cds_phase_liftoff_gff_polished:
     input:
-        polished = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished",
+        polished = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished",
         assembly = "final_output/{asmname}.full.fa",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",
+        "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",
     log:
-        "results/logs/4.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.log"
+        "results/logs/2.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.txt"
+        "results/benchmarks/2.annotation/fixed_cds_phase_liftoff_gff_polished/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -43,16 +43,16 @@ rule fix_cds_phase_liftoff_gff_polished:
 
 rule filter_valid_ORF_mRNA:
     input:
-        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",
+        gff = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        gff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff",
-        report = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_report.txt",
-        discarded = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_discarded.gff",
+        gff = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff",
+        report = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_report.txt",
+        discarded = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF_discarded.gff",
     log:
-        "results/logs/4.annotation/filter_valid_ORF_mRNA/{asmname}.log"
+        "results/logs/2.annotation/filter_valid_ORF_mRNA/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/filter_valid_ORF_mRNA/{asmname}.txt"
+        "results/benchmarks/2.annotation/filter_valid_ORF_mRNA/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:

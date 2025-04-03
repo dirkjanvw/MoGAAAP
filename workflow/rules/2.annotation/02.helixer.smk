@@ -2,11 +2,11 @@ rule helixer:
     input:
         "final_output/{asmname}.full.fa",
     output:
-        "results/{asmname}/4.annotation/02.helixer/helixer.gff",
+        "results/{asmname}/2.annotation/02.helixer/helixer.gff",
     log:
-        "results/logs/4.annotation/helixer/{asmname}.log"
+        "results/logs/2.annotation/helixer/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/helixer/{asmname}.txt"
+        "results/benchmarks/2.annotation/helixer/{asmname}.txt"
     params:
         helixer_model = config["helixer_model"],
         subseqlen = config["helixer_max_gene_length"],

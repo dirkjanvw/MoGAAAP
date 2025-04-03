@@ -1,14 +1,14 @@
 rule combine_liftoff_helixer:
     input:
-        liftoff = "results/{asmname}/4.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff", # fixed CDS phase and removed transcripts with invalid ORF
-        helixer = "results/{asmname}/4.annotation/02.helixer/helixer.gff",
+        liftoff = "results/{asmname}/2.annotation/01.liftoff/liftoff.gff_polished.fixed.valid_ORF.gff", # fixed CDS phase and removed transcripts with invalid ORF
+        helixer = "results/{asmname}/2.annotation/02.helixer/helixer.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/4.annotation/03.combined/{asmname}.gff",
+        "results/{asmname}/2.annotation/03.combined/{asmname}.gff",
     log:
-        "results/logs/4.annotation/combine_liftoff_helixer/{asmname}.log"
+        "results/logs/2.annotation/combine_liftoff_helixer/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/combine_liftoff_helixer/{asmname}.txt"
+        "results/benchmarks/2.annotation/combine_liftoff_helixer/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -19,12 +19,12 @@ rule identify_coding_genes:
         gff = lambda wildcards: get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
-        temp = temporary("results/{asmname}/4.annotation/03.combined/{asmname}.coding_ID.list"),
-        list = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.list",
+        temp = temporary("results/{asmname}/2.annotation/03.combined/{asmname}.coding_ID.list"),
+        list = "results/{asmname}/2.annotation/03.combined/{asmname}.coding.list",
     log:
-        "results/logs/4.annotation/identify_coding_genes/{asmname}.log"
+        "results/logs/2.annotation/identify_coding_genes/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/identify_coding_genes/{asmname}.txt"
+        "results/benchmarks/2.annotation/identify_coding_genes/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -38,14 +38,14 @@ rule identify_coding_genes:
 rule filter_coding_genes:
     input:
         original = lambda wildcards: get_annotation_location(wildcards.asmname),
-        coding_genes = "results/{asmname}/4.annotation/03.combined/{asmname}.coding.list",
+        coding_genes = "results/{asmname}/2.annotation/03.combined/{asmname}.coding.list",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/4.annotation/03.combined/{asmname}.coding.gff",
+        "results/{asmname}/2.annotation/03.combined/{asmname}.coding.gff",
     log:
-        "results/logs/4.annotation/filter_coding_genes/{asmname}.log"
+        "results/logs/2.annotation/filter_coding_genes/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/filter_coding_genes/{asmname}.txt"
+        "results/benchmarks/2.annotation/filter_coding_genes/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -56,11 +56,11 @@ rule remove_attributes_gff:
         original = lambda wildcards: get_annotation_location(wildcards.asmname),
         config = "results/{asmname}/agat_config.yaml",
     output:
-        temporary("results/{asmname}/4.annotation/03.combined/{asmname}.no_attr.gff"),
+        temporary("results/{asmname}/2.annotation/03.combined/{asmname}.no_attr.gff"),
     log:
-        "results/logs/4.annotation/remove_attributes_gff/{asmname}.log"
+        "results/logs/2.annotation/remove_attributes_gff/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/remove_attributes_gff/{asmname}.txt"
+        "results/benchmarks/2.annotation/remove_attributes_gff/{asmname}.txt"
     conda:
         "../../envs/agat.yaml"
     shell:
@@ -68,14 +68,14 @@ rule remove_attributes_gff:
 
 rule create_clean_gff:
     input:
-        original = "results/{asmname}/4.annotation/03.combined/{asmname}.no_attr.gff",
+        original = "results/{asmname}/2.annotation/03.combined/{asmname}.no_attr.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/4.annotation/03.combined/{asmname}.clean.gff",
+        "results/{asmname}/2.annotation/03.combined/{asmname}.clean.gff",
     log:
-        "results/logs/4.annotation/create_clean_gff/{asmname}.log"
+        "results/logs/2.annotation/create_clean_gff/{asmname}.log"
     benchmark:
-        "results/benchmarks/4.annotation/create_clean_gff/{asmname}.txt"
+        "results/benchmarks/2.annotation/create_clean_gff/{asmname}.txt"
     params:
         species = lambda wildcards: get_species_name(wildcards),
     conda:

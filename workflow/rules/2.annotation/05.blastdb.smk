@@ -2,11 +2,11 @@ rule blastdb:
     input:
         "final_output/{asmname}.full.fa",
     output:
-        "results/{asmname}/3.analysis/01.blastdb/{asmname}.BDB",
+        "results/{asmname}/2.annotation/05.blastdb/{asmname}.BDB",
     log:
-        "results/logs/3.analysis/blastdb/{asmname}.log"
+        "results/logs/2.annotation/blastdb/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/blastdb/{asmname}.txt"
+        "results/benchmarks/2.annotation/blastdb/{asmname}.txt"
     conda:
         "../../envs/blast.yaml"
     shell:

@@ -1,14 +1,14 @@
 rule extract_organelle:
     input:
         assembly = "final_output/{asmname}.full.fa",
-        asm_coverage = "results/{asmname}/3.analysis/07.bcovbln/{organelle}.vs.{asmname}.asm.coverage",
+        asm_coverage = "results/{asmname}/2.annotation/11.bcovbln/{organelle}.vs.{asmname}.asm.coverage",
     output:
-        txt = temporary("results/{asmname}/3.analysis/09.separate_genome/{asmname}.{organelle}.txt"),
-        fa = "results/{asmname}/3.analysis/09.separate_genome/{asmname}.{organelle}.fa",
+        txt = temporary("results/{asmname}/2.annotation/13.separate_genome/{asmname}.{organelle}.txt"),
+        fa = "results/{asmname}/2.annotation/13.separate_genome/{asmname}.{organelle}.fa",
     log:
-        "results/logs/3.analysis/extract_organelle/{asmname}/{organelle}.log",
+        "results/logs/2.annotation/extract_organelle/{asmname}/{organelle}.log",
     benchmark:
-        "results/benchmarks/3.analysis/extract_organelle/{asmname}/{organelle}.txt",
+        "results/benchmarks/2.annotation/extract_organelle/{asmname}/{organelle}.txt",
     params:
         min_coverage = 0.5,  # consider hits covering more than 50% of the contig as organelle
     conda:
@@ -24,14 +24,14 @@ rule extract_organelle:
 rule extract_nuclear:
     input:
         assembly = "final_output/{asmname}.full.fa",
-        organelles = expand("results/{{asmname}}/3.analysis/09.separate_genome/{{asmname}}.{organelle}.fa", organelle=config["organellar"]),
+        organelles = expand("results/{{asmname}}/2.annotation/13.separate_genome/{{asmname}}.{organelle}.fa", organelle=config["organellar"]),
     output:
-        txt = temporary("results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.txt"),
-        fa = "results/{asmname}/3.analysis/09.separate_genome/{asmname}.nuclear.fa",
+        txt = temporary("results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.txt"),
+        fa = "results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.fa",
     log:
-        "results/logs/3.analysis/extract_nuclear/{asmname}.log",
+        "results/logs/2.annotation/extract_nuclear/{asmname}.log",
     benchmark:
-        "results/benchmarks/3.analysis/extract_nuclear/{asmname}.txt",
+        "results/benchmarks/2.annotation/extract_nuclear/{asmname}.txt",
     conda:
         "../../envs/seqkit.yaml"
     shell:

@@ -2,14 +2,14 @@ rule asm_bed:
     input:
         "final_output/{asmname}.full.fa",
     output:
-        asm_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.BED",
-        chr_bed = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.BED",
-        asm_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Asm_Len.1Mb.Range",
-        chr_1Mb = "results/{asmname}/3.analysis/00.asm_bed/{asmname}.Chr_Len.1Mb.Range",
+        asm_bed = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Asm_Len.BED",
+        chr_bed = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Chr_Len.BED",
+        asm_1Mb = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Asm_Len.1Mb.Range",
+        chr_1Mb = "results/{asmname}/2.annotation/04.asm_bed/{asmname}.Chr_Len.1Mb.Range",
     log:
-        "results/logs/3.analysis/asm_bed/{asmname}.log"
+        "results/logs/2.annotation/asm_bed/{asmname}.log"
     benchmark:
-        "results/benchmarks/3.analysis/asm_bed/{asmname}.txt"
+        "results/benchmarks/2.annotation/asm_bed/{asmname}.txt"
     params:
         num_chr = lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"])
     conda:
