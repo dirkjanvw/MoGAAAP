@@ -9,6 +9,9 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Changed
 - Update sample sheet to allow using the pipeline for already existing assemblies (#83).
+- Update SANS to version v1.0.0 (#90).
+- Restructure the pipeline into three main modules: assembly, annotation and quality assessment (#91).
+- Update Helixer to v0.3.5 which simplifies the config YAML (#92).
 
 ## [0.2.6 - 2025-02-21]
 

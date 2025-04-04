@@ -128,7 +128,8 @@ def validate_targets(ctx, param, value):
         analyse, annotate, qa)
     """
 
-    valid_targets = ['all', 'assemble', 'scaffold', 'analyse', 'annotate', 'qa']
+    valid_targets = ['all', 'assemble', 'contig', 'annotate', 'annotate_genes',
+        'annotate_custom', 'qa']
 
     for target in value:
         if target not in valid_targets:
