@@ -92,7 +92,7 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         for column in required_oneof_columns:
             if column in header:
                 required_oneof_column_count += 1
-        if required_oneof_column_count != 1:
+        if required_oneof_column_count == 0:
             click.secho(f'[ERROR] One of the required columns {", ".join(required_oneof_columns)} not found in {samples}',
                 fg='red')
             return
