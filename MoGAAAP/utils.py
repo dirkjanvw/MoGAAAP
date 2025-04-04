@@ -73,9 +73,9 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
             fg='yellow')
 
     # Check if the samples contains all required columns
-    required_columns = ['accessionId', 'hifi', 'ont', 'illumina_1',
-        'illumina_2', 'hic_1', 'hic_2', 'haplotypes', 'speciesName', 'taxId',
-        'referenceId']
+    required_columns = ['accessionId', 'haplotypes', 'speciesName', 'taxId', 'referenceId']
+    required_oneof_columns = ['assemblyLocation', 'hifi']
+    optional_columns = ['annotationLocation', 'ont', 'illumina_1', 'illumina_2', 'hic_1', 'hic_2']
     accession_names = []
     accession_name_col = -1
     reference_names = []
@@ -88,8 +88,16 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
                 click.secho(f'[ERROR] Required column "{column}" not found in {samples}',
                     fg='red')
                 return
+        required_oneof_column_count = 0
+        for column in required_oneof_columns:
+            if column in header:
+                required_oneof_column_count += 1
+        if required_oneof_column_count != 1:
+            click.secho(f'[ERROR] One of the required columns {", ".join(required_oneof_columns)} not found in {samples}',
+                fg='red')
+            return
         for column in header:
-            if column not in required_columns:
+            if column not in required_columns and column not in required_oneof_columns and column not in optional_columns:
                 click.secho(f'[WARN ] Unknown column "{column}" found in {samples}',
                     fg='yellow')
             if column == 'referenceId':

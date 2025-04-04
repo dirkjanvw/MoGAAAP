@@ -111,7 +111,6 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
     mitochondrion = os.path.abspath(mitochondrion)
     if chloroplast:
         chloroplast = os.path.abspath(chloroplast)
-    helixer_model = os.path.abspath(helixer_model)
     gxdb = os.path.abspath(gxdb)
     omadb = os.path.abspath(omadb)
     kraken2db = os.path.abspath(kraken2db)
