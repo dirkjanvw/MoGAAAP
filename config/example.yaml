@@ -10,7 +10,7 @@
 samples: "config/example.tsv"
 
 # Assembly settings
-assembler: "hifiasm" #supported assemblers: hifiasm, verkko
+assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
 
 # Scaffolding settings
 scaffolder: "ntjoin" #supported scaffolders: ntjoin, ragtag

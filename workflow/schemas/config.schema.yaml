@@ -16,8 +16,8 @@ properties:
 
     assembler:
         type: string
-        description: assembler to use; supported assemblers are hifiasm, verkko
-        pattern: "^(hifiasm|verkko)$"
+        description: assembler to use; supported assemblers are hifiasm, verkko, flye
+        pattern: "^(hifiasm|verkko|flye)$"
         default: "hifiasm"
 
     scaffolder:
