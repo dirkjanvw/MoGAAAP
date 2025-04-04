@@ -250,3 +250,124 @@ rule verkko_rename_fasta:
         "results/benchmarks/1.assembly/verkko_{ext}_rename_fasta/{asmname}.txt"
     shell:
         "cp {input} {output} &> {log}"
+
+rule flye:
+    input:
+        hifi = get_hifi,
+        reference_genome = config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
+    output:
+        "results/{asmname}/1.assembly/01.flye_hifi_only/assembly.fasta",
+    log:
+        "results/logs/1.assembly/flye_hifi_only/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_hifi_only/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/flye.yaml"
+    shell:
+        """
+        (
+        GENOMESIZE=$(grep -vE '^>' {input.reference_genome} | tr -d '\n' | wc -c)
+        flye --genome-size $GENOMESIZE --threads {threads} --out-dir $(dirname {output}) --pacbio-hifi {input.hifi}
+        ) &> {log}
+        """
+
+rule flye_with_ont:
+    input:
+        hifi = get_hifi,
+        ont = get_ont,
+        reference_genome = config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
+    output:
+        "results/{asmname}/1.assembly/01.flye_hifi_and_ont/assembly.fasta",
+    log:
+        "results/logs/1.assembly/flye_hifi_and_ont/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_hifi_and_ont/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/flye.yaml"
+    shell:
+        """
+        (
+        GENOMESIZE=$(grep -vE '^>' {input.reference_genome} | tr -d '\n' | wc -c)
+        flye --genome-size $GENOMESIZE --threads {threads} --out-dir $(dirname {output}) --pacbio-hifi {input.hifi} --nano-raw {input.ont}
+        ) &> {log}
+        """
+
+rule flye_assembly_minimap2:
+    input:
+        hifi=get_hifi,
+        assembly="results/{asmname}/1.assembly/01.flye_{ext}/assembly.fasta",
+    output:
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hifi_vs_assembly.bam",
+    log:
+        "results/logs/1.assembly/flye_{ext}_assembly_minimap2/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_{ext}_assembly_minimap2/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1,1),50)
+    conda:
+        "../../envs/minimap2.yaml"
+    shell:
+        "(minimap2 -ax map-hifi -t {threads} {input.assembly} {input.hifi} | samtools sort -@ $(({threads}-1)) > {output}) 2> {log}"
+
+rule flye_assembly_minimap2_index:
+    input:
+        bam="results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hifi_vs_assembly.bam",
+    output:
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hifi_vs_assembly.bam.bai",
+    log:
+        "results/logs/1.assembly/flye_{ext}_assembly_minimap2_index/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_{ext}_assembly_minimap2_index/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1,1),50)
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools index -@ $(({threads}-1)) {input} &> {log}"
+
+rule flye_hapdup:
+    input:
+        bam="results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hifi_vs_assembly.bam",
+        bai="results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hifi_vs_assembly.bam.bai",
+        assembly="results/{asmname}/1.assembly/01.flye_{ext}/assembly.fasta",
+    output:
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hapdup_dual_1.fasta",
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hapdup_dual_2.fasta",
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/phased_blocks_hp1.bed",
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/phased_blocks_hp2.bed",
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hapdup_phased_1.fasta",
+        "results/{asmname}/1.assembly/01.flye_{ext}/assembly_hapdup/hapdup_phased_2.fasta",
+    log:
+        "results/logs/1.assembly/flye_{ext}_hapdup/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_{ext}_hapdup/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1,1),50)
+    container:
+        "docker://mkolmogo/hapdup:0.12"
+    shell:
+        "hapdup --threads {threads} --bam {input.bam} --rtype hifi --assembly {input.assembly} --out-dir $(dirname {output[0]}) &> {log}"
+
+def get_flye_output(wildcards):
+    if get_haplotypes(wildcards) == 1:
+        return "results/{asmname}/1.assembly/01.flye_{ext}/assembly.fasta"
+    else:
+        haplotype = int(wildcards.asmname[-1])
+        asmname = get_clean_accession_id(wildcards.asmname)
+        return f"results/{asmname}/1.assembly/01.flye_{{ext}}/assembly_hapdup/hapdup_dual_{haplotype}.fasta"  #using dual output here instead of phased, since we would like to keep contiguity (so phase switching may occur)
+
+rule flye_rename_fasta:
+    input:
+        get_flye_output,
+    output:
+        "results/{asmname}/1.assembly/01.flye_{ext}/{asmname}.fa",
+    log:
+        "results/logs/1.assembly/flye_{ext}_rename_fasta/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_{ext}_rename_fasta/{asmname}.txt"
+    shell:
+        "cp {input} {output} &> {log}"

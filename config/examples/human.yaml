@@ -10,7 +10,7 @@
 samples: "config/samples.tsv"
 
 # Assembly settings
-assembler: "hifiasm"  #supported assemblers: hifiasm, verkko
+assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
 
 # All filtering and scaffolding parameters
 min_contig_len: 10000
@@ -71,12 +71,12 @@ helixer_model: "vertebrate" #choose between land_plant, vertebrate, invertebrate
 helixer_max_gene_length: 64152
 
 # Quality assessment settings
-k_qa: 21  #optimal k-mer size for quality assessment
-gxdb: "/local/fcs/gxdb"  #path to gxdb for fcs-gx
-pantools_grouping: 3  #grouping relaxation setting for pantools
-odb: "primates_odb10"  #ODB database for busco
-kraken2_nt: "/path/to/kraken2/nt"  #kraken2 database
-OMAdb: "/path/to/oma_databases/LUCA.h5"  #OMA database for orthologs
+k_qa: 21 #optimal k-mer size for quality assessment
+gxdb: "/local/fcs/gxdb" #path to gxdb for fcs-gx
+pantools_grouping: 3 #grouping relaxation setting for pantools
+odb: "primates_odb10" #ODB database for busco
+kraken2_nt: "/path/to/kraken2/nt" #kraken2 database
+OMAdb: "/path/to/oma_databases/LUCA.h5" #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive and will only be used for QC.
@@ -87,7 +87,7 @@ set:
         - HG004
 
 # General settings; only change if you know what you are doing
-jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
-tmpdir: "/dev/shm/tmp_human"  #temporary directory for fast IO
-nucmer_maxgap: 1000  #maximum gap size for nucmer
-nucmer_minmatch: 1000  #minimum match size for nucmer
+jvm: "-Xmx100g -Xms100g" #java virtual machine settings
+tmpdir: "/dev/shm/tmp_human" #temporary directory for fast IO
+nucmer_maxgap: 1000 #maximum gap size for nucmer
+nucmer_minmatch: 1000 #minimum match size for nucmer
