@@ -87,8 +87,7 @@ def init(workdir):
     help='ODB name for BUSCO')
 @click.option('--helixer-model', '-e',
     required=True,
-    type=click.Path(exists=True),
-    help='Helixer model weights file')
+    help='Helixer model name (land_plant, vertebrate, invertebrate, fungi)')
 @click.option('--gxdb', '-x',
     required=True,
     type=click.Path(exists=True),
