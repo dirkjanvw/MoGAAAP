@@ -66,11 +66,17 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         click.secho('[ERROR] Did you run `MoGAAAP init`?', fg='red')
         return
 
-    # Check if the configfile already exists
+    # Check if the configfile already exists and move it if it does
     configfile = os.path.join(workdir, 'config', 'config.yaml')
     if os.path.exists(configfile):
-        click.secho('[WARN ] Configuration file already exists; overwriting existing file',
+        old_config_counter = 1
+        while os.path.exists(os.path.join(workdir, 'config', f'config_{old_config_counter}.yaml')):
+            old_config_counter += 1
+        old_config_location = os.path.join(workdir, 'config', f'config_{old_config_counter}.yaml')
+
+        click.secho(f'[WARN ] Configuration file already exists; moving it to {old_config_location}',
             fg='yellow')
+        os.rename(configfile, old_config_location)
 
     # Check if the samples contains all required columns
     required_columns = ['accessionId', 'haplotypes', 'speciesName', 'taxId', 'referenceId']
