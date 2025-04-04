@@ -5,6 +5,7 @@ All notable changes to MoGAAAP will be documented in this file.
 ### Added
 - Add wrapper script to initialise, configure and run MoGAAAP (#80).
 - Add option to use the pipeline for already existing assemblies (#83).
+- Add flye as an alternative assembler (#93).
 
 ### Changed
 - Update sample sheet to allow using the pipeline for already existing assemblies (#83).
