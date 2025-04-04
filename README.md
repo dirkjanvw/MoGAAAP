@@ -146,7 +146,10 @@ While the command can be a great help, it is recommended to always double-check 
 ### Available modules
 Several modules are available in this pipeline (will be referred to later as `${MODULE}`):
 - `assemble`: This module will assemble the reads into contigs and subsequently scaffold the contigs using `ntJoin` against a provided reference genome.
+  - `contig`: This is the first step of the `assemble` module and will only assemble the reads into contigs. Only use this if you want to inspect the contig assembly before scaffolding.
 - `annotate`: This module will generate a provisional annotation of the assembly using `liftoff` and `helixer`, and optionally analyse user-defined queries.
+  - `annotate_genes`: This only performs the gene annotation step of the `annotate` module without performing custom analysis.
+  - `annotate_custom`: This only performs the custom analysis step of the `annotate` module without performing gene annotation.
 - `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
 - `all`: This module will run all the above modules (DEFAULT).
 

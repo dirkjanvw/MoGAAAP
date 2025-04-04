@@ -75,14 +75,21 @@ def get_hic_plots(wildcards):
                 filelist.append(f"results/{asmname}/1.assembly/04.{config['scaffolder']}/contact_map.pdf")
     return filelist
 
-rule assemble:
+rule contig:
     input:
         expand("final_output/{asmname}.contigs.fa",
             asmname=[asmname for asmname in get_all_accessions() if not has_assembly_location(asmname)]
         ),
         get_mummerplot_contigs,
+    output:
+        touch("results/contig.done")
+
+rule assemble:
+    input:
+        "results/contig.done",
         expand("final_output/{asmname}.full.fa",
-                asmname = get_all_accessions()),
+            asmname=[asmname for asmname in get_all_accessions() if not has_assembly_location(asmname)]
+        ),
         get_mummerplot_scaffolds,
         get_hic_plots,
     output:

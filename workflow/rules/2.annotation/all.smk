@@ -69,17 +69,28 @@ def get_query_files(wildcards):
 
     return query_files
 
-
-rule annotate:
+rule annotate_genes:
     input:
         expand("final_output/{asmname}.full.gff", asmname=get_all_accessions()),
         expand("final_output/{asmname}.full.coding.gff", asmname=get_all_accessions()),
         expand("final_output/{asmname}.full.clean.gff", asmname=get_all_accessions()),
+    output:
+        touch("results/gene_annotation.done")
+
+rule annotate_custom:
+    input:
         get_query_files, ### optional BLAST results ###
         expand("results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.html", query_name = config["organellar"], asmname = get_all_accessions()), ### BLASTN results for organellar ###
         expand("results/{asmname}/2.annotation/12.circos/{asmname}.circos.html", asmname = get_all_accessions()), ### CIRCOS configuration ###
         expand("results/{asmname}/2.annotation/12.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
         expand("results/{asmname}/2.annotation/14.telo/{asmname}.telo.html", asmname = get_all_accessions()), ### TELOMERE LOCATIONS ###
         expand("final_output/{asmname}.{section}.fa", section = [x for x in config["organellar"]] + ["nuclear"], asmname = get_all_accessions()), ### SEPARATED GENOMES ###
+    output:
+        touch("results/custom_annotation.done")
+
+rule annotate:
+    input:
+        "results/gene_annotation.done",
+        "results/custom_annotation.done",
     output:
         touch("results/annotation.done")
