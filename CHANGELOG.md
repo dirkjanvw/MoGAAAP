@@ -22,11 +22,9 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Added
 - Add option to use the pipeline without custom built singularity containers (#79).
-- Add option to use the pipeline for already existing assemblies (#83).
 
 ### Changed
 - No longer require sudo rights for setup (#81).
-- Update sample sheet to allow using the pipeline for already existing assemblies (#83).
 - Added some more information to README about the pipeline (#82).
 
 ## [0.2.4 - 2025-01-20]
