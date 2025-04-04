@@ -254,7 +254,7 @@ rule verkko_rename_fasta:
 rule flye:
     input:
         hifi = get_hifi,
-        reference_genome = config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
+        reference_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
     output:
         "results/{asmname}/1.assembly/01.flye_hifi_only/assembly.fasta",
     log:
@@ -277,7 +277,7 @@ rule flye_with_ont:
     input:
         hifi = get_hifi,
         ont = get_ont,
-        reference_genome = config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
+        reference_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
     output:
         "results/{asmname}/1.assembly/01.flye_hifi_and_ont/assembly.fasta",
     log:

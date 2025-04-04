@@ -249,7 +249,7 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     snakemake_cmd.extend(['--cores', str(cores)])
     snakemake_cmd.extend(['--resources', f'gbmem={memory}'])
     if other:
-        snakemake_cmd.extend(other)
+        snakemake_cmd.extend(other.split(" "))
     if dryrun:
         snakemake_cmd.append('--dryrun')
 
