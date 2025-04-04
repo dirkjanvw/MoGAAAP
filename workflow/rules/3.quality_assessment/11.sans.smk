@@ -2,11 +2,11 @@ rule sans_prepare_genome:
     input:
         genomes = lambda wildcards: expand("final_output/{asmname}.full.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
-        "results/{asmset}/5.quality_assessment/11.sans.list",
+        "results/{asmset}/3.quality_assessment/11.sans.list",
     log:
-        "results/logs/5.quality_assessment/sans_prepare_genome/{asmset}.log"
+        "results/logs/3.quality_assessment/sans_prepare_genome/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/sans_prepare_genome/{asmset}.txt"
+        "results/benchmarks/3.quality_assessment/sans_prepare_genome/{asmset}.txt"
     shell:
         """
         (
@@ -20,18 +20,18 @@ rule sans_prepare_genome:
 
 rule sans:
     input:
-        "results/{asmset}/5.quality_assessment/11.sans.list",
+        "results/{asmset}/3.quality_assessment/11.sans.list",
     output:
-        splits = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
-        bootstrap = "results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
-        nexus = report("results/{asmset}/5.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
+        splits = "results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
+        bootstrap = "results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
+        nexus = report("results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
             category="Phylogeny",
             caption="../../report/sans.rst",
             labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
-        "results/logs/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.log"
+        "results/logs/3.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.txt"
+        "results/benchmarks/3.quality_assessment/sans/{k}/{asmset}_b{bootstrap}.txt"
     threads:
         min(workflow.cores - 10, 10)
     container:

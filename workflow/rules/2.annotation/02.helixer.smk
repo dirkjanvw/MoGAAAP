@@ -2,7 +2,7 @@ rule helixer_download_model:
     output:
         temporary(directory("helixer_models")),
     log:
-        "results/logs/4.annotation/helixer_download_model.log"
+        "results/logs/2.annotation/helixer_download_model.log"
     params:
         helixer_model = config["helixer_model"],
     container:

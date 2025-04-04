@@ -10,11 +10,11 @@ rule meryl:
     input:
         get_wgs_input
     output:
-        temporary(directory("results/{asmname}/5.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl")),  #relatively fast to compute and takes up a lot of space
+        temporary(directory("results/{asmname}/3.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl")),  #relatively fast to compute and takes up a lot of space
     log:
-        "results/logs/5.quality_assessment/meryl/{k}/{asmname}/{wgstype}.log"
+        "results/logs/3.quality_assessment/meryl/{k}/{asmname}/{wgstype}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/meryl/{k}/{asmname}/{wgstype}.txt"
+        "results/benchmarks/3.quality_assessment/meryl/{k}/{asmname}/{wgstype}.txt"
     threads:
         10
     conda:
@@ -24,35 +24,35 @@ rule meryl:
 
 rule merqury:
     input:
-        meryl = "results/{asmname}/5.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl",
+        meryl = "results/{asmname}/3.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl",
         genome = "final_output/{asmname}.full.fa",
     output:
-        temporary(directory("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full.meryl")), #relatively fast to compute and takes up a lot of space
-        bed = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.bed",
-        wig = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.wig",
-        stats = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.completeness.stats",
-        distonlyhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.dist_only.hist",
-        allqv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.qv",
-        qv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv",
-        cnflplot = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.fl.png",
+        temporary(directory("results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full.meryl")), #relatively fast to compute and takes up a lot of space
+        bed = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.bed",
+        wig = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}.full_only.wig",
+        stats = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.completeness.stats",
+        distonlyhist = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.dist_only.hist",
+        allqv = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.qv",
+        qv = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv",
+        cnflplot = report("results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.fl.png",
             category="Quality assessment",
             subcategory="K-mer completeness",
             caption="../../report/merqury_plot.rst",
             labels={"type": "spectra-cn", "scope": "all sequences", "assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
-        cnhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.hist",
-        cnlnplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.ln.png",
-        cnstplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.st.png",
-        asmplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.fl.png",
-        asmhist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.hist",
-        asmlnplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.ln.png",
-        asmstplot = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.st.png",
-        filt = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.filt",
-        hist = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.hist",
-        ploidy = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.hist.ploidy",
+        cnhist = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.hist",
+        cnlnplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.ln.png",
+        cnstplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.st.png",
+        asmplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.fl.png",
+        asmhist = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.hist",
+        asmlnplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.ln.png",
+        asmstplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.spectra-asm.st.png",
+        filt = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.filt",
+        hist = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.hist",
+        ploidy = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{wgstype}.hist.ploidy",
     log:
-        "results/logs/5.quality_assessment/merqury/{k}/{asmname}/{wgstype}.log"
+        "results/logs/3.quality_assessment/merqury/{k}/{asmname}/{wgstype}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/merqury/{k}/{asmname}/{wgstype}.txt"
+        "results/benchmarks/3.quality_assessment/merqury/{k}/{asmname}/{wgstype}.txt"
     conda:
         "../../envs/merqury.yaml"
     shell:
@@ -67,19 +67,19 @@ rule merqury:
 
 rule visualise_qv:
     input:
-        "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv"
+        "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv"
     output:
-        tsv = "results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.tsv",
-        html = report("results/{asmname}/5.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.html",
+        tsv = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.tsv",
+        html = report("results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.html",
             category="Quality assessment",
             subcategory="K-mer completeness",
             caption="../../report/merqury_qv.rst",
             labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
                     "wgs": "{wgstype}", "k": "{k}"}),
     log:
-        "results/logs/5.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.log"
+        "results/logs/3.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.txt"
+        "results/benchmarks/3.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.txt"
     conda:
         "../../envs/csvtotable.yaml"
     shell:

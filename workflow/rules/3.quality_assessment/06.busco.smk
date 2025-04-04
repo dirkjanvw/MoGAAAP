@@ -2,9 +2,9 @@ rule busco_download:
     output:
         temporary(directory("busco_downloads")), #unfortunately cannot be changed as the `--download_path` parameter from busco doesn't work
     log:
-        "results/logs/5.quality_assessment/busco_download.log"
+        "results/logs/3.quality_assessment/busco_download.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/busco_download.txt"
+        "results/benchmarks/3.quality_assessment/busco_download.txt"
     params:
         odb = config["odb"]
     conda:
@@ -14,14 +14,14 @@ rule busco_download:
 
 rule busco_proteome:
     input:
-        proteome = "results/{asmname}/5.quality_assessment/proteome.pep.fa",
+        proteome = "results/{asmname}/3.quality_assessment/proteome.pep.fa",
         download = ancient(rules.busco_download.output),
     output:
-        "results/{asmname}/5.quality_assessment/06.busco_proteome/{asmbase}_proteome/short_summary.specific.{odb}.{asmbase}_proteome.txt",
+        "results/{asmname}/3.quality_assessment/06.busco_proteome/{asmbase}_proteome/short_summary.specific.{odb}.{asmbase}_proteome.txt",
     log:
-        "results/logs/5.quality_assessment/busco_proteome/{odb}/{asmname}/{asmbase}.log"
+        "results/logs/3.quality_assessment/busco_proteome/{odb}/{asmname}/{asmbase}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/busco_proteome/{odb}/{asmname}/{asmbase}.txt"
+        "results/benchmarks/3.quality_assessment/busco_proteome/{odb}/{asmname}/{asmbase}.txt"
     threads:
         10
     conda:
@@ -34,11 +34,11 @@ rule busco_genome:
         genome = "final_output/{asmname}.full.fa",
         download = ancient(rules.busco_download.output),
     output:
-        "results/{asmname}/5.quality_assessment/06.busco_genome/{asmbase}_genome/short_summary.specific.{odb}.{asmbase}_genome.txt",
+        "results/{asmname}/3.quality_assessment/06.busco_genome/{asmbase}_genome/short_summary.specific.{odb}.{asmbase}_genome.txt",
     log:
-        "results/logs/5.quality_assessment/busco_genome/{odb}/{asmname}/{asmbase}.log"
+        "results/logs/3.quality_assessment/busco_genome/{odb}/{asmname}/{asmbase}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/busco_genome/{odb}/{asmname}/{asmbase}.txt"
+        "results/benchmarks/3.quality_assessment/busco_genome/{odb}/{asmname}/{asmbase}.txt"
     threads:
         10
     conda:
@@ -53,26 +53,26 @@ def get_busco_plot_input(wildcards):
         if get_haplotype_information(asmname) > 1:
             asmbase = get_clean_accession_id(asmname)
             haplotype = get_haplotype_accession_id(asmname)
-            all_output.append(f"results/{asmbase}.{haplotype}/5.quality_assessment/06.busco_genome/{asmbase}_{haplotype}_genome/short_summary.specific.{odb}.{asmbase}_{haplotype}_genome.txt")
-            all_output.append(f"results/{asmbase}.{haplotype}/5.quality_assessment/06.busco_proteome/{asmbase}_{haplotype}_proteome/short_summary.specific.{odb}.{asmbase}_{haplotype}_proteome.txt")
+            all_output.append(f"results/{asmbase}.{haplotype}/3.quality_assessment/06.busco_genome/{asmbase}_{haplotype}_genome/short_summary.specific.{odb}.{asmbase}_{haplotype}_genome.txt")
+            all_output.append(f"results/{asmbase}.{haplotype}/3.quality_assessment/06.busco_proteome/{asmbase}_{haplotype}_proteome/short_summary.specific.{odb}.{asmbase}_{haplotype}_proteome.txt")
         else:
-            all_output.append(f"results/{asmname}/5.quality_assessment/06.busco_genome/{asmname}_genome/short_summary.specific.{odb}.{asmname}_genome.txt")
-            all_output.append(f"results/{asmname}/5.quality_assessment/06.busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt")
+            all_output.append(f"results/{asmname}/3.quality_assessment/06.busco_genome/{asmname}_genome/short_summary.specific.{odb}.{asmname}_genome.txt")
+            all_output.append(f"results/{asmname}/3.quality_assessment/06.busco_proteome/{asmname}_proteome/short_summary.specific.{odb}.{asmname}_proteome.txt")
     return all_output
 
 rule busco_plot:
     input:
         get_busco_plot_input,
     output:
-        report("results/{asmset}/5.quality_assessment/06.busco_plot/busco_figure.png",
+        report("results/{asmset}/3.quality_assessment/06.busco_plot/busco_figure.png",
             category="Quality assessment",
             subcategory="Gene completeness",
             caption="../../report/busco.rst",
             labels={"type": "busco", "set": "{asmset}"}),
     log:
-        "results/logs/5.quality_assessment/busco_plot/{asmset}.log"
+        "results/logs/3.quality_assessment/busco_plot/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/busco_plot/{asmset}.txt"
+        "results/benchmarks/3.quality_assessment/busco_plot/{asmset}.txt"
     conda:
         "../../envs/busco.yaml"
     shell:

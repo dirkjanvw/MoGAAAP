@@ -2,12 +2,12 @@ rule mash_distance:
     input:
         lambda wildcards: expand("final_output/{asmname}.full.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
-        tsv = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.tsv",
-        csv = "results/{asmset}/5.quality_assessment/09.mash/{asmset}.csv",
+        tsv = "results/{asmset}/3.quality_assessment/09.mash/{asmset}.tsv",
+        csv = "results/{asmset}/3.quality_assessment/09.mash/{asmset}.csv",
     log:
-        "results/logs/5.quality_assessment/mash_distance/{asmset}.log"
+        "results/logs/3.quality_assessment/mash_distance/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/mash_distance/{asmset}.txt"
+        "results/benchmarks/3.quality_assessment/mash_distance/{asmset}.txt"
     threads:
         min(workflow.cores, 50)
     conda:
@@ -23,17 +23,17 @@ rule mash_distance:
 
 rule mash_heatmap:
     input:
-        "results/{asmset}/5.quality_assessment/09.mash/{asmset}.csv",
+        "results/{asmset}/3.quality_assessment/09.mash/{asmset}.csv",
     output:
-        report("results/{asmset}/5.quality_assessment/09.mash/{asmset}.pdf",
+        report("results/{asmset}/3.quality_assessment/09.mash/{asmset}.pdf",
             category="Quality assessment",
             subcategory="Phylogeny",
             caption="../../report/mash.rst",
             labels={"type": "mash", "set": "{asmset}", "distance": "mash"}),
     log:
-        "results/logs/5.quality_assessment/mash_heatmap/{asmset}.log"
+        "results/logs/3.quality_assessment/mash_heatmap/{asmset}.log"
     benchmark:
-        "results/benchmarks/5.quality_assessment/mash_heatmap/{asmset}.txt"
+        "results/benchmarks/3.quality_assessment/mash_heatmap/{asmset}.txt"
     conda:
         "../../envs/rbase.yaml"
     shell:
