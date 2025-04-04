@@ -88,8 +88,8 @@ properties:
 
     helixer_model:
         type: string
-        description: path to the Helixer model
-        pattern: "^.+\\.h5$"
+        description: path to the Helixer model (choose between land_plant, vertebrate, invertebrate, fungi)
+        pattern: "^(land_plant|vertebrate|invertebrate|fungi)$"
     helixer_max_gene_length:
         type: integer
         description: maximum gene length for Helixer
