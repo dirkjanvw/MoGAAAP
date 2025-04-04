@@ -14,7 +14,7 @@ rule fcs_gx:
     resources:
         gbmem = 500
     container:
-        "docker://ncbi/fcs-gx:0.5.4"
+        "docker://ncbi/fcs-gx:0.5.5"
     retries:
         3
     shell:
