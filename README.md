@@ -52,9 +52,11 @@ conda create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poe
 > For apptainer to work as expected, some environment variables can be set.
 > This one is required to be set in your `.bashrc` (don't forget to source the file after changing):
 > - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+>
 > Optionally, you can also set these:
 > - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
 > - `APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
+>
 > More information can be found [here](https://apptainer.org/docs/user/main/appendix.html).
 
 Then make sure to activate the environment before running the pipeline:
