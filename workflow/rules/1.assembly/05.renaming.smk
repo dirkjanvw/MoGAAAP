@@ -57,7 +57,8 @@ rule visualise_scaffold_renaming:
         ),
     output:
         report("results/{asmname}/1.assembly/05.renaming/{asmname}.{scaffolder}.html",
-            category="Hi-C",
+            category="Assembly",
+            subcategory="Hi-C",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
                     "algorithm": "{scaffolder} (conversion table)"}

@@ -47,6 +47,7 @@ rule visualise_blast_n:
     output:
         report("results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.html",
             category="Custom annotation",
+            subcategory="Nucleotide queries",
             caption="../../report/blast.rst",
             labels={"asmname": "{asmname}", "query_name": "{query_name}"}),
     log:

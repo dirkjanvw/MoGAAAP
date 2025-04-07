@@ -40,7 +40,7 @@ rule dotplot_contigs:
         fplot = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.fplot",
         filterfile = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.filter",
         png = report("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.png",
-            category="assembly",
+            category="Assembly",
             subcategory="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",
@@ -68,7 +68,7 @@ rule dotplot_large_contigs:
     output:
         gp = "results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.gp",
         png = report("results/{asmname}/1.assembly/03.mummer/{asmname}.min{minlen}.vs.{reference}.plot.large.png",
-            category="assembly",
+            category="Assembly",
             subcategory="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",

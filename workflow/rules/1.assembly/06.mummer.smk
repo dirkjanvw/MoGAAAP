@@ -40,7 +40,7 @@ rule dotplot:
         fplot = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.fplot",
         filterfile = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.filter",
         png = report("results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.png",
-            category="assembly",
+            category="Assembly",
             subcategory="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",
@@ -68,7 +68,7 @@ rule dotplot_large:
     output:
         gp = "results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.large.gp",
         png = report("results/{asmname}/1.assembly/06.mummer/{asmname}.vs.{reference}.plot.large.png",
-            category="assembly",
+            category="Assembly",
             subcategory="MUMmerplot",
             caption="../../report/mummerplot.rst",
             labels={"assembly": "{asmname}",

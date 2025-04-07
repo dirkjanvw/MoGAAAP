@@ -108,7 +108,8 @@ rule visualise_circos_configuration:
         "results/{asmname}/2.annotation/12.circos/{asmname}.circos.tsv"
     output:
         report("results/{asmname}/2.annotation/12.circos/{asmname}.circos.html",
-            category="Circos",
+            category="Custom annotation",
+            subcategory="Circos",
             caption="../../report/circos_overview.rst",
             labels={"file": "overview", "assembly": "{asmname}"}),
     log:
@@ -126,6 +127,7 @@ rule circos:
     output:
         png = report("results/{asmname}/2.annotation/12.circos/{asmname}.circos.png",
             category="Custom annotation",
+            subcategory="Circos",
             caption="../../report/circos_plot.rst",
             labels={"file": "plot", "assembly": "{asmname}"}),
         svg = "results/{asmname}/2.annotation/12.circos/{asmname}.circos.svg",

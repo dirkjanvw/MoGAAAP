@@ -25,6 +25,7 @@ rule visualise_telomere_locations:
     output:
         report("results/{asmname}/2.annotation/14.telo/{asmname}.telo.html",
             category="Custom annotation",
+            subcategory="Telomere",
             caption="../../report/telo.rst",
             labels={"asmname": "{asmname}", "query_name": "telomere"}),
     log:
