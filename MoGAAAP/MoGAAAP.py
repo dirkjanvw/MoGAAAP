@@ -43,6 +43,7 @@ def cli():
 @click.option('--workdir', '-d',
     default='.',
     show_default=True,
+    type=click.Path(exists=False),
     help='Working directory for MoGAAAP')
 def init(workdir):
     """Initialise a new MoGAAAP pipeline"""

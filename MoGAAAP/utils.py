@@ -32,14 +32,14 @@ def init_mogaaap(workdir):
     if not os.path.exists(os.path.join(workdir, 'workflow')):
         shutil.copytree(WORKFLOW_DIR, os.path.join(workdir, 'workflow'))
     else:
-        click.secho('[ERROR] Workflow directory already exists', fg='red')
+        click.secho('[ERROR] Workflow directory already exists; exiting', fg='red')
         return
 
     # Copy the config directory to the working directory if it doesn't exist yet
     if not os.path.exists(os.path.join(workdir, 'config')):
         shutil.copytree(CONFIG_DIR, os.path.join(workdir, 'config'))
     else:
-        click.secho('[WARN ] Config directory already exists; ignoring the config directory', fg='yellow')
+        click.secho('[ERROR] Config directory already exists; exiting', fg='red')
 
     # Print further instructions
     click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}',
