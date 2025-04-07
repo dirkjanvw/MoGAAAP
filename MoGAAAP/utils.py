@@ -56,16 +56,12 @@ def init_mogaaap(workdir):
         click.secho('[ERROR] Config directory already exists; exiting', fg='red')
 
     # Print further instructions
-    click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}',
-        fg='blue')
-    click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/',
-        fg='blue')
-    click.secho('        before running the pipeline by hand or using `MoGAAAP configure`',
-        fg='blue')
-    click.secho(f'[INFO ] See {workdir}/config/example.yaml',
-                fg='blue')
-    click.secho('        for an example configuration',
-            fg='blue')
+    click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}', fg='blue')
+    click.secho(f'[INFO ] Configure a config.yaml in {workdir}/config/', fg='blue')
+    click.secho('        before running the pipeline by hand or using `MoGAAAP configure`', fg='blue')
+    click.secho(f'[INFO ] See {workdir}/config/example.yaml', fg='blue')
+    click.secho('        for an example configuration', fg='blue')
+    click.secho(f'[INFO ] Optionally, download the databases using `MoGAAAP download_databases`', fg='blue')
 
     return
 
@@ -115,7 +111,7 @@ def download_databases(workdir, databases):
             if not run_command(oma_download_cmd):
                 return
 
-            click.secho(f'[INFO ] OMA database downloaded to {oma_dir}', fg='blue')
+            click.secho(f'[INFO ] OMA database downloaded to {oma_dir}/LUCA.h5', fg='blue')
 
     # Download GXDB if needed
     if "all" in databases or "gxdb" in databases:
@@ -280,16 +276,11 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
     dump(configuration, open(configfile, 'w'))
 
     # Print further instructions
-    click.secho(f'[INFO ] Configured the MoGAAAP pipeline at {workdir}',
-        fg='blue')
-    click.secho(f'[INFO ] Please carefully compare the {configfile}',
-        fg='blue')
-    click.secho(f'        file with the example in {os.path.join(workdir, "config", "example.yaml")}',
-        fg='blue')
-    click.secho('        for more information on the configuration options',
-        fg='blue')
-    click.secho('[INFO ] After finishing the configuration, run the pipeline using `MoGAAAP run`',
-        fg='blue')
+    click.secho(f'[INFO ] Configured the MoGAAAP pipeline at {workdir}', fg='blue')
+    click.secho(f'[INFO ] Please carefully compare the {configfile}', fg='blue')
+    click.secho(f'        file with the example in {os.path.join(workdir, "config", "example.yaml")}', fg='blue')
+    click.secho('        for more information on the configuration options', fg='blue')
+    click.secho('[INFO ] After finishing the configuration, run the pipeline using `MoGAAAP run`', fg='blue')
 
 
 def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
@@ -356,5 +347,4 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     # Print further instructions
     click.secho('[INFO ] Finished running the MoGAAAP pipeline', fg='blue')
     click.secho(f'[INFO ] Report available at {reportfile}', fg='blue')
-    click.secho(f'[INFO ] Final output available at {os.path.join(workdir, "final_output")}',
-        fg='blue')
+    click.secho(f'[INFO ] Final output available at {os.path.join(workdir, "final_output")}', fg='blue')
