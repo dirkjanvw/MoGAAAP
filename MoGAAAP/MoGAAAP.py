@@ -74,7 +74,7 @@ def validate_databases(ctx, param, value):
 @cli.command('download_databases',
     short_help='Download the necessary databases for MoGAAAP')
 @click.option('--workdir', '-d',
-    default='.',
+    default='databases',
     show_default=True,
     help='Target directory for the databases')
 @click.argument('databases',
