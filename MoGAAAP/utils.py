@@ -12,6 +12,20 @@ WORKFLOW_DIR = os.path.join(BASE_DIR, 'workflow')
 CONFIG_DIR = os.path.join(BASE_DIR, 'config')
 
 
+def run_command(cmd, output_file=None):
+    click.secho(f'[INFO ] Running the following command: {cmd}', fg='blue')
+    try:
+        if output_file:
+            with open(output_file, 'w') as outfile:
+                subprocess.run(cmd, check=True, stdout=outfile)
+        else:
+            subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        click.secho(f'[ERROR] Command failed with exit code {e.returncode}', fg='red')
+        return False
+    return True
+
+
 def show_ascii_art():
     click.secho("""
         ___  ___      _____   ___    ___    ___  ______
@@ -42,16 +56,89 @@ def init_mogaaap(workdir):
         click.secho('[ERROR] Config directory already exists; exiting', fg='red')
 
     # Print further instructions
-    click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}',
-        fg='blue')
-    click.secho(f'[INFO ] Please configure a config.yaml in {workdir}/config/',
-        fg='blue')
-    click.secho('        before running the pipeline by hand or using `MoGAAAP configure`',
-        fg='blue')
-    click.secho(f'[INFO ] See {workdir}/config/example.yaml',
-                fg='blue')
-    click.secho('        for an example configuration',
-            fg='blue')
+    click.secho(f'[INFO ] Initialised a new MoGAAAP pipeline at {workdir}', fg='blue')
+    click.secho(f'[INFO ] Configure a config.yaml in {workdir}/config/', fg='blue')
+    click.secho('        before running the pipeline by hand or using `MoGAAAP configure`', fg='blue')
+    click.secho(f'[INFO ] See {workdir}/config/example.yaml', fg='blue')
+    click.secho('        for an example configuration', fg='blue')
+    click.secho(f'[INFO ] Optionally, download the databases using `MoGAAAP download_databases`', fg='blue')
+
+    return
+
+
+def download_databases(workdir, databases):
+    click.secho(f'[INFO ] Downloading databases for MoGAAAP: {databases}', fg='blue')
+    databases = [database.lower() for database in databases]
+
+    # Check if the working directory exists
+    if not os.path.exists(workdir):
+        os.makedirs(workdir)
+
+    # Download kraken2 if needed
+    if "all" in databases or "kraken2" in databases:
+        kraken2_dir = os.path.join(workdir, "core_nt")
+
+        if os.path.exists(kraken2_dir):
+            click.secho('[WARN ] kraken2 database already exists; skipping download', fg='yellow')
+        else:
+            click.secho(f'[INFO ] Downloading kraken2 database to {kraken2_dir}', fg='blue')
+            os.makedirs(kraken2_dir)
+
+            kraken2_download_cmd = ['wget', 'https://genome-idx.s3.amazonaws.com/kraken/k2_core_nt_20241228.tar.gz',
+                '-O', os.path.join(kraken2_dir, 'k2_core_nt_20241228.tar.gz')]
+            if not run_command(kraken2_download_cmd):
+                return
+
+            kraken2_untar_cmd = ['tar', 'xzf', os.path.join(kraken2_dir, 'k2_core_nt_20241228.tar.gz'),
+                '-C', kraken2_dir]
+            if not run_command(kraken2_untar_cmd):
+                return
+
+            click.secho(f'[INFO ] kraken2 database downloaded to {kraken2_dir}', fg='blue')
+
+    # Download OMA if needed
+    if "all" in databases or "oma" in databases:
+        oma_dir = os.path.join(workdir, "oma")
+
+        if os.path.exists(oma_dir):
+            click.secho('[WARN ] OMA database already exists; skipping download', fg='yellow')
+        else:
+            click.secho(f'[INFO ] Downloading OMA database to {oma_dir}', fg='blue')
+            os.makedirs(oma_dir)
+
+            oma_download_cmd = ['wget', 'https://omabrowser.org/All/LUCA.h5',
+                '-O', os.path.join(oma_dir, 'LUCA.h5')]
+            if not run_command(oma_download_cmd):
+                return
+
+            click.secho(f'[INFO ] OMA database downloaded to {oma_dir}/LUCA.h5', fg='blue')
+
+    # Download GXDB if needed
+    if "all" in databases or "gxdb" in databases:
+        gxdb_dir = os.path.join(workdir, "gxdb")
+
+        if os.path.exists(gxdb_dir):
+            click.secho('[WARN ] GXDB database already exists; skipping download', fg='yellow')
+        else:
+            click.secho(f'[INFO ] Downloading GXDB database to {gxdb_dir}', fg='blue')
+            os.makedirs(gxdb_dir)
+
+            gxdb_helper_cmd = ['wget', 'https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz',
+                '-O', os.path.join(gxdb_dir, 's5cmd_2.0.0_Linux-64bit.tar.gz')]
+            if not run_command(gxdb_helper_cmd):
+                return
+
+            gxdb_untar_cmd = ['tar', 'xzf', os.path.join(gxdb_dir, 's5cmd_2.0.0_Linux-64bit.tar.gz'),
+                '-C', gxdb_dir]
+            if not run_command(gxdb_untar_cmd):
+                return
+
+            gxdb_download_cmd = [os.path.join(gxdb_dir, 's5cmd'), '--no-sign-request', 'cp', '--part-size', '50',
+                '--concurrency', '50', 's3://ncbi-fcs-gx/gxdb/latest/all.*', gxdb_dir]
+            if not run_command(gxdb_download_cmd):
+                return
+
+            click.secho(f'[INFO ] GXDB database downloaded to {gxdb_dir}', fg='blue')
 
     return
 
@@ -189,30 +276,11 @@ def configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
     dump(configuration, open(configfile, 'w'))
 
     # Print further instructions
-    click.secho(f'[INFO ] Configured the MoGAAAP pipeline at {workdir}',
-        fg='blue')
-    click.secho(f'[INFO ] Please carefully compare the {configfile}',
-        fg='blue')
-    click.secho(f'        file with the example in {os.path.join(workdir, "config", "example.yaml")}',
-        fg='blue')
-    click.secho('        for more information on the configuration options',
-        fg='blue')
-    click.secho('[INFO ] After finishing the configuration, run the pipeline using `MoGAAAP run`',
-        fg='blue')
-
-
-def run_command(cmd, output_file=None):
-    click.secho(f'[INFO ] Running the following command: {cmd}', fg='blue')
-    try:
-        if output_file:
-            with open(output_file, 'w') as outfile:
-                subprocess.run(cmd, check=True, stdout=outfile)
-        else:
-            subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError as e:
-        click.secho(f'[ERROR] Command failed with exit code {e.returncode}', fg='red')
-        return False
-    return True
+    click.secho(f'[INFO ] Configured the MoGAAAP pipeline at {workdir}', fg='blue')
+    click.secho(f'[INFO ] Please carefully compare the {configfile}', fg='blue')
+    click.secho(f'        file with the example in {os.path.join(workdir, "config", "example.yaml")}', fg='blue')
+    click.secho('        for more information on the configuration options', fg='blue')
+    click.secho('[INFO ] After finishing the configuration, run the pipeline using `MoGAAAP run`', fg='blue')
 
 
 def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
@@ -279,5 +347,4 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     # Print further instructions
     click.secho('[INFO ] Finished running the MoGAAAP pipeline', fg='blue')
     click.secho(f'[INFO ] Report available at {reportfile}', fg='blue')
-    click.secho(f'[INFO ] Final output available at {os.path.join(workdir, "final_output")}',
-        fg='blue')
+    click.secho(f'[INFO ] Final output available at {os.path.join(workdir, "final_output")}', fg='blue')

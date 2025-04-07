@@ -6,13 +6,14 @@
 #
 # Subcommands:
 # - init: Initialise a new MoGAAAP pipeline
+# - download_databases: Download the necessary databases for the pipeline if needed
 # - configure: Configure the MoGAAAP pipeline
 # - run: Run the MoGAAAP pipeline and create a report
 
 import click
 from importlib.metadata import version
 import multiprocessing, psutil, os
-from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap
+from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap, download_databases as utils_download_databases
 
 
 class OrderedGroup(click.Group):
@@ -51,6 +52,43 @@ def init(workdir):
     workdir = os.path.abspath(workdir)
 
     init_mogaaap(workdir)
+
+
+def validate_databases(ctx, param, value):
+    """
+    Validate that the databases are valid (i.e. one of: all, kraken2, OMA, GXDB)
+    """
+
+    valid_databases = ['all', 'kraken2', 'oma', 'gxdb']
+
+    if not value:
+        value = ['all']
+
+    for database in value:
+        if database.lower() not in valid_databases:
+            raise click.BadParameter(f'Invalid database: {database}')
+
+    return value
+
+
+@cli.command('download_databases',
+    short_help='Download the necessary databases for MoGAAAP')
+@click.option('--workdir', '-d',
+    default='databases',
+    show_default=True,
+    help='Target directory for the databases')
+@click.argument('databases',
+    nargs=-1,
+    required=False,
+    callback=validate_databases)
+def download_databases(workdir, databases):
+    """Download databases for MoGAAAP
+    Possible DATABASES are: all, kraken2, OMA, GXDB (default: all).
+    """
+
+    workdir = os.path.abspath(workdir)
+
+    utils_download_databases(workdir, databases)
 
 
 @cli.command('configure',
