@@ -13,7 +13,7 @@
 import click
 from importlib.metadata import version
 import multiprocessing, psutil, os
-from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap
+from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap, download_databases as utils_download_databases
 
 
 class OrderedGroup(click.Group):
@@ -88,7 +88,7 @@ def download_databases(workdir, databases):
 
     workdir = os.path.abspath(workdir)
 
-    download_databases(workdir, databases)
+    utils_download_databases(workdir, databases)
 
 
 @cli.command('configure',
