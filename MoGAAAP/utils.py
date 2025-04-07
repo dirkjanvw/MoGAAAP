@@ -88,13 +88,15 @@ def download_databases(workdir, databases):
             click.secho(f'[INFO ] Downloading kraken2 database to {kraken2_dir}', fg='blue')
             os.makedirs(kraken2_dir)
 
-            kraken2_download_cmd = ['wget', '"https://genome-idx.s3.amazonaws.com/kraken/k2_core_nt_20241228.tar.gz"',
+            kraken2_download_cmd = ['wget', 'https://genome-idx.s3.amazonaws.com/kraken/k2_core_nt_20241228.tar.gz',
                 '-O', os.path.join(kraken2_dir, 'k2_core_nt_20241228.tar.gz')]
-            run_command(kraken2_download_cmd)
+            if not run_command(kraken2_download_cmd):
+                return
 
             kraken2_untar_cmd = ['tar', 'xzf', os.path.join(kraken2_dir, 'k2_core_nt_20241228.tar.gz'),
                 '-C', kraken2_dir]
-            run_command(kraken2_untar_cmd)
+            if not run_command(kraken2_untar_cmd):
+                return
 
             click.secho(f'[INFO ] kraken2 database downloaded to {kraken2_dir}', fg='blue')
 
@@ -108,9 +110,10 @@ def download_databases(workdir, databases):
             click.secho(f'[INFO ] Downloading OMA database to {oma_dir}', fg='blue')
             os.makedirs(oma_dir)
 
-            oma_download_cmd = ['wget', '"https://omabrowser.org/All/LUCA.h5"',
+            oma_download_cmd = ['wget', 'https://omabrowser.org/All/LUCA.h5',
                 '-O', os.path.join(oma_dir, 'LUCA.h5')]
-            run_command(oma_download_cmd)
+            if not run_command(oma_download_cmd):
+                return
 
             click.secho(f'[INFO ] OMA database downloaded to {oma_dir}', fg='blue')
 
@@ -124,17 +127,20 @@ def download_databases(workdir, databases):
             click.secho(f'[INFO ] Downloading GXDB database to {gxdb_dir}', fg='blue')
             os.makedirs(gxdb_dir)
 
-            gxdb_helper_cmd = ['wget', '"https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz"',
+            gxdb_helper_cmd = ['wget', 'https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz',
                 '-O', os.path.join(gxdb_dir, 's5cmd_2.0.0_Linux-64bit.tar.gz')]
-            run_command(gxdb_helper_cmd)
+            if not run_command(gxdb_helper_cmd):
+                return
 
             gxdb_untar_cmd = ['tar', 'xzf', os.path.join(gxdb_dir, 's5cmd_2.0.0_Linux-64bit.tar.gz'),
                 '-C', gxdb_dir]
-            run_command(gxdb_untar_cmd)
+            if not run_command(gxdb_untar_cmd):
+                return
 
             gxdb_download_cmd = [os.path.join(gxdb_dir, 's5cmd'), '--no-sign-request', 'cp', '--part-size', '50',
                 '--concurrency', '50', 's3://ncbi-fcs-gx/gxdb/latest/all.*', gxdb_dir]
-            run_command(gxdb_download_cmd)
+            if not run_command(gxdb_download_cmd):
+                return
 
             click.secho(f'[INFO ] GXDB database downloaded to {gxdb_dir}', fg='blue')
 
