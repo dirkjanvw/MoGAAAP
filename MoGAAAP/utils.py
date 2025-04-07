@@ -72,14 +72,14 @@ def init_mogaaap(workdir):
 
 def download_databases(workdir, databases):
     click.secho(f'[INFO ] Downloading databases for MoGAAAP: {databases}', fg='blue')
-    databases = databases.lower()
+    databases = [database.lower() for database in databases]
 
     # Check if the working directory exists
     if not os.path.exists(workdir):
         os.makedirs(workdir)
 
     # Download kraken2 if needed
-    if databases == "all" or databases == "kraken2":
+    if "all" in databases or "kraken2" in databases:
         kraken2_dir = os.path.join(workdir, "core_nt")
 
         if os.path.exists(kraken2_dir):
@@ -99,7 +99,7 @@ def download_databases(workdir, databases):
             click.secho(f'[INFO ] kraken2 database downloaded to {kraken2_dir}', fg='blue')
 
     # Download OMA if needed
-    if databases == "all" or databases == "oma":
+    if "all" in databases or "oma" in databases:
         oma_dir = os.path.join(workdir, "oma")
 
         if os.path.exists(oma_dir):
@@ -115,7 +115,7 @@ def download_databases(workdir, databases):
             click.secho(f'[INFO ] OMA database downloaded to {oma_dir}', fg='blue')
 
     # Download GXDB if needed
-    if databases == "all" or databases == "gxdb":
+    if "all" in databases or "gxdb" in databases:
         gxdb_dir = os.path.join(workdir, "gxdb")
 
         if os.path.exists(gxdb_dir):
