@@ -16,8 +16,8 @@ rule mash_distance:
         """
         (
         mash triangle -p {threads} {input} > {output.tsv}
-        sed 's/\\t/,/g' {output.tsv} | awk 'BEGIN{{FS = OFS = ",";}} FNR!=1{{header=","$1""header; lines[$0];}} END{{print header; for (line in lines){{print line;}}}}' | sed 's/$/,/g' | sort > {output.csv}
-        sed 's/\\t/,/g' {output.tsv} | awk 'BEGIN{{FS = OFS = ",";}} FNR!=1{{header[FNR]=$1; lines[FNR]=$0;}} END{{for (i in header){{printf ",%s",header[i];}} printf "\\n"; for (i in lines){{print lines[i];}}}}' | sed 's/$/,/g' > {output.csv}
+        awk 'BEGIN{{FS = "\\t";OFS = ",";}} {{n=split($1,a,"/");$1=a[n];}} 1' {output.tsv} | awk 'BEGIN{{FS = OFS = ",";}} FNR!=1{{header=","$1""header; lines[$0];}} END{{print header; for (line in lines){{print line;}}}}' | sed 's/$/,/g' | sort > {output.csv}
+        awk 'BEGIN{{FS = "\\t";OFS = ",";}} {{n=split($1,a,"/");$1=a[n];}} 1' {output.tsv} | awk 'BEGIN{{FS = OFS = ",";}} FNR!=1{{header[FNR]=$1; lines[FNR]=$0;}} END{{for (i in header){{printf ",%s",header[i];}} printf "\\n"; for (i in lines){{print lines[i];}}}}' | sed 's/$/,/g' > {output.csv}
         ) &> {log}
         """
 
