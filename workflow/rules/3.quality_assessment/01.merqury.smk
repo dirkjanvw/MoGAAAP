@@ -36,9 +36,9 @@ rule merqury:
         qv = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv",
         cnflplot = report("results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.fl.png",
             category="Quality assessment",
-            subcategory="K-mer completeness",
+            subcategory="K-mer completeness (spectra-cn)",
             caption="../../report/merqury_plot.rst",
-            labels={"type": "spectra-cn", "scope": "all sequences", "assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
+            labels={"assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
         cnhist = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.hist",
         cnlnplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.ln.png",
         cnstplot = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.spectra-cn.st.png",
@@ -72,9 +72,9 @@ rule visualise_qv:
         tsv = "results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.tsv",
         html = report("results/{asmname}/3.quality_assessment/01.merqury/{k}/{wgstype}/{asmname}_vs_{wgstype}.{asmname}.full.qv.html",
             category="Quality assessment",
-            subcategory="K-mer completeness",
+            subcategory="K-mer completeness (QV)",
             caption="../../report/merqury_qv.rst",
-            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
+            labels={"assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
     log:
         "results/logs/3.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.log"
     benchmark:
