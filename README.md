@@ -88,6 +88,12 @@ At the time of writing (February 2025), the total size of the databases is aroun
 | Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
 
+A helper script is provided to automate the download of the databases.
+As the locations of the databases are hardcoded, please leave an issue on the GitHub page if any of the locations no longer works.
+```bash
+MoGAAAP download_databases -d databases/ all
+```
+
 
 
 ## Initialise the pipeline
