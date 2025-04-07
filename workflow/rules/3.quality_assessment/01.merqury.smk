@@ -74,8 +74,7 @@ rule visualise_qv:
             category="Quality assessment",
             subcategory="K-mer completeness",
             caption="../../report/merqury_qv.rst",
-            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}",
-                    "wgs": "{wgstype}", "k": "{k}"}),
+            labels={"type": "QV", "scope": "per sequence", "assembly": "{asmname}", "wgs": "{wgstype}", "k": "{k}"}),
     log:
         "results/logs/3.quality_assessment/visualise_qv/{k}/{asmname}/{wgstype}.log"
     benchmark:
