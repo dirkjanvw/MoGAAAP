@@ -40,8 +40,10 @@ rule copy_assembly:
         "results/logs/1.assembly/copy_assembly/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/copy_assembly/{asmname}.txt"
+    conda:
+        "../../envs/seqkit.yaml"
     shell:
-        "cp $(realpath {input}) {output} &> {log}"
+        "seqkit seq -w 80 $(realpath {input}) -o {output} &> {log}"
 
 rule index_scaffolds:
     input:
