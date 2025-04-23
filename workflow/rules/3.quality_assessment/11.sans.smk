@@ -25,7 +25,8 @@ rule sans:
         splits = "results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits",
         bootstrap = "results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.splits.bootstrap",
         nexus = report("results/{asmset}/3.quality_assessment/11.sans/{k}/{asmset}_b{bootstrap}.nexus",
-            category="Phylogeny",
+            subcategory="Phylogeny",
+            category="Quality assessment",
             caption="../../report/sans.rst",
             labels={"type": "SANS", "set": "{asmset}", "k": "{k}", "bootstrap": "{bootstrap}"}),
     log:
