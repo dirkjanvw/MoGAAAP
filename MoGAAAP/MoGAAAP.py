@@ -197,7 +197,7 @@ def validate_targets(ctx, param, value):
 @click.option('--memory', '-m',
     default=round(psutil.virtual_memory().total / (1024 ** 3) / 2), # half of total memory
     show_default=True,
-    help='Amount of memory to use in GB')
+    help='Amount of memory to use in GB (please put lower than what is available because this limit is not enforced)')
 @click.option('--dryrun', '-n',
     is_flag=True,
     help='Dry run the pipeline')
