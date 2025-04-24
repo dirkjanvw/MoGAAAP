@@ -76,6 +76,24 @@ rule hifiasm_with_hic_and_ont:
     shell:
         "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --h1 {input.hic1} --h2 {input.hic2} --ul $(echo {input.ont} | sed 's/ /,/g') {input.hifi} 2> {log}"
 
+rule hifiasm_ont_only:
+    input:
+        ont = get_ont,
+    output:
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.p_ctg.gfa",
+    log:
+        "results/logs/1.assembly/hifiasm_ont_only/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/hifiasm_ont_only/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/hifiasm.yaml"
+    shell:
+        "hifiasm -t {threads} -o $(echo {output.consensus} | rev | cut -d '.' -f 4- | rev) --ont $(echo {input.ont} | sed 's/ /,/g') 2> {log}"
+
 def get_hifiasm_output(wildcards):
     suffix = "hic" if has_hic(wildcards.asmname) else "bp"
     if get_haplotypes(wildcards) == 1:
