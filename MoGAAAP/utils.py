@@ -1,6 +1,7 @@
 import click
 import os
 import shutil
+import sys
 import subprocess
 from yaml import dump
 from math import log
@@ -22,12 +23,20 @@ def find_base_dir():
     if os.path.exists(os.path.join(source_dir, 'workflow')) and os.path.exists(os.path.join(source_dir, 'config')):
         return source_dir
 
-    # If not, try to find the installed package data using importlib.resources (Python 3.9+) or the backport
+    # Check if workflow and config are in the same directory as this module (installed package)
+    module_dir = os.path.dirname(os.path.abspath(__file__))
+    if os.path.exists(os.path.join(module_dir, 'workflow')) and os.path.exists(os.path.join(module_dir, 'config')):
+        return module_dir
+    
+    # If not, try to use importlib.resources
     if importlib_resources is not None:
         try:
-            base_dir = str(importlib_resources.files('MoGAAAP').parent)
-            if os.path.exists(os.path.join(base_dir, 'workflow')) and os.path.exists(os.path.join(base_dir, 'config')):
-                return base_dir
+            from importlib.resources import files
+            package_path = files('MoGAAAP')
+            if hasattr(package_path, '_paths'):  # Direct access to file system path
+                for path in package_path._paths:
+                    if os.path.exists(os.path.join(path, 'workflow')) and os.path.exists(os.path.join(path, 'config')):
+                        return path
         except Exception:
             pass
 
@@ -43,7 +52,6 @@ def find_base_dir():
 
 # Define globally to make sure init has the correct paths
 BASE_DIR = find_base_dir()
-print(BASE_DIR)
 WORKFLOW_DIR = os.path.join(BASE_DIR, 'workflow')
 CONFIG_DIR = os.path.join(BASE_DIR, 'config')
 
