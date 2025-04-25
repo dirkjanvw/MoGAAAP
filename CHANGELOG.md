@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.0.0 - 2025-04-25]
 
 ### Added
 - Add wrapper script to initialise, configure and run MoGAAAP (#80).
