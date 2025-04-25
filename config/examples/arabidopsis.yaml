@@ -7,7 +7,7 @@
 # accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
 # paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
 # ID should be defined.
-samples: "config/samples.tsv"
+samples: "arabidopsis.tsv"
 
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
