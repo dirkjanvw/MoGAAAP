@@ -138,7 +138,7 @@ Therefore, `hifi` and `illumina_1`/`illumina_2` will only be used for the qualit
 
 ### Configuration YAML
 We can now create the configuration YAML file for MoGAAAP.
-An example of this file is provided in `working_directory/config/example.yaml` and also see `config/examples/` for more examples of filled-in configuration files.
+An example of this file is provided in `working_directory/config/example.yaml` and also see `working_directory/config/examples/` for more examples of filled-in configuration files.
 There are two ways of generating a configuration YAML file:
 1. Copy the example file and fill in the fields.
 2. Run the following command to generate a configuration YAML file:
