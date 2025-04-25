@@ -1,4 +1,0 @@
-accessionId	hifi	ont	illumina_1	illumina_2	hic_1	hic_2	haplotypes	speciesName	taxId	referenceId
-accessionA	"resources/reads/HiFi/readsA1.fasta;resources/reads/HiFi/readsA2.fasta"		"resources/reads/sample1/library1_1.fq.gz"	"resources/reads/sample1/library1_2.fq.gz"	""	""	1	"speciesSp"	123	referenceA
-accessionB	"resources/reads/HiFi/readsB.fasta"	"resources/reads/ONT/readsB1.fasta;resources/reads/ONT/readsB2.fasta"	""	""	""	""	2	"speciesSp"	123	referenceA
-accessionC	"resources/reads/HiFi/readsC.fasta"	""	""	""	""	""	1	"speciesSd"	456	referenceB

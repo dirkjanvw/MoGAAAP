@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "MoGAAAP"
+version = "1.0.0"
+description = "Modular Genome Assembly, Annotation and Assessment Pipeline"
+authors = ["Dirk-Jan M. van Workum <dirk-jan.vanworkum@wur.nl>"]
+license = "GPL-3.0"
+readme = "README.md"
+packages = [{ include = "MoGAAAP" }]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.0"
+pyyaml = "^6.0"
+psutil = "^7.0"
+
+[tool.poetry.scripts]
+MoGAAAP = "MoGAAAP.MoGAAAP:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

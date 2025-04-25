@@ -8,11 +8,6 @@ if [ ! -d "test_data" ]; then
 fi
 cd test_data/
 
-# Download Helixer model
-if [ ! -f "land_plant_v0.3_a_0080.h5" ]; then
-    wget -O land_plant_v0.3_a_0080.h5 "https://zenodo.org/records/10836346/files/land_plant_v0.3_a_0080.h5?download=1"
-fi
-
 # Download kraken2 nt_core
 if [ ! -d "nt" ]; then
     mkdir nt

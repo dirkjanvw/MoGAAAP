@@ -7,10 +7,10 @@
 # accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
 # paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
 # ID should be defined.
-samples: "config/samples.tsv"
+samples: "arabidopsis.tsv"
 
 # Assembly settings
-assembler: "hifiasm"  #supported assemblers: hifiasm, verkko
+assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
 
 # All filtering and scaffolding parameters
 min_contig_len: 10000
@@ -49,16 +49,16 @@ organellar:
 telomere_motif: "CCCTAAA"
 
 # Annotation settings
-helixer_model: "resources/land_plant_v0.3_a_0080.h5"
+helixer_model: "land_plant" #choose between land_plant, vertebrate, invertebrate, fungi
 helixer_max_gene_length: 64152
 
 # Quality assessment settings
-k_qa: 21  #optimal k-mer size for quality assessment
-gxdb: "/local/fcs/gxdb"  #path to gxdb for fcs-gx
-pantools_grouping: 3  #grouping relaxation setting for pantools
-odb: "brassicales_odb10"  #ODB database for busco
-kraken2_nt: "/path/to/kraken2/nt"  #kraken2 database
-OMAdb: "/path/to/oma_databases/LUCA.h5"  #OMA database for orthologs
+k_qa: 21 #optimal k-mer size for quality assessment
+gxdb: "/local/fcs/gxdb" #path to gxdb for fcs-gx
+pantools_grouping: 3 #grouping relaxation setting for pantools
+odb: "brassicales_odb10" #ODB database for busco
+kraken2_nt: "/path/to/kraken2/nt" #kraken2 database
+OMAdb: "/path/to/oma_databases/LUCA.h5" #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive and will only be used for QC.
@@ -98,7 +98,7 @@ set:
         - 45_meh_0
 
 # General settings; only change if you know what you are doing
-jvm: "-Xmx100g -Xms100g"  #java virtual machine settings
-tmpdir: "/dev/shm/tmp_arabidopsis"  #temporary directory for fast IO
-nucmer_maxgap: 1000  #maximum gap size for nucmer
-nucmer_minmatch: 1000  #minimum match size for nucmer
+jvm: "-Xmx100g -Xms100g" #java virtual machine settings
+tmpdir: "/dev/shm/tmp_arabidopsis" #temporary directory for fast IO
+nucmer_maxgap: 1000 #maximum gap size for nucmer
+nucmer_minmatch: 1000 #minimum match size for nucmer

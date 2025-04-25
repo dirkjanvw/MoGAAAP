@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - pantools=4.3.1
+  - pantools=4.3.3

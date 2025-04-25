@@ -1,5 +1,5 @@
 *
-!config.yaml
-!samples.tsv
+!example.yaml
+!example.tsv
 !.gitignore
 !examples/
