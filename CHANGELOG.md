@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.0.1 - 2025-04-26]
 
 ### Changed
 - Relocate the workflow and config directories to a MoGAAAP directory to allow pip installation (#99).
