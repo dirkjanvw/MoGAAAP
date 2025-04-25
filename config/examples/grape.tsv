@@ -1,7 +1,8 @@
-accessionId	hifi	ont	illumina_1	illumina_2	hic_1	hic_2	haplotypes	speciesName	taxId	referenceId
-Manicure_Finger	resources/grape/HiFi/SRR29686483_subreads.fastq.gz	resources/grape/ONT/SRR29686485_1.fastq.gz			resources/grape/HiC/SRR29686480_1.fastq.gz	resources/grape/HiC/SRR29686480_2.fastq.gz	2	Vvinifera	29760	PNT2T
-Muscat_Hamburg	resources/grape/HiFi/SRR29686484_subreads.fastq.gz	resources/grape/ONT/SRR29686479_1.fastq.gz			resources/grape/HiC/SRR29686481_1.fastq.gz	resources/grape/HiC/SRR29686481_2.fastq.gz	2	Vvinifera	29760	PNT2T
-Shine_Muscat	resources/grape/HiFi/SRR29686472_subreads.fastq.gz	resources/grape/ONT/SRR29686476_1.fastq.gz			resources/grape/HiC/SRR29686482_1.fastq.gz	resources/grape/HiC/SRR29686482_2.fastq.gz	2	Vvinifera	29760	PNT2T
-Baimunage	resources/grape/HiFi/SRR30692114_subreads.fastq.gz	resources/grape/ONT/SRR29686474_1.fastq.gz			resources/grape/HiC/SRR30692115_1.fastq.gz	resources/grape/HiC/SRR30692115_2.fastq.gz	2	Vvinifera	29760	PNT2T
-Hongmunage	resources/grape/HiFi/SRR30692112_subreads.fastq.gz	resources/grape/ONT/SRR29686477_1.fastq.gz			resources/grape/HiC/SRR30692113_1.fastq.gz	resources/grape/HiC/SRR30692113_2.fastq.gz	2	Vvinifera	29760	PNT2T
-Wolley	resources/grape/HiFi/SRR30536351_subreads.fastq.gz	resources/grape/ONT/SRR29686473_1.fastq.gz			resources/grape/HiC/SRR30536352_1.fastq.gz	resources/grape/HiC/SRR30536352_2.fastq.gz	2	Vvinifera	29760	PNT2T
+accessionId	hifi	ont	illumina_1	illumina_2	hic_1	hic_2	haplotypes	speciesName	taxId	referenceId	assemblyLocation	annotationLocation
+Manicure_Finger	resources/grape/HiFi/SRR29686483_subreads.fastq.gz	resources/grape/ONT/SRR29686485_1.fastq.gz			resources/grape/HiC/SRR29686480_1.fastq.gz	resources/grape/HiC/SRR29686480_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+Muscat_Hamburg	resources/grape/HiFi/SRR29686484_subreads.fastq.gz	resources/grape/ONT/SRR29686479_1.fastq.gz			resources/grape/HiC/SRR29686481_1.fastq.gz	resources/grape/HiC/SRR29686481_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+Shine_Muscat	resources/grape/HiFi/SRR29686472_subreads.fastq.gz	resources/grape/ONT/SRR29686476_1.fastq.gz			resources/grape/HiC/SRR29686482_1.fastq.gz	resources/grape/HiC/SRR29686482_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+Baimunage	resources/grape/HiFi/SRR30692114_subreads.fastq.gz	resources/grape/ONT/SRR29686474_1.fastq.gz			resources/grape/HiC/SRR30692115_1.fastq.gz	resources/grape/HiC/SRR30692115_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+Hongmunage	resources/grape/HiFi/SRR30692112_subreads.fastq.gz	resources/grape/ONT/SRR29686477_1.fastq.gz			resources/grape/HiC/SRR30692113_1.fastq.gz	resources/grape/HiC/SRR30692113_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+Wolley	resources/grape/HiFi/SRR30536351_subreads.fastq.gz	resources/grape/ONT/SRR29686473_1.fastq.gz			resources/grape/HiC/SRR30536352_1.fastq.gz	resources/grape/HiC/SRR30536352_2.fastq.gz	2	Vvinifera	29760	PNT2T		
+PNT2T							1	Vvinifera	29760	PNT2T	resources/grape/genome/GCF_030704535.1_ASM3070453v1_genomic.fna	resources/grape/annotation/GCF_030704535.1_ASM3070453v1_genomic.gff

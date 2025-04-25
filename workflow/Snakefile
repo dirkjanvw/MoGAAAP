@@ -1,11 +1,15 @@
 # Import libraries
 import pandas as pd
 from snakemake.utils import validate, min_version
+from os import path
 min_version("8") # Require at least Snakemake 8.0
 
 # Load configuration
 if not config:
-    configfile: "config/config.yaml"
+    if path.exists("config/config.yaml"):
+        configfile: "config/config.yaml"
+    if not config:
+        raise ValueError("No configuration file found.")
 validate(config, schema="schemas/config.schema.yaml")
 
 # Load samples
@@ -20,10 +24,8 @@ validate(SAMPLES, schema="schemas/samples.schema.yaml")
 include: "rules/common.smk"
 include: "rules/agat.smk"
 include: "rules/1.assembly/all.smk"
-include: "rules/2.scaffolding/all.smk"
-include: "rules/3.analysis/all.smk"
-include: "rules/4.annotation/all.smk"
-include: "rules/5.quality_assessment/all.smk"
+include: "rules/2.annotation/all.smk"
+include: "rules/3.quality_assessment/all.smk"
 
 # Define report main page
 report: "report/workflow.rst"
@@ -36,8 +38,6 @@ wildcard_constraints:
 rule all:
     input:
         "results/assembly.done",
-        "results/scaffolding.done",
-        "results/analysis.done",
         "results/annotation.done",
         "results/quality_assessment.done",
 
@@ -71,4 +71,3 @@ onerror:
     MoGAAAP workflow failed.
     Please check the provided error message and log file of the rule that failed above carefully before reporting any issues at https://github.com/dirkjanvw/MoGAAAP/issues for help.
     """)
-
