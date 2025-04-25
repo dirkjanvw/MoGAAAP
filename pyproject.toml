@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MoGAAAP"
-version = "1.0.0"
+version = "1.0.1"
 description = "Modular Genome Assembly, Annotation and Assessment Pipeline"
 authors = ["Dirk-Jan M. van Workum <dirk-jan.vanworkum@wur.nl>"]
 license = "GPL-3.0"
