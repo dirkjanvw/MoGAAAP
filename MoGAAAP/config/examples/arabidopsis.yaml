@@ -96,6 +96,7 @@ set:
         - 43_elk_1
         - 44_ket_10
         - 45_meh_0
+        - ARAPORT11
 
 # General settings; only change if you know what you are doing
 jvm: "-Xmx100g -Xms100g" #java virtual machine settings
