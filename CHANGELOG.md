@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.0.2 - 2025-05-02]
 
 ### Fixed
 - Fix re-running pantools, which gave an error when snakemake decided it was necessary to run the same job again (#105).
