@@ -9,6 +9,7 @@ Although developed for a project in lettuce, the pipeline is designed to work wi
 The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
 Additionally, MoGAAAP is set up in a modular way, allowing for any combination of assembly, annotation and quality assessment steps.
+Therefore, MoGAAAP can also be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
 
 A test dataset is provided in the `test_data/` directory, including instructions.
 
@@ -109,7 +110,7 @@ In the rest of this README, we will use `working_directory` as the working direc
 ### Sample sheet
 Before configuring the pipeline, a sample sheet (in TSV format) has to be created.
 In this TSV file, each row represents a sample.
-An example of this file can be found in `working_directory/config/example.tsv` but it is recommendable to create a new TSV file with the same header.
+An example of this file can be found in `working_directory/config/example.tsv` (and more examples are available in `working_directory/config/examples/`) but it is recommendable to create a new TSV file with the same header.
 The sample TSV sheet has the following columns to fill in (one row per sample):
 
 | Column name          | Required? | Description                                                                                                                                                              |
@@ -175,6 +176,8 @@ MoGAAAP run -d working_directory ${MODULE}
 ```
 
 It is generally recommendable to set the `--cores` and `--memory` flags to what is available on your system.
+It is important to realise that Snakemake cannot enforce these limits, so it is up to the user to make sure that the limits are not exceeded.
+In general, the number of cores will generally not exceed the limit, but for memory it is advisable to set the limit to a value that is lower than the available memory on your system (about half).
 Please also check out the other options available by running `MoGAAAP run --help`.
 
 > [!NOTE]
