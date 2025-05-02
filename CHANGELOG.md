@@ -4,6 +4,7 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Added
 - Added bioconda installation instructions (#104).
+- Fix paths that were forgotten to be updated in the last release (#102).
 
 ## [1.0.1 - 2025-04-26]
 
