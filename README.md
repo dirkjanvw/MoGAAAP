@@ -1,9 +1,15 @@
+![latest release](https://img.shields.io/github/v/release/dirkjanvw/mogaaap)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/mogaaap/README.html)
+[![bioconda downloads](https://img.shields.io/conda/dn/bioconda/mogaaap.svg?label=bioconda%20downloads)](https://anaconda.org/bioconda/mogaaap)
+[![bioconda version](https://img.shields.io/conda/vn/bioconda/mogaaap)](https://anaconda.org/bioconda/mogaaap)
+
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
 This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
 The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
 
 Additionally, MoGAAAP is set up in a modular way, allowing for any combination of assembly, annotation and quality assessment steps.
+Therefore, MoGAAAP can also be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
 
 A test dataset is provided in the `test_data/` directory, including instructions.
 
@@ -23,7 +29,6 @@ A test dataset is provided in the `test_data/` directory, including instructions
 
 ## Setup
 To install MoGAAAP, you'll need a Linux machine with `conda` installed.
-For now, MoGAAAP can only installed by hand but we are working on a more user-friendly installation through bioconda.
 
 ### Conda
 If not installed already, `conda` can be installed by following these instructions:
@@ -42,15 +47,43 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-### Install dependencies
-The pipeline depends on several other software packages that can be installed using `conda`:
+### Install MoGAAAP
+MoGAAAP can be installed using bioconda as follows:
+```bash
+conda create -c conda-forge -c bioconda -n mogaaap mogaaap
+```
+
+<details>
+<summary>Click here for manual installation</summary>
+
+If you prefer to install MoGAAAP manually, you can do so by following these instructions:
 ```bash
 conda create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poetry
+conda activate mogaaap
+```
+
+Now that the dependencies are installed, the pipeline can be installed via:
+```bash
+git clone https://github.com/dirkjanvw/MoGAAAP.git
+cd MoGAAAP/
+poetry install
+```
+</details>
+
+Then make sure to activate the environment before running the pipeline:
+```bash
+conda activate mogaaap
+```
+
+To check if MoGAAAP is installed correctly, run:
+```bash
+MoGAAAP --help
 ```
 
 > [!NOTE]
-> For apptainer to work as expected, some environment variables can be set.
-> This one is required to be set in your `.bashrc` (don't forget to source the file after changing):
+> MoGAAAP uses apptainer for handling some software dependencies.
+> Although apptainer has been installed as part of the conda environment, there are some environment variables that need to be set for it to work correctly.
+> This has to be set in your `.bashrc` (don't forget to source the file after changing):
 > - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
 >
 > Optionally, you can also set these:
@@ -58,24 +91,6 @@ conda create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poe
 > - `APPTAINER_CACHEDIR`: To store the cache of the container outside of your home directory.
 >
 > More information can be found [here](https://apptainer.org/docs/user/main/appendix.html).
-
-Then make sure to activate the environment before running the pipeline:
-```bash
-conda activate mogaaap
-```
-
-### Install MoGAAAP
-Now that the dependencies are installed, the pipeline can be installed via:
-```bash
-git clone https://github.com/dirkjanvw/MoGAAAP.git
-cd MoGAAAP/
-poetry install
-```
-
-To check if MoGAAAP is installed correctly, run:
-```bash
-MoGAAAP --help
-```
 
 ### Download databases
 Next, download the databases that are required for the pipeline to run.
@@ -112,7 +127,7 @@ In the rest of this README, we will use `working_directory` as the working direc
 ### Sample sheet
 Before configuring the pipeline, a sample sheet (in TSV format) has to be created.
 In this TSV file, each row represents a sample.
-An example of this file can be found in `working_directory/config/example.tsv` but it is recommendable to create a new TSV file with the same header.
+An example of this file can be found in `working_directory/config/example.tsv` (and more examples are available in `working_directory/config/examples/`) but it is recommendable to create a new TSV file with the same header.
 The sample TSV sheet has the following columns to fill in (one row per sample):
 
 | Column name          | Required? | Description                                                                                                                                                              |
@@ -138,7 +153,7 @@ Therefore, `hifi` and `illumina_1`/`illumina_2` will only be used for the qualit
 
 ### Configuration YAML
 We can now create the configuration YAML file for MoGAAAP.
-An example of this file is provided in `working_directory/config/example.yaml` and also see `config/examples/` for more examples of filled-in configuration files.
+An example of this file is provided in `working_directory/config/example.yaml` and also see `working_directory/config/examples/` for more examples of filled-in configuration files.
 There are two ways of generating a configuration YAML file:
 1. Copy the example file and fill in the fields.
 2. Run the following command to generate a configuration YAML file:
@@ -178,6 +193,8 @@ MoGAAAP run -d working_directory ${MODULE}
 ```
 
 It is generally recommendable to set the `--cores` and `--memory` flags to what is available on your system.
+It is important to realise that Snakemake cannot enforce these limits, so it is up to the user to make sure that the limits are not exceeded.
+In general, the number of cores will generally not exceed the limit, but for memory it is advisable to set the limit to a value that is lower than the available memory on your system (about half).
 Please also check out the other options available by running `MoGAAAP run --help`.
 
 > [!NOTE]
@@ -348,10 +365,11 @@ If the error persists, please report it as an issue on this GitHub page.
 
 ### Q: A job that uses singularity fails for no apparent reason
 A: This is likely due to missing environment variables for Singularity/Apptainer.
-See the note under [Install dependencies](#install-dependencies) for more information on which environment variables need to be set.
+See the note under [Install MoGAAAP](#install-mogaaap) for more information on how to set these environment variables.
 
 ### Q: Report HTML cuts off the top of the page
-A: This is a known issue of the Snakemake report HTML.
+A: This is a known issue of the Snakemake report HTML that should only happen when running MoGAAAP manually with `snakemake`.
+The wrapper `MoGAAAP` command should not have this issue.
 The current workaround is to run:
 ```bash
 sed -E 's/([^l]) h-screen/\1/g' report.html > report_fixed.html
@@ -367,3 +385,4 @@ Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x t
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
+

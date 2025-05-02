@@ -1,5 +1,14 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [1.0.2 - 2025-05-02]
+
+### Fixed
+- Fix re-running pantools, which gave an error when snakemake decided it was necessary to run the same job again (#105).
+
+### Added
+- Added bioconda installation instructions (#104).
+- Fix paths that were forgotten to be updated in the last release (#102).
+
 ## [1.0.1 - 2025-04-26]
 
 ### Changed

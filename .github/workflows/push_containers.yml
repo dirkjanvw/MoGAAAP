@@ -3,7 +3,7 @@ name: Build and Push Singularity Containers
 on:
     push:
         paths:
-            - "workflow/singularity/**"
+            - "MoGAAAP/workflow/singularity/**"
             - ".github/workflows/push_containers.yml"
 
 permissions:
@@ -36,7 +36,7 @@ jobs:
             - name: Build and Push Singularity Containers
               run: |
                   repo_name=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-                  cd workflow/singularity
+                  cd MoGAAAP/workflow/singularity
                   echo '{"type":"container"}' > config.json
                   for def_file in */*.def; do
                     container_name=$(basename "${def_file}" .def | tr '[:upper:]' '[:lower:]')
