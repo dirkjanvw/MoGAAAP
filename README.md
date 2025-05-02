@@ -50,8 +50,25 @@ conda config --set channel_priority strict
 ### Install MoGAAAP
 MoGAAAP can be installed using bioconda as follows:
 ```bash
-conda create -n mogaaap -c conda-forge -c bioconda mogaaap
+conda create -c conda-forge -c bioconda -n mogaaap mogaaap
 ```
+
+<details>
+<summary>Click here for manual installation</summary>
+
+If you prefer to install MoGAAAP manually, you can do so by following these instructions:
+```bash
+conda create -c conda-forge -c bioconda -n mogaaap snakemake=8 apptainer=1.3 poetry
+conda activate mogaaap
+```
+
+Now that the dependencies are installed, the pipeline can be installed via:
+```bash
+git clone https://github.com/dirkjanvw/MoGAAAP.git
+cd MoGAAAP/
+poetry install
+```
+</details.
 
 Then make sure to activate the environment before running the pipeline:
 ```bash
