@@ -43,6 +43,7 @@ rule panproteome_build:
         (
         mkdir -p {params.tmpdir}
         pantools {params.jvm} build_panproteome --force {params.tmpdir}/panproteome_DB {input}
+        rm -rd $(dirname $(dirname {output}))
         mv {params.tmpdir}/panproteome_DB $(dirname $(dirname {output}))
         ) &> {log}"""
 
@@ -71,6 +72,7 @@ rule panproteome_group:
         mkdir -p {params.tmpdir}
         cp -vr $(dirname {input}) {params.tmpdir}/panproteome_groups_DB
         pantools {params.jvm} group --relaxation {params.grouping} --threads {threads} {params.tmpdir}/panproteome_groups_DB
+        rm -rd $(dirname $(dirname {output}))
         mv {params.tmpdir}/panproteome_groups_DB $(dirname $(dirname {output}))/
         ) &> {log}"""
 
