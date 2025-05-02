@@ -68,7 +68,7 @@ git clone https://github.com/dirkjanvw/MoGAAAP.git
 cd MoGAAAP/
 poetry install
 ```
-</details.
+</details>
 
 Then make sure to activate the environment before running the pipeline:
 ```bash
