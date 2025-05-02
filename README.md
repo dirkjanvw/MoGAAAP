@@ -1,4 +1,7 @@
+![latest release](https://img.shields.io/github/v/release/dirkjanvw/mogaaap)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/mogaaap/README.html)
+[![bioconda downloads](https://img.shields.io/conda/dn/bioconda/mogaaap.svg?label=bioconda%20downloads)](https://anaconda.org/bioconda/mogaaap)
+[![bioconda version](https://img.shields.io/conda/vn/bioconda/mogaaap)](https://anaconda.org/bioconda/mogaaap)
 
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
 This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
