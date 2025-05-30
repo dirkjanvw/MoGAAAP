@@ -25,28 +25,10 @@ rule ntsynt:
         ) &> {log}
         """
 
-rule format_ntsynt:
-    input:
-        fai = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
-        blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
-    output:
-        links = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
-        sequence_lengths = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
-    log:
-        "results/logs/3.quality_assessment/format_ntsynt/{asmset}.k{mink}.w{minw}.log"
-    benchmark:
-        "results/benchmarks/3.quality_assessment/format_ntsynt/{asmset}.k{mink}.w{minw}.txt"
-    params:
-        minlen = 100000 #minimum length for a block
-    conda:
-        "../../envs/ntsynt.yaml"
-    shell:
-        "workflow/scripts/ntSynt.v1.0.0/format_blocks_gggenomes.py -l {params.minlen} -p $(echo {output.links} | rev | cut -d '.' -f 3- | rev) --blocks {input.blocks} --fai {input.fai} &> {log}"
-
 rule visualise_ntsynt:
     input:
-        links = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
-        sequence_lengths = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.tsv",
+        blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
+        fai = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
         report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
             category="Quality assessment",
@@ -60,6 +42,6 @@ rule visualise_ntsynt:
     params:
         minlen = 10000000 #minimum length for a block
     container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt.visualization_scripts.v1.0.0:latest"
+        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt-viz.v1.0.0:latest"
     shell:
-        "workflow/scripts/ntSynt.v1.0.0/plot_synteny_blocks_gggenomes.R -s {input.sequence_lengths} -l {input.links} -p $(echo {output} | rev | cut -d '.' -f 2- | rev) &> {log}"
+        "ntsynt_viz.py --blocks {input.blocks} --fais {input.fai} --seq_length {params.minlen} --prefix $(echo {output} | rev | cut -d '.' -f 2- | rev) 2> {log}"
