@@ -49,6 +49,6 @@ rule visualise_ntsynt:
         blocks=$(realpath {input.blocks})
         fais="$(realpath {input.fais})"
         cd $(dirname {output})
-        ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output} | rev | cut -d '_' -f 2- | rev)
-        ) 2> {log}
+        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output} | rev | cut -d '_' -f 2- | rev)
+        ) &> {log}
         """
