@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: condaforge/mambaforge:latest
+From: condaforge/mambaforge:24.9.2-0
 
 %post
     apt-get update -y && apt-get install -y wget unzip
