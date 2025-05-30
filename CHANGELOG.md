@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+## Changed
+- Update GH actions to only rebuild the SIF containers that have changed (#112).
+
 ## [1.0.2 - 2025-05-02]
 
 ### Fixed
