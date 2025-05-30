@@ -28,9 +28,9 @@ rule ntsynt:
 rule visualise_ntsynt:
     input:
         blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
-        fai = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
+        fais = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
-        report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.png",
+        report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot.png",
             category="Quality assessment",
             subcategory="Collinearity",
             caption="../../report/ntsynt.rst",
@@ -44,4 +44,11 @@ rule visualise_ntsynt:
     container:
         "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt-viz.v1.0.0:latest"
     shell:
-        "ntsynt_viz.py --blocks {input.blocks} --fais {input.fai} --seq_length {params.minlen} --prefix $(echo {output} | rev | cut -d '.' -f 2- | rev) 2> {log}"
+        """
+        (
+        blocks=$(realpath {input.blocks})
+        fais="$(realpath {input.fais})"
+        cd $(dirname {output})
+        ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output} | rev | cut -d '_' -f 2- | rev)
+        ) 2> {log}
+        """
