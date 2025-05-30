@@ -2,7 +2,7 @@ Bootstrap: docker
 From: r-base:4.3.2
 
 %post
-    apt-get update -y && apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev automake build-essential bzip2 wget default-jre unzip
+    apt-get update -y && apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev automake build-essential bzip2 wget unzip
 
 %post
     wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
@@ -18,10 +18,11 @@ From: r-base:4.3.2
 
     wget https://github.com/bcgsc/ntSynt-viz/releases/download/v1.0.0/ntSynt-viz-1.0.0.tar.gz
     tar xvzf ntSynt-viz-1.0.0.tar.gz
+    rm ntSynt-viz-1.0.0.tar.gz
 
 %post
     R -e 'install.packages(c("gggenomes"), repos = "https://cran.r-project.org")'
 
 %environment
-    PATH="$PATH:/opt/ntsynt-viz-1.0.0/bin"
+    PATH="$PATH:/opt/ntSynt-viz-1.0.0/bin"
     export PATH="/miniforge3/bin:$PATH"
