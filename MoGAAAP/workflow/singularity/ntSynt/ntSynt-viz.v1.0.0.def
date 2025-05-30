@@ -1,21 +1,14 @@
 Bootstrap: docker
-From: r-base:4.3.2
+From: condaforge/mambaforge:latest
 
 %post
-    apt-get update -y && apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev automake build-essential bzip2 wget unzip
+    apt-get update -y && apt-get install -y wget unzip
 
 %post
-    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-    bash Miniforge3-Linux-x86_64.sh -b -f -p /miniforge3/
-    rm Miniforge3-Linux-x86_64.sh
-
-    export PATH="/miniforge3/bin:$PATH"
-
-    mamba install -y -c conda-forge -c bioconda quicktree snakemake intervaltree bioconductor-treeio r-ggpubr bioconductor-ggtree r-phytools r-dplyr r-argparse r-scales r-stringr
+    mamba install -y -c conda-forge -c bioconda quicktree snakemake intervaltree r-base bioconductor-treeio r-ggpubr bioconductor-ggtree r-phytools r-dplyr r-argparse r-scales r-stringr
 
 %post
     cd /opt
-
     wget https://github.com/bcgsc/ntSynt-viz/releases/download/v1.0.0/ntSynt-viz-1.0.0.tar.gz
     tar xvzf ntSynt-viz-1.0.0.tar.gz
     rm ntSynt-viz-1.0.0.tar.gz
@@ -25,4 +18,3 @@ From: r-base:4.3.2
 
 %environment
     PATH="$PATH:/opt/ntSynt-viz-1.0.0/bin"
-    export PATH="/miniforge3/bin:$PATH"
