@@ -334,11 +334,11 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other,
     # Check if the configfile exists
     if not os.path.exists(configfile):
         if not os.path.exists(os.path.join(workdir, 'config', 'config.yaml')):
-            click.secho('[ERROR] Configuration file config/config.yaml does not exist',
+            click.secho('[ERROR] Configuration file does not exist',
                 fg='red')
             click.secho(f'[ERROR] Checked {os.path.abspath(configfile)} and {os.path.abspath(os.path.join(workdir, "config", "config.yaml"))}',
                 fg='red')
-            click.secho('[ERROR] Did you run `MoGAAAP init`?',
+            click.secho('[ERROR] Did you run `MoGAAAP init` and `MoGAAAP configure`?',
                 fg='red')
             return
         else:
