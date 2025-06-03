@@ -30,7 +30,7 @@ rule visualise_ntsynt:
         blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
         fais = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
     output:
-        default_plot = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png",
+        default_plot = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot.png",
         tree = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.nwk",
         tree_plot = report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png",
             category="Quality assessment",
