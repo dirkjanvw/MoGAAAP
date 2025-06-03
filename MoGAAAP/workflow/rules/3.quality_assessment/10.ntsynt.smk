@@ -29,8 +29,8 @@ rule ntsynt:
 rule visualise_ntsynt:
     input:
         blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
+        tree = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.nwk",
         fais = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
-        tree = 
     output:
         report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png",
             category="Quality assessment",
