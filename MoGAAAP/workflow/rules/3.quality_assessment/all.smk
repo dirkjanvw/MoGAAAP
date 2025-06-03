@@ -97,7 +97,7 @@ def get_ntsynt_output(wildcards):
             if (len(get_all_accessions_from_asmset(asmset)) < 2):
                 continue
             if len(config["set"][asmset]) >= 2:  #synteny only makes sense for multiple genomes
-                all_output.append(f"results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot.png")
+                all_output.append(f"results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png")
     return all_output
 
 def get_sans_output(wildcards):

@@ -7,6 +7,7 @@ rule ntsynt:
         commonbf = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.common.bf",
         mxdot = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.mx.dot",
         precolblocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.pre-collinear-merge.synteny_blocks.tsv",
+        tree = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.nwk",
     log:
         "results/logs/3.quality_assessment/ntsynt/{asmset}.k{mink}.w{minw}.log"
     benchmark:
@@ -29,8 +30,9 @@ rule visualise_ntsynt:
     input:
         blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.tsv",
         fais = lambda wildcards: expand("final_output/{asmname}.full.fa.fai", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
+        tree = 
     output:
-        report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot.png",
+        report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png",
             category="Quality assessment",
             subcategory="Collinearity",
             caption="../../report/ntsynt.rst",
@@ -49,6 +51,6 @@ rule visualise_ntsynt:
         blocks=$(realpath {input.blocks})
         fais="$(realpath {input.fais})"
         cd $(dirname {output})
-        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output} | rev | cut -d '_' -f 2- | rev)
+        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output} | rev | cut -d '_' -f 2- | rev) --tree {input.tree}
         ) &> {log}
         """
