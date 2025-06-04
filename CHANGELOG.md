@@ -2,7 +2,11 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## [Unreleased]
 
-## Changed
+### Added
+- Add some extra documentation to error messages and FAQ (#109, #110).
+
+### Changed
+- Using ntSynt-viz instead of single visualisation scripts (#111).
 - Update GH actions to only rebuild the SIF containers that have changed (#112).
 
 ## [1.0.2 - 2025-05-02]
