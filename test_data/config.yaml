@@ -7,7 +7,7 @@
 # accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
 # paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
 # ID should be defined.
-samples: "test_data/test_samples.tsv"
+samples: "../test_data/test_samples.tsv"
 
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
@@ -21,8 +21,8 @@ ntjoin_w: 16000
 # sheet should match the key in this section.
 reference_genomes:
     TAIR10:
-        genome: "test_data/GCF_000001735.4_TAIR10.1_genomic.fna"
-        annotation: "test_data/Araport11_GFF3_genes_transposons.current.renamed.gff"
+        genome: "../test_data/GCF_000001735.4_TAIR10.1_genomic.fna"
+        annotation: "../test_data/Araport11_GFF3_genes_transposons.current.renamed.gff"
         chromosomes:
             1: "NC_003070.9"
             2: "NC_003071.7"
@@ -40,12 +40,12 @@ reference_genomes:
 # For the protein queries, the query should be a single exon domain as it
 # is searched in the genome and not in the proteome.
 prot_queries:
-    NBS_domain: "test_data/NBS_HMM.amac"
+    NBS_domain: "../test_data/NBS_HMM.amac"
 nucl_queries:
-    telomere: "test_data/telomere.fasta"
+    telomere: "../test_data/telomere.fasta"
 organellar:
-    chloroplast: "test_data/chloroplast.fasta"
-    mitochondrion: "test_data/mitochondrion.fasta"
+    chloroplast: "../test_data/chloroplast.fasta"
+    mitochondrion: "../test_data/mitochondrion.fasta"
 telomere_motif: "CCCTAAA"
 
 # Annotation settings
@@ -54,11 +54,11 @@ helixer_max_gene_length: 64152
 
 # Quality assessment settings
 k_qa: 21 #optimal k-mer size for quality assessment
-gxdb: "test_data/gxdb" #path to gxdb for fcs-gx
+gxdb: "../test_data/gxdb" #path to gxdb for fcs-gx
 pantools_grouping: 3 #grouping relaxation setting for pantools
 odb: "brassicales_odb10" #ODB database for busco
-kraken2_nt: "test_data/nt" #kraken2 database
-OMAdb: "test_data/LUCA.h5" #OMA database for orthologs
+kraken2_nt: "../test_data/nt" #kraken2 database
+OMAdb: "../test_data/LUCA.h5" #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive and will only be used for QC.

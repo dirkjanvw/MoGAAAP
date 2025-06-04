@@ -20,7 +20,8 @@ bash test_data/download_test_data.sh
 
 ## Download the databases
 Run the following command to download all databases into the `test_data` directory.
-Normally, it would not be recommended to download them into the `test_data` directory due to speed, but for the purpose of this test, it is fine.
+Normally, it is recommended to download the databases on a disk with fast I/O capabilities, such as an SSD or `/dev/shm/` (if available).
+However, for the purpose of this test, it is fine to download them into the `test_data` directory on a regular disk.
 
 > [!WARNING]
 > This script will download >900GB of data.
