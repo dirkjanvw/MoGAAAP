@@ -2,5 +2,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - ntsynt=1.0.0
+  - ntsynt=1.0.2
   - mash=2.3
