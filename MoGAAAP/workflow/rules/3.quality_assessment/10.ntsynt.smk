@@ -35,6 +35,10 @@ rule visualise_ntsynt:
         phylip = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.phylip",
         newick = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.nwk",
         order = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_est-distances.order.tsv",
+        chrom_paint = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.chrom-paint-feats.tsv",
+        links = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.links.tsv",
+        seq_lengths = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.sequence_lengths.sorted.tsv",
+        renamed_blocks = "results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}.synteny_blocks.renamed.sorted.blocks.tsv",
         tree_plot = report("results/{asmset}/3.quality_assessment/10.ntsynt/{asmset}.k{mink}.w{minw}_ribbon-plot_tree.png",
             category="Quality assessment",
             subcategory="Collinearity",
@@ -55,6 +59,6 @@ rule visualise_ntsynt:
         fais="$(realpath {input.fais})"
         cd $(dirname {output.default_plot})
         env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev)
-        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick})
+        (env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick}) 2>&1 | awk '{{if ($0==l){{c++;}} else{{c=1;l=$0;}} if (c>=100) exit 1; print;}}') || cp $(basename {output.default_plot}) $(basename {output.tree_plot})
         ) &> {log}
         """
