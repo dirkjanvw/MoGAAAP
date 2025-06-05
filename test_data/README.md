@@ -37,7 +37,7 @@ To run the pipeline, execute the following command:
 snakemake -s MoGAAAP/workflow/Snakefile -d MoGAAAP/ --configfile test_data/config.yaml
 ```
 
-On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately X hours to complete.
+On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately 3 hours to complete.
 
 ## Check the results
 After running the pipeline, you can create the HTML report with the following command:
