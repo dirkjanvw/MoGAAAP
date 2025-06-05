@@ -55,6 +55,6 @@ rule visualise_ntsynt:
         fais="$(realpath {input.fais})"
         cd $(dirname {output.default_plot})
         env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev)
-        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick})
+        if ! timeout 3600 env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick}); then if [ $? -eq 124 ]; then cp {output.default_plot} {output.tree_plot}; exit 0; else exit $?; fi; fi
         ) &> {log}
         """

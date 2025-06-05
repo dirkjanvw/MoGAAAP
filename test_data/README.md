@@ -34,15 +34,15 @@ bash test_data/download_databases.sh
 ## Run the pipeline
 To run the pipeline, execute the following command:
 ```bash
-snakemake -s MoGAAAP/workflow/Snakefile --configfile test_data/config.yaml
+snakemake -s MoGAAAP/workflow/Snakefile -d MoGAAAP/ --configfile test_data/config.yaml
 ```
 
-On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately X hours to complete.
+On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately 3 hours to complete.
 
 ## Check the results
 After running the pipeline, you can create the HTML report with the following command:
 ```bash
-snakemake -s MoGAAAP/workflow/Snakefile --configfile test_data/config.yaml --report report.html
+snakemake -s MoGAAAP/workflow/Snakefile -d MoGAAAP/ --configfile test_data/config.yaml --report report.html
 ```
 
 Additionally, the following output files will be present in the `final_output` directory:
