@@ -3,6 +3,29 @@ All notable changes to MoGAAAP will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Add some extra documentation to error messages and FAQ (#109, #110).
+
+### Changed
+- Using ntSynt-viz instead of single visualisation scripts (#111).
+- Update GH actions to only rebuild the SIF containers that have changed (#112).
+
+## [1.0.2 - 2025-05-02]
+
+### Fixed
+- Fix re-running pantools, which gave an error when snakemake decided it was necessary to run the same job again (#105).
+
+### Added
+- Added bioconda installation instructions (#104).
+- Fix paths that were forgotten to be updated in the last release (#102).
+
+## [1.0.1 - 2025-04-26]
+
+### Changed
+- Relocate the workflow and config directories to a MoGAAAP directory to allow pip installation (#99).
+
+## [1.0.0 - 2025-04-25]
+
+### Added
 - Add wrapper script to initialise, configure and run MoGAAAP (#80).
 - Add option to use the pipeline for already existing assemblies (#83).
 - Add flye as an alternative assembler (#93).

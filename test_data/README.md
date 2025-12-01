@@ -20,7 +20,8 @@ bash test_data/download_test_data.sh
 
 ## Download the databases
 Run the following command to download all databases into the `test_data` directory.
-Normally, it would not be recommended to download them into the `test_data` directory due to speed, but for the purpose of this test, it is fine.
+Normally, it is recommended to download the databases on a disk with fast I/O capabilities, such as an SSD or `/dev/shm/` (if available).
+However, for the purpose of this test, it is fine to download them into the `test_data` directory on a regular disk.
 
 > [!WARNING]
 > This script will download >900GB of data.
@@ -33,15 +34,15 @@ bash test_data/download_databases.sh
 ## Run the pipeline
 To run the pipeline, execute the following command:
 ```bash
-snakemake --configfile test_data/config.yaml
+snakemake -s MoGAAAP/workflow/Snakefile -d MoGAAAP/ --configfile test_data/config.yaml
 ```
 
-On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately X hours to complete.
+On a system with 128 CPUs, 1TB of memory and no GPUs, this pipeline will take approximately 3 hours to complete.
 
 ## Check the results
 After running the pipeline, you can create the HTML report with the following command:
 ```bash
-snakemake --configfile test_data/config.yaml --report report.html
+snakemake -s MoGAAAP/workflow/Snakefile -d MoGAAAP/ --configfile test_data/config.yaml --report report.html
 ```
 
 Additionally, the following output files will be present in the `final_output` directory:

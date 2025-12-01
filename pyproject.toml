@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "MoGAAAP"
-version = "1.0.0"
+version = "1.0.2"
 description = "Modular Genome Assembly, Annotation and Assessment Pipeline"
 authors = ["Dirk-Jan M. van Workum <dirk-jan.vanworkum@wur.nl>"]
 license = "GPL-3.0"
@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{ include = "MoGAAAP" }]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 click = "^8.0"
 pyyaml = "^6.0"
 psutil = "^7.0"

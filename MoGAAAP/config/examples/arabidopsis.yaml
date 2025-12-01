@@ -7,7 +7,7 @@
 # accessionId, path to HiFi reads, (optional) path to ONT reads, (optional)
 # paths to Illumina reads, species name, NCBI taxonomy ID, and reference genome
 # ID should be defined.
-samples: "config/samples.tsv"
+samples: "arabidopsis.tsv"
 
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
@@ -20,34 +20,15 @@ ntjoin_w: 16000
 # All reference genomes and chromosomes. The reference genome ID in the samples
 # sheet should match the key in this section.
 reference_genomes:
-    GRCh38:
-        genome: "resources/human/GCA_000001405.29_GRCh38.p14_genomic.fna"
-        annotation: "resources/human/gencode.v46.chr_patch_hapl_scaff.annotation.fixed.gff3"
+    TAIR10:
+        genome: "resources/arabidopsis/genome/GCF_000001735.4_TAIR10.1_genomic.fna"
+        annotation: "resources/arabidopsis/annotation/Araport11_GFF3_genes_transposons.current.renamed.gff"
         chromosomes:
-            1: "CM000663.2"
-            2: "CM000664.2"
-            3: "CM000665.2"
-            4: "CM000666.2"
-            5: "CM000667.2"
-            6: "CM000668.2"
-            7: "CM000669.2"
-            8: "CM000670.2"
-            9: "CM000671.2"
-            10: "CM000672.2"
-            11: "CM000673.2"
-            12: "CM000674.2"
-            13: "CM000675.2"
-            14: "CM000676.2"
-            15: "CM000677.2"
-            16: "CM000678.2"
-            17: "CM000679.2"
-            18: "CM000680.2"
-            19: "CM000681.2"
-            20: "CM000682.2"
-            21: "CM000683.2"
-            22: "CM000684.2"
-            X: "CM000685.2"
-            Y: "CM000686.2"
+            1: "NC_003070.9"
+            2: "NC_003071.7"
+            3: "NC_003074.8"
+            4: "NC_003075.7"
+            5: "NC_003076.8"
 
 # All protein and nucleotide queries that need to be run for the assembly
 # analysis module. The key should be the name of the query and the value should
@@ -59,35 +40,66 @@ reference_genomes:
 # For the protein queries, the query should be a single exon domain as it
 # is searched in the genome and not in the proteome.
 prot_queries:
-    hox: "resources/human/HOX.amac"
+    NBS_domain: "resources/arabidopsis/NBS_HMM.amac"
 nucl_queries:
-    telomere: "resources/human/telomere.fasta"
+    telomere: "resources/arabidopsis/genome/telomere.fasta"
 organellar:
-    mitochondrion: "resources/human/mitochondrion.fasta"
-telomere_motif: "AACCCT"
+    chloroplast: "resources/arabidopsis/genome/chloroplast.fasta"
+    mitochondrion: "resources/arabidopsis/genome/mitochondrion.fasta"
+telomere_motif: "CCCTAAA"
 
 # Annotation settings
-helixer_model: "vertebrate" #choose between land_plant, vertebrate, invertebrate, fungi
+helixer_model: "land_plant" #choose between land_plant, vertebrate, invertebrate, fungi
 helixer_max_gene_length: 64152
 
 # Quality assessment settings
 k_qa: 21 #optimal k-mer size for quality assessment
 gxdb: "/local/fcs/gxdb" #path to gxdb for fcs-gx
 pantools_grouping: 3 #grouping relaxation setting for pantools
-odb: "primates_odb10" #ODB database for busco
+odb: "brassicales_odb10" #ODB database for busco
 kraken2_nt: "/path/to/kraken2/nt" #kraken2 database
 OMAdb: "/path/to/oma_databases/LUCA.h5" #OMA database for orthologs
 
 # A section to define groups of accessions for plotting together in report. This
 # list is order sensitive and will only be used for QC.
 set:
-    human_all:
-        - HG002
-        - HG003
-        - HG004
+    arabidopsis_all:
+        - 01_col
+        - 02_tibet
+        - 03_yilong
+        - 04_bor_1
+        - 05_cdm_0
+        - 08_kondara
+        - 12_li_of_095
+        - 13_got_22
+        - 14_st_0
+        - 15_kelsterbach_2
+        - 19_kz_9
+        - 20_ll_0
+        - 21_ms_0
+        - 23_sij_1
+        - 24_hs_0
+        - 25_per_1
+        - 26_nz_1
+        - 27_belmonte_4_94
+        - 29_sij_2
+        - 30_tu_sb30_3
+        - 31_mammo_1
+        - 33_sha
+        - 36_pra_6
+        - 37_pu_2_23
+        - 38_dra_2
+        - 39_ah_7
+        - 40_etna_2
+        - 41_sorbo
+        - 42_arb_0
+        - 43_elk_1
+        - 44_ket_10
+        - 45_meh_0
+        - ARAPORT11
 
 # General settings; only change if you know what you are doing
 jvm: "-Xmx100g -Xms100g" #java virtual machine settings
-tmpdir: "/dev/shm/tmp_human" #temporary directory for fast IO
+tmpdir: "/dev/shm/tmp_arabidopsis" #temporary directory for fast IO
 nucmer_maxgap: 1000 #maximum gap size for nucmer
 nucmer_minmatch: 1000 #minimum match size for nucmer
