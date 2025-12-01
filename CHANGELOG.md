@@ -8,6 +8,7 @@ All notable changes to MoGAAAP will be documented in this file.
 ### Changed
 - Using ntSynt-viz instead of single visualisation scripts (#111).
 - Update GH actions to only rebuild the SIF containers that have changed (#112).
+- Remove kmer-db due to redundancy with mash (#116).
 
 ## [1.0.2 - 2025-05-02]
 
