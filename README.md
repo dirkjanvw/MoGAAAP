@@ -84,7 +84,7 @@ MoGAAAP --help
 > MoGAAAP uses apptainer for handling some software dependencies.
 > Although apptainer has been installed as part of the conda environment, there are some environment variables that need to be set for it to work correctly.
 > This has to be set in your `.bashrc` (don't forget to source the file after changing):
-> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included: **all** locations containing input and output of MoGAAAP need to be included here, as well as the location of the GXDB database.
 >
 > Optionally, you can also set these:
 > - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
@@ -94,14 +94,16 @@ MoGAAAP --help
 
 ### Download databases
 Next, download the databases that are required for the pipeline to run.
-Please be aware that these databases are large and require a lot of storage space.
+Please be aware that these databases are large and require a lot of storage space, but can be shared between different runs of the pipeline.
 At the time of writing (February 2025), the total size of the databases is around 900GB.
 
 | Database            | Download instructions                                                                                                                                                                    |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX-quickstart#download-the-fcs-gx-database) (I only tested the Cloud instructions) |
-| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
+| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                        |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
+
+Importantly, the location of the GXDB database has be included in the `APPTAINER_BIND` environment variable (see note above).
 
 A helper script is provided to automate the download of the databases.
 As the locations of the databases are hardcoded, please leave an issue on the GitHub page if any of the locations no longer works.
