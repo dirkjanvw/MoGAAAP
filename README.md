@@ -310,7 +310,7 @@ Feel free to copy the config files produced by this pipeline and adjust to your 
 This final quality assessment module is the most important for human curation of the genome.
 The quality assessment steps in this module can be roughly divided into two categories: individual and grouped.
 Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
-Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
+Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
 Any groups can be defined in the configuration YAML file and a genome may occur in multiple groups.
 
