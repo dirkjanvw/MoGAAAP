@@ -12,6 +12,8 @@ def get_assembly(wildcards):
         else:
             return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_hifi_only/{wildcards.asmname}.fa"
     elif config['assembler'] == 'verkko':
+        if not has_hifi(wildcards.asmname):
+            raise ValueError("Verkko requires HiFi data.")
         if has_ont(wildcards.asmname):
             if has_hic(wildcards.asmname):
                 return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_hic_and_ont/{wildcards.asmname}.fa"
@@ -23,7 +25,7 @@ def get_assembly(wildcards):
             return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_only/{wildcards.asmname}.fa"
     elif config['assembler'] == 'flye':
         if not has_hifi(wildcards.asmname):
-            return f"results/{wildcards.asmname}/1.assembly/01.flye_ont_only/{wildcards.asmname}.fa"
+            raise ValueError("Current implementation of flye in MoGAAAP requires HiFi data.")
         if has_ont(wildcards.asmname):
             return f"results/{wildcards.asmname}/1.assembly/01.flye_hifi_and_ont/{wildcards.asmname}.fa"
         else:

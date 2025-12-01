@@ -92,7 +92,7 @@ def get_scaffolds(wildcards):
             minlen=config["min_contig_len"],
         )
     else: #should never happen
-        raise ValueError("Unknown scaffolder")
+        raise ValueError("Unknown scaffolder.")
 
 rule renaming_scaffolds:
     input:
