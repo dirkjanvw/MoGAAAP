@@ -4,6 +4,7 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Added
 - Add some extra documentation to error messages and FAQ (#109, #110).
+- Add ONT-only assembly option (#115).
 
 ### Changed
 - Using ntSynt-viz instead of single visualisation scripts (#111).
