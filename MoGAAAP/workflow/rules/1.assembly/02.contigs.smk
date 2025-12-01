@@ -1,14 +1,33 @@
 def get_assembly(wildcards):
-    if has_ont(wildcards.asmname):
-        if has_hic(wildcards.asmname) and config['assembler'] in ['hifiasm', 'verkko']:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_hic_and_ont/{wildcards.asmname}.fa"
+    if config['assembler'] == 'hifiasm':
+        if not has_hifi(wildcards.asmname):
+            return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_ont_only/{wildcards.asmname}.fa"
+        if has_ont(wildcards.asmname):
+            if has_hic(wildcards.asmname):
+                return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_hifi_hic_and_ont/{wildcards.asmname}.fa"
+            else:
+                return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_hifi_and_ont/{wildcards.asmname}.fa"
+        if has_hic(wildcards.asmname):
+            return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_hifi_and_hic/{wildcards.asmname}.fa"
         else:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_ont/{wildcards.asmname}.fa"
-    else:
-        if has_hic(wildcards.asmname) and config['assembler'] in ['hifiasm', 'verkko']:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_and_hic/{wildcards.asmname}.fa"
+            return f"results/{wildcards.asmname}/1.assembly/01.hifiasm_hifi_only/{wildcards.asmname}.fa"
+    elif config['assembler'] == 'verkko':
+        if has_ont(wildcards.asmname):
+            if has_hic(wildcards.asmname):
+                return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_hic_and_ont/{wildcards.asmname}.fa"
+            else:
+                return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_and_ont/{wildcards.asmname}.fa"
+        if has_hic(wildcards.asmname):
+            return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_and_hic/{wildcards.asmname}.fa"
         else:
-            return f"results/{wildcards.asmname}/1.assembly/01.{config['assembler']}_hifi_only/{wildcards.asmname}.fa"
+            return f"results/{wildcards.asmname}/1.assembly/01.verkko_hifi_only/{wildcards.asmname}.fa"
+    elif config['assembler'] == 'flye':
+        if not has_hifi(wildcards.asmname):
+            return f"results/{wildcards.asmname}/1.assembly/01.flye_ont_only/{wildcards.asmname}.fa"
+        if has_ont(wildcards.asmname):
+            return f"results/{wildcards.asmname}/1.assembly/01.flye_hifi_and_ont/{wildcards.asmname}.fa"
+        else:
+            return f"results/{wildcards.asmname}/1.assembly/01.flye_hifi_only/{wildcards.asmname}.fa"
 
 rule filter_contigs:
     input:

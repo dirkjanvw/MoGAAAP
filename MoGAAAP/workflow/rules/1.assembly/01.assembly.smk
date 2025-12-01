@@ -80,9 +80,9 @@ rule hifiasm_ont_only:
     input:
         ont = get_ont,
     output:
-        hap1 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.hap1.p_ctg.gfa",
-        hap2 = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.hap2.p_ctg.gfa",
-        consensus = "results/{asmname}/1.assembly/01.hifiasm_hifi_and_ont/{asmname}.bp.p_ctg.gfa",
+        hap1 = "results/{asmname}/1.assembly/01.hifiasm_ont_only/{asmname}.bp.hap1.p_ctg.gfa",
+        hap2 = "results/{asmname}/1.assembly/01.hifiasm_ont_only/{asmname}.bp.hap2.p_ctg.gfa",
+        consensus = "results/{asmname}/1.assembly/01.hifiasm_ont_only/{asmname}.bp.p_ctg.gfa",
     log:
         "results/logs/1.assembly/hifiasm_ont_only/{asmname}.log"
     benchmark:
@@ -311,6 +311,28 @@ rule flye_with_ont:
         (
         GENOMESIZE=$(grep -vE '^>' {input.reference_genome} | tr -d '\n' | wc -c)
         flye --genome-size $GENOMESIZE --threads {threads} --out-dir $(dirname {output}) --pacbio-hifi {input.hifi} --nano-raw {input.ont}
+        ) &> {log}
+        """
+
+rule flye_ont_only:
+    input:
+        ont = get_ont,
+        reference_genome = lambda wildcards: config["reference_genomes"][get_reference_id(wildcards.asmname)]["genome"],
+    output:
+        "results/{asmname}/1.assembly/01.flye_ont_only/assembly.fasta",
+    log:
+        "results/logs/1.assembly/flye_ont_only/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/flye_ont_only/{asmname}.txt"
+    threads:
+        min(max(workflow.cores - 1, 1), 50)
+    conda:
+        "../../envs/flye.yaml"
+    shell:
+        """
+        (
+        GENOMESIZE=$(grep -vE '^>' {input.reference_genome} | tr -d '\n' | wc -c)
+        flye --genome-size $GENOMESIZE --threads {threads} --out-dir $(dirname {output}) --nano-hq {input.ont}
         ) &> {log}
         """
 
