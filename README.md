@@ -136,7 +136,7 @@ The sample TSV sheet has the following columns to fill in (one row per sample):
 | `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
 | `annotationLocation` | Optional  | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
 | `hifi`               | `*`       | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
-| `ont`                | Optional  | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
+| `ont`                | `*`       | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
 | `illumina_1`         | Optional  | The path to the forward Illumina reads in FASTQ format.                                                                                                                  |
 | `illumina_2`         | Optional  | The path to the reverse Illumina reads in FASTQ format.                                                                                                                  |
 | `hic_1`              | Optional  | The path to the forward Hi-C reads in FASTQ format.                                                                                                                      |
