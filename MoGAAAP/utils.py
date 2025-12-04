@@ -396,7 +396,7 @@ def configure_mogaaap(
     configuration = {}
     configuration["samples"] = samples
     configuration["assembler"] = "hifiasm"
-    configuration["YAHS"] = True
+    configuration["YAHS"] = False
     configuration["scaffolder"] = "ntjoin"
     configuration["min_contig_len"] = 10000
     configuration["ntjoin_k"] = 52
