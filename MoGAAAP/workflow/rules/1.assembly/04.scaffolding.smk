@@ -1,7 +1,35 @@
+rule yahs:
+    input:
+        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigsfai = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.fai",
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+        bai = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
+    output:
+        scaffolds = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
+        agp = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.agp",
+    log:
+        "results/logs/1.assembly/yahs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/yahs/{asmname}.min{minlen}.txt"
+    conda:
+        "../../envs/yahs.yaml"
+    shell:
+        """
+        mkdir -p $(dirname {output})
+        yahs -o $(echo {output.scaffolds} | rev | cut -d '_' -f 3- | rev) {input.contigs} {input.bam}
+        ) &> {log}
+        """
+
+def get_scaffolding_input(wildcards):
+    if config["YAHS"] and has_hic(wildcards.asmname):
+        return "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa"
+    else:
+        return "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
+
 rule ntjoin:
     input:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigs = get_scaffolding_input,
     output:
         all = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
         assigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
@@ -32,7 +60,7 @@ rule ntjoin:
 rule ragtag:
     input:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigs = get_scaffolding_input,
     output:
         agp = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
         paf = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
@@ -81,7 +109,7 @@ rule map_hic:
         forward = get_hic_1,
         backward = get_hic_2,
     output:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.bam",
     log:
         "results/logs/1.assembly/map_hic/{asmname}.log"
     benchmark:
@@ -95,9 +123,9 @@ rule map_hic:
 
 rule filter_hic:
     input:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.bam",
     output:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
     log:
         "results/logs/1.assembly/filter_hic/{asmname}.log"
     benchmark:
@@ -109,6 +137,38 @@ rule filter_hic:
     shell:
         "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
 
+rule filter_hic_sort:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+    log:
+        "results/logs/1.assembly/filter_hic_sort/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/filter_hic_sort/{asmname}.txt"
+    threads:
+        10
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools sort -n -@$(({threads}-1)) -o {output} {input} &> {log}"
+
+rule filter_hic_index:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
+    log:
+        "results/logs/1.assembly/filter_hic_index/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/filter_hic_index/{asmname}.txt"
+    threads:
+        10
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools index -@$(({threads}-1)) {input} &> {log}"
+
 rule ntjoin_plot_hic:
     input:
         agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
@@ -117,7 +177,7 @@ rule ntjoin_plot_hic:
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ntjoin/contact_map.pdf",
@@ -153,7 +213,7 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ragtag/contact_map.pdf",
