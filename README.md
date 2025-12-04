@@ -386,8 +386,8 @@ A: While `seqtk` is more accurate in the boundaries of the telomere search, it c
 Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Q: I only have ONT data and no HiFi data; can I still use this pipeline?
-A: MoGAAAP does not support ONT-only assemblies (yet), but it is possible to create your own assembly and then give it to MoGAAAP in the `assemblyLocation` field of the sample sheet.
-This way, you can still use MoGAAAP to run the annotation and quality assessment modules.
+A: MoGAAAP only supports ONT-only assemblies when using `hifiasm` as assembler.
+However, we have not tested this functionality extensively, so please open an issue on this GitHub page if you run into any problems.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
