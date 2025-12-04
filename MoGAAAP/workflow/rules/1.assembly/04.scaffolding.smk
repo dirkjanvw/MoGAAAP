@@ -137,15 +137,15 @@ rule filter_hic:
     shell:
         "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
 
-rule filter_hic_sort:
+rule sort_hic:
     input:
         "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
     output:
         "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
     log:
-        "results/logs/1.assembly/filter_hic_sort/{asmname}.log"
+        "results/logs/1.assembly/sort_hic/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/filter_hic_sort/{asmname}.txt"
+        "results/benchmarks/1.assembly/sort_hic/{asmname}.txt"
     threads:
         10
     conda:
@@ -153,15 +153,15 @@ rule filter_hic_sort:
     shell:
         "samtools sort -@$(({threads}-1)) -o {output} {input} &> {log}"
 
-rule filter_hic_index:
+rule index_hic:
     input:
         "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
     output:
         "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
     log:
-        "results/logs/1.assembly/filter_hic_index/{asmname}.log"
+        "results/logs/1.assembly/index_hic/{asmname}.log"
     benchmark:
-        "results/benchmarks/1.assembly/filter_hic_index/{asmname}.txt"
+        "results/benchmarks/1.assembly/index_hic/{asmname}.txt"
     threads:
         10
     conda:
