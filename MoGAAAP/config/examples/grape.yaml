@@ -13,7 +13,7 @@ samples: "grape.tsv"
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko, flye
 
 # Scaffolding settings
-YAHS: true #whether to run YAHS on Hi-C data prior to scaffolding if Hi-C is available
+YAHS: false #whether to run YAHS on Hi-C data prior to scaffolding if Hi-C is available
 scaffolder: "ntjoin" #supported scaffolders: ntjoin, ragtag
 
 # All filtering and scaffolding parameters
