@@ -6,7 +6,6 @@ include: "04.mapping.smk"
 include: "05.pantools.smk"
 include: "06.busco.smk"
 include: "07.omark.smk"
-include: "08.kmer-db.smk"
 include: "09.mash.smk"
 include: "10.ntsynt.smk"
 include: "11.sans.smk"
@@ -67,16 +66,6 @@ def get_omark_output(wildcards):
     all_output = []
     for asmset in config["set"]:
         all_output.append(f"results/{asmset}/3.quality_assessment/07.omark_plot.png")  #omark
-    return all_output
-
-def get_kmerdb_output(wildcards):
-    all_output = []
-    k = config["k_qa"]
-    for asmset in config["set"]:
-        if (len(get_all_accessions_from_asmset(asmset)) < 2):
-            continue
-        if len(config["set"][asmset]) >= 2:
-            all_output.append(f"results/{asmset}/3.quality_assessment/08.kmer-db/{k}/{asmset}.csv.mash.pdf"),  #kmer distances
     return all_output
 
 def get_mash_output(wildcards):
@@ -144,7 +133,6 @@ rule qa:
         get_pantools_output,  #pantools
         get_busco_output,  #busco
         get_omark_output,  #omark
-        get_kmerdb_output,  #kmer-db
         get_mash_output,  #mash
         get_ntsynt_output, #ntsynt
         get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
