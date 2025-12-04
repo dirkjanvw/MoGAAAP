@@ -84,7 +84,7 @@ MoGAAAP --help
 > MoGAAAP uses apptainer for handling some software dependencies.
 > Although apptainer has been installed as part of the conda environment, there are some environment variables that need to be set for it to work correctly.
 > This has to be set in your `.bashrc` (don't forget to source the file after changing):
-> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included: **all** locations containing input and output of MoGAAAP need to be included here, as well as the location of the GXDB database.
 >
 > Optionally, you can also set these:
 > - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
@@ -94,14 +94,16 @@ MoGAAAP --help
 
 ### Download databases
 Next, download the databases that are required for the pipeline to run.
-Please be aware that these databases are large and require a lot of storage space.
+Please be aware that these databases are large and require a lot of storage space, but can be shared between different runs of the pipeline.
 At the time of writing (February 2025), the total size of the databases is around 900GB.
 
 | Database            | Download instructions                                                                                                                                                                    |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX-quickstart#download-the-fcs-gx-database) (I only tested the Cloud instructions) |
-| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
+| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                        |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
+
+Importantly, the location of the GXDB database has be included in the `APPTAINER_BIND` environment variable (see note above).
 
 A helper script is provided to automate the download of the databases.
 As the locations of the databases are hardcoded, please leave an issue on the GitHub page if any of the locations no longer works.
@@ -136,7 +138,7 @@ The sample TSV sheet has the following columns to fill in (one row per sample):
 | `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
 | `annotationLocation` | Optional  | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
 | `hifi`               | `*`       | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
-| `ont`                | Optional  | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
+| `ont`                | `*`       | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
 | `illumina_1`         | Optional  | The path to the forward Illumina reads in FASTQ format.                                                                                                                  |
 | `illumina_2`         | Optional  | The path to the reverse Illumina reads in FASTQ format.                                                                                                                  |
 | `hic_1`              | Optional  | The path to the forward Hi-C reads in FASTQ format.                                                                                                                      |
@@ -384,8 +386,8 @@ A: While `seqtk` is more accurate in the boundaries of the telomere search, it c
 Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
 ### Q: I only have ONT data and no HiFi data; can I still use this pipeline?
-A: MoGAAAP does not support ONT-only assemblies (yet), but it is possible to create your own assembly and then give it to MoGAAAP in the `assemblyLocation` field of the sample sheet.
-This way, you can still use MoGAAAP to run the annotation and quality assessment modules.
+A: MoGAAAP only supports ONT-only assemblies when using `hifiasm` as assembler.
+However, we have not tested this functionality extensively, so please open an issue on this GitHub page if you run into any problems.
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.

@@ -4,11 +4,13 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Added
 - Add some extra documentation to error messages and FAQ (#109, #110).
+- Add ONT-only assembly option (#115).
 
 ### Changed
 - Using ntSynt-viz instead of single visualisation scripts (#111).
 - Update GH actions to only rebuild the SIF containers that have changed (#112).
 - Remove kmer-db due to redundancy with mash (#116).
+- Make sure that converting the BLAST output doesn't fail on no results (#117).
 
 ## [1.0.2 - 2025-05-02]
 

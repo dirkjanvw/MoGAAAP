@@ -31,7 +31,12 @@ rule blast_p_to_tsv:
     benchmark:
         "results/benchmarks/2.annotation/blast_p_to_tsv/{asmname}/{query_name}.vs.{asmname}.txt"
     shell:
-        "awk 'BEGIN{{FS = OFS = \"\\t\";}} /^# Fields: /{{$1=substr($1,11); gsub(/, /,\"\\t\",$1); print $1; next;}} /^#/{{next;}} {{print;}}' {input} > {output} 2> {log}"
+        """
+        (
+        awk 'BEGIN{{FS = OFS = \"\\t\";}} /^# Fields: /{{$1=substr($1,11); gsub(/, /,\"\\t\",$1); print $1; next;}} /^#/{{next;}} {{print;}}' {input} > {output}
+        [ ! -s \"{output}\" ] && echo EMPTY > {output} || true
+        ) 2> {log}
+        """
 
 rule visualise_blast_p:
     input:
