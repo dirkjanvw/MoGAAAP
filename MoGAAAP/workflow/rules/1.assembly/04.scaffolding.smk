@@ -15,6 +15,7 @@ rule yahs:
         "../../envs/yahs.yaml"
     shell:
         """
+        (
         mkdir -p $(dirname {output})
         yahs -o $(echo {output.scaffolds} | rev | cut -d '_' -f 3- | rev) {input.contigs} {input.bam}
         ) &> {log}
