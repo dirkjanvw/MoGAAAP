@@ -151,7 +151,7 @@ rule filter_hic_sort:
     conda:
         "../../envs/samtools.yaml"
     shell:
-        "samtools sort -n -@$(({threads}-1)) -o {output} {input} &> {log}"
+        "samtools sort -@$(({threads}-1)) -o {output} {input} &> {log}"
 
 rule filter_hic_index:
     input:
