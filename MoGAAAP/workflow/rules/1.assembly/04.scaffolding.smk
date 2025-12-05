@@ -1,86 +1,3 @@
-rule yahs:
-    input:
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
-        contigsfai = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.fai",
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
-        bai = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
-    output:
-        scaffolds = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
-        agp = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.agp",
-    log:
-        "results/logs/1.assembly/yahs/{asmname}.min{minlen}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/yahs/{asmname}.min{minlen}.txt"
-    conda:
-        "../../envs/yahs.yaml"
-    shell:
-        """
-        (
-        mkdir -p $(dirname {output})
-        yahs -o $(echo {output.scaffolds} | rev | cut -d '_' -f 3- | rev) {input.contigs} {input.bam}
-        ) &> {log}
-        """
-
-def get_scaffolding_input(wildcards):
-    if config["YAHS"] and has_hic(wildcards.asmname):
-        return "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa"
-    else:
-        return "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
-
-rule ntjoin:
-    input:
-        reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = get_scaffolding_input,
-    output:
-        all = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
-        assigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
-        unassigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa",
-        agp = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
-        mxdot = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
-        contigscount = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv",
-        path = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.path",
-        unassignedbed = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv.unassigned.bed",
-    log:
-        "results/logs/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.txt"
-    threads:
-        5
-    conda:
-        "../../envs/ntjoin.yaml"
-    shell:
-        """
-        (
-        ln -sf $(realpath {input.contigs}) $(dirname {output.all})/$(basename {output.all} | rev | cut -d"." -f7- | rev)
-        ln -sf $(realpath {input.reference}) $(dirname {output.all})/{wildcards.reference}.fa
-        cd $(dirname {output.all})
-        ntJoin assemble target=$(basename {output.all} | rev | cut -d"." -f7- | rev) references='{wildcards.reference}.fa' target_weight='1' reference_weights='2' n=2 G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
-        ) &> {log}
-        """
-
-rule ragtag:
-    input:
-        reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = get_scaffolding_input,
-    output:
-        agp = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
-        paf = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
-        paflog = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf.log",
-        confidence = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.confidence.txt",
-        err = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.err",
-        fasta = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
-        stats = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.stats",
-    log:
-        "results/logs/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.txt"
-    threads:
-        5
-    conda:
-        "../../envs/ragtag.yaml"
-    shell:
-        "ragtag.py scaffold -rt{threads} -o$(dirname {output.fasta}) {input.reference} {input.contigs} &> {log}"
-
 rule bwa_index_contigs:
     input:
         contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
@@ -170,6 +87,136 @@ rule index_hic:
     shell:
         "samtools index -@$(({threads}-1)) {input} &> {log}"
 
+rule yahs:
+    input:
+        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigsfai = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.fai",
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+        bai = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
+    output:
+        scaffolds = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
+        agp = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.agp",
+    log:
+        "results/logs/1.assembly/yahs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/yahs/{asmname}.min{minlen}.txt"
+    conda:
+        "../../envs/yahs.yaml"
+    shell:
+        """
+        (
+        mkdir -p $(dirname {output})
+        yahs -o $(echo {output.scaffolds} | rev | cut -d '_' -f 3- | rev) {input.contigs} {input.bam}
+        ) &> {log}
+        """
+
+use rule bwa_index_contigs as bwa_index_yahs with:
+    input:
+        contigs = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
+    output:
+        index1 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.0123",
+        index2 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.amb",
+        index3 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.ann",
+        index4 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.bwt.2bit.64",
+        index5 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.pac",
+    log:
+        "results/logs/1.assembly/bwa_index_yahs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/bwa_index_yahs/{asmname}.min{minlen}.txt"
+
+use rule map_hic as map_hic_again with:
+    input:
+        contigs = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa", minlen=config["min_contig_len"],),
+        index1 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.0123", minlen=config["min_contig_len"],),
+        index2 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.amb", minlen=config["min_contig_len"],),
+        index3 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.ann", minlen=config["min_contig_len"],),
+        index4 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.bwt.2bit.64", minlen=config["min_contig_len"],),
+        index5 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.pac", minlen=config["min_contig_len"],),
+        forward = get_hic_1,
+        backward = get_hic_2,
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.bam",
+    log:
+        "results/logs/1.assembly/map_hic_again/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/map_hic_again/{asmname}.txt"
+
+use rule filter_hic as filter_hic_again with:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.filtered.bam",
+    log:
+        "results/logs/1.assembly/filter_hic_again/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/filter_hic_again/{asmname}.txt"
+
+def get_scaffolding_input(wildcards):
+    if config["YAHS"] and has_hic(wildcards.asmname):
+        return "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa"
+    else:
+        return "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
+
+rule ntjoin:
+    input:
+        reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
+        contigs = get_scaffolding_input,
+    output:
+        all = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
+        assigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
+        unassigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.unassigned.scaffolds.fa",
+        agp = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
+        mxdot = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.mx.dot",
+        contigscount = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv",
+        path = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.path",
+        unassignedbed = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.tsv.unassigned.bed",
+    log:
+        "results/logs/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.txt"
+    threads:
+        5
+    conda:
+        "../../envs/ntjoin.yaml"
+    shell:
+        """
+        (
+        ln -sf $(realpath {input.contigs}) $(dirname {output.all})/$(basename {output.all} | rev | cut -d"." -f7- | rev)
+        ln -sf $(realpath {input.reference}) $(dirname {output.all})/{wildcards.reference}.fa
+        cd $(dirname {output.all})
+        ntJoin assemble target=$(basename {output.all} | rev | cut -d"." -f7- | rev) references='{wildcards.reference}.fa' target_weight='1' reference_weights='2' n=2 G=10000 agp=True no_cut=True overlap=False k={wildcards.k} w={wildcards.w} mkt=True prefix=$(basename {output.all} | rev | cut -d '.' -f 2- | rev) t={threads}
+        ) &> {log}
+        """
+
+rule ragtag:
+    input:
+        reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
+        contigs = get_scaffolding_input,
+    output:
+        agp = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
+        paf = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
+        paflog = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf.log",
+        confidence = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.confidence.txt",
+        err = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.err",
+        fasta = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.fasta",
+        stats = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.stats",
+    log:
+        "results/logs/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/ragtag/{asmname}.vs.{reference}.min{minlen}.txt"
+    threads:
+        5
+    conda:
+        "../../envs/ragtag.yaml"
+    shell:
+        "ragtag.py scaffold -rt{threads} -o$(dirname {output.fasta}) {input.reference} {input.contigs} &> {log}"
+
+def get_hic_mapping(wildcards):
+    if config["YAHS"] and has_hic(wildcards.asmname):
+        return "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.filtered.bam"
+    else:
+        return "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam"
+
 rule ntjoin_plot_hic:
     input:
         agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
@@ -178,7 +225,7 @@ rule ntjoin_plot_hic:
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+        bam = get_hic_mapping,
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ntjoin/contact_map.pdf",
@@ -214,7 +261,7 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+        bam = get_hic_mapping,
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ragtag/contact_map.pdf",
