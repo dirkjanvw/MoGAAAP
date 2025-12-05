@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.1.0 - 2025-12-05]
 
 ### Added
 - Add some extra documentation to error messages and FAQ (#109, #110).
@@ -8,7 +8,7 @@ All notable changes to MoGAAAP will be documented in this file.
 - Add YAHS scaffolder optionally prior to ntJoin/RagTag (#119).
 
 ### Changed
-- Using ntSynt-viz instead of single visualisation scripts (#111).
+- Use ntSynt-viz instead of single visualisation scripts (#111).
 - Update GH actions to only rebuild the SIF containers that have changed (#112).
 - Remove kmer-db due to redundancy with mash (#116).
 - Make sure that converting the BLAST output doesn't fail on no results (#118).
