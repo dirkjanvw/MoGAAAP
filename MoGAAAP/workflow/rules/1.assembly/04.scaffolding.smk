@@ -110,6 +110,40 @@ rule yahs:
         ) &> {log}
         """
 
+rule yahs_plot_hic:
+    input:
+        agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.agp",
+            minlen=config["min_contig_len"],
+        ),
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+    output:
+        pdf = report("results/{asmname}/1.assembly/04.yahs/contact_map.pdf",
+            category="Assembly",
+            subcategory="Hi-C",
+            caption="../../report/hic.rst",
+            labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
+                    "algorithm": "YAHS (contact map)"}
+        ),
+        pkl = "results/{asmname}/1.assembly/04.yahs/contact_matrix.pkl",
+    log:
+        "results/logs/1.assembly/yahs_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/yahs_plot/{asmname}.txt"
+    threads:
+        8
+    container:
+        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
+    shell:
+        """
+        (
+        agp="$(realpath {input.agp})"
+        bam="$(realpath {input.bam})"
+        cd $(dirname {output.pdf})
+        haphic plot --threads {threads} $agp $bam
+        ) &> {log}
+        """
+
 use rule bwa_index_contigs as bwa_index_yahs with:
     input:
         contigs = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
@@ -217,7 +251,7 @@ def get_hic_mapping(wildcards):
     else:
         return "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam"
 
-rule ntjoin_plot_hic:
+use rule yahs_plot_hic as ntjoin_plot_hic with:
     input:
         agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             reference=get_reference_id(wildcards.asmname),
@@ -234,26 +268,13 @@ rule ntjoin_plot_hic:
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ntjoin (contact map)"}
+                    "algorithm": "ntJoin (contact map)"}
         ),
         pkl = "results/{asmname}/1.assembly/04.ntjoin/contact_matrix.pkl",
     log:
         "results/logs/1.assembly/ntjoin_plot/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/ntjoin_plot/{asmname}.txt"
-    threads:
-        8
-    container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
-    shell:
-        """
-        (
-        agp="$(realpath {input.agp})"
-        bam="$(realpath {input.bam})"
-        cd $(dirname {output.pdf})
-        haphic plot --threads {threads} $agp $bam
-        ) &> {log}
-        """
 
 use rule ntjoin_plot_hic as ragtag_plot_hic with:
     input:
@@ -270,7 +291,7 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ragtag (contact map)"}
+                    "algorithm": "RagTag (contact map)"}
         ),
         pkl = "results/{asmname}/1.assembly/04.ragtag/contact_matrix.pkl",
     log:
