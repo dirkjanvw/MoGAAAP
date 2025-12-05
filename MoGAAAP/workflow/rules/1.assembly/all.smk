@@ -73,6 +73,8 @@ def get_hic_plots(wildcards):
     filelist = []
     if singularity_enabled():
         for asmname in get_all_accessions():
+            if config["YAHS"] and has_hic(asmname):
+                filelist.append(f"results/{asmname}/1.assembly/04.yahs/contact_map.pdf")
             if has_hic(asmname) and not has_assembly_location(asmname): #TODO: enable for all assemblies
                 filelist.append(f"results/{asmname}/1.assembly/04.{config['scaffolder']}/contact_map.pdf")
     return filelist

@@ -6,10 +6,10 @@
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
 This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
-The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
+The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi (or ONT) is required.
 
 Additionally, MoGAAAP is set up in a modular way, allowing for any combination of assembly, annotation and quality assessment steps.
-Therefore, MoGAAAP can also be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
+Therefore, MoGAAAP can **also** be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
 
 A test dataset is provided in the `test_data/` directory, including instructions.
 
@@ -84,7 +84,7 @@ MoGAAAP --help
 > MoGAAAP uses apptainer for handling some software dependencies.
 > Although apptainer has been installed as part of the conda environment, there are some environment variables that need to be set for it to work correctly.
 > This has to be set in your `.bashrc` (don't forget to source the file after changing):
-> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included (working directory, database directory, etc.).
+> - `APPTAINER_BIND`: To bind the paths inside the container to the paths on your system; make sure all relevant paths are included: **all** locations containing input and output of MoGAAAP need to be included here, as well as the location of the GXDB database.
 >
 > Optionally, you can also set these:
 > - `APPTAINER_NV`: To use the GPU inside the container; only required if you have a GPU.
@@ -94,17 +94,19 @@ MoGAAAP --help
 
 ### Download databases
 Next, download the databases that are required for the pipeline to run.
-Please be aware that these databases are large and require a lot of storage space.
+Please be aware that these databases are large and require a lot of storage space, but can be shared between different runs of the pipeline.
 At the time of writing (February 2025), the total size of the databases is around 900GB.
 
 | Database            | Download instructions                                                                                                                                                                    |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | GXDB database       | Follow "Download the database" instructions on [FCS GitHub wiki](https://github.com/ncbi/fcs/wiki/FCS-GX-quickstart#download-the-fcs-gx-database) (I only tested the Cloud instructions) |
-| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                             |
+| Kraken2 nt database | Download `core_nt` from [this list](https://benlangmead.github.io/aws-indexes/k2)                                                                                                        |
 | OMA database        | Download `LUCA.h5` from [this list](https://omabrowser.org/oma/current/)                                                                                                                 |
 
+Importantly, the location of the GXDB database has be included in the `APPTAINER_BIND` environment variable (see note above).
+
 A helper script is provided to automate the download of the databases.
-As the locations of the databases are hardcoded, please leave an issue on the GitHub page if any of the locations no longer works.
+As the hyperlinks of the databases are hardcoded in the script, please leave an issue on the GitHub page if any of the locations no longer works.
 ```bash
 MoGAAAP download_databases -d databases/ all
 ```
@@ -133,10 +135,10 @@ The sample TSV sheet has the following columns to fill in (one row per sample):
 | Column name          | Required? | Description                                                                                                                                                              |
 |----------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `accessionId`        | Required  | The accession ID of the sample. This name has to be unique.                                                                                                              |
-| `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
+| `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided. This is especially useful for performing QA on existing assemblies.  |
 | `annotationLocation` | Optional  | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
 | `hifi`               | `*`       | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
-| `ont`                | Optional  | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
+| `ont`                | `*`       | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
 | `illumina_1`         | Optional  | The path to the forward Illumina reads in FASTQ format.                                                                                                                  |
 | `illumina_2`         | Optional  | The path to the reverse Illumina reads in FASTQ format.                                                                                                                  |
 | `hic_1`              | Optional  | The path to the forward Hi-C reads in FASTQ format.                                                                                                                      |
@@ -267,12 +269,13 @@ In most cases, the error may be resolved by choosing different values for the `n
 In our experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
 Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolder` parameter in the configuration YAML file.
 
+Importantly, Hi-C reads can be used for scaffolding too by setting the `YAHS` parameter in the configuration to `True`: this will run YAHS prior to scaffolding by `ntJoin`/`ragtag`.
+It's important to stress that the default here is `False` because we have not tested `yahs` extensively, but preliminary tests show more accurate scaffolding.
+Please open an issue on this GitHub page if you tested `yahs` and encountered problems.
+
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 If Hi-C reads were provided, the Hi-C contact map is also produced for visual inspection of the `ntJoin` scaffolding process.
-
-**NB**: It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
-The reason for this is that none of the currently available algorithms for Hi-C scaffolding can guarantee a correct assembly, and we believe that the reference-guided scaffolding is more reliable for automated pipelines.
 
 #### Next steps
 As the assembly as outputted by this module is used as starting point for the annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
@@ -310,7 +313,7 @@ Feel free to copy the config files produced by this pipeline and adjust to your 
 This final quality assessment module is the most important for human curation of the genome.
 The quality assessment steps in this module can be roughly divided into two categories: individual and grouped.
 Individual quality assessment steps include k-mer completeness (`merqury`), k-mer contamination (`kraken2`), NCBI contamination (`fcs-gx`), adapter contamination (`fcs-adaptor`) and read mapping (`bwa-mem2`).
-Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), k-mer distances (`kmer-db`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
+Grouped quality assessment steps include BUSCO completeness (`busco`), OMA completeness (`omark`), mash distances (`mash`), minimizer collinearity (`ntsynt`), k-mer phylogeny (`SANS`), k-mer pangenome growth (`pangrowth`), gene pangenome growth (`pantools`) and general statistics.
 These groups are meant to give a comparative overview of the assembly and annotation.
 Any groups can be defined in the configuration YAML file and a genome may occur in multiple groups.
 
@@ -324,7 +327,15 @@ Next steps could include (but are not limited to) removal of contaminants, disco
 ## Citation
 If you use MoGAAAP in your work, please cite this work as:
 ```bibtex
-in prep.
+@misc{workum_mogaaap_2025,
+	title = {{MoGAAAP}: {A} modular {Snakemake} workflow for automated genome assembly and annotation with quality assessment},
+	author = {Workum, Dirk-Jan M. van and Dey, Kuntal K. and Kozik, Alexander and Lavelle, Dean and Ridder, Dick de and Schranz, M. Eric and Michelmore, Richard W. and Smit, Sandra},
+	doi = {10.1101/2025.08.26.672321},
+	publisher = {bioRxiv},
+	month = aug,
+	year = {2025},
+}
+
 ```
 
 
@@ -383,6 +394,9 @@ We use strict matching to rename the chromosomes, so the names have to be exactl
 A: While `seqtk` is more accurate in the boundaries of the telomere search, it cannot identify telomeres that are not at the ends of the chromosomes.
 Therefore, we recommend to *also* run BLASTN with a fasta file containing 100x the telomere repeat sequence for identification of telomeres that are not at the ends of the chromosomes.
 
+### Q: I only have ONT data and no HiFi data; can I still use this pipeline?
+A: MoGAAAP only supports ONT-only assemblies when using `hifiasm` as assembler.
+However, we have not tested this functionality extensively, so please open an issue on this GitHub page if you run into any problems.
+
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
-

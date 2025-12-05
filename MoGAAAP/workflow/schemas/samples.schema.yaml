@@ -65,6 +65,7 @@ required:
 
 anyOf:
     - required: ["hifi"]
+    - required: ["ont"]
     - required: ["assemblyLocation"]
 
 dependentRequired:

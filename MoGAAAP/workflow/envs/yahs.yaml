@@ -2,4 +2,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - kmer-db=1.11.1
+  - yahs=1.2.2
