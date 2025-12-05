@@ -6,10 +6,10 @@
 # MoGAAAP (Modular Genome Assembly, Annotation and Assessment Pipeline)
 This repository contains a Snakemake pipeline for the assembly, annotation and quality assessment of HiFi-based assemblies.
 Although developed for a project in lettuce, the pipeline is designed to work with any eukaryotic organism.
-The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi is required.
+The pipeline will work with HiFi, ONT data and Hi-C, although only HiFi (or ONT) is required.
 
 Additionally, MoGAAAP is set up in a modular way, allowing for any combination of assembly, annotation and quality assessment steps.
-Therefore, MoGAAAP can also be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
+Therefore, MoGAAAP can **also** be used to e.g. only assess the quality of already assembled genomes, or only to annotate an unannoated genome assembly.
 
 A test dataset is provided in the `test_data/` directory, including instructions.
 
@@ -269,12 +269,13 @@ In most cases, the error may be resolved by choosing different values for the `n
 In our experience, increasing the value for `ntjoin_w` resolves most issues when no correct scaffolding is produced.
 Alternatively, scaffolding can be done using `ragtag` by changing the `scaffolder` parameter in the configuration YAML file.
 
+Importantly, Hi-C reads can be used for scaffolding too by setting the `YAHS` parameter in the configuration to `True`: this will run YAHS prior to scaffolding by `ntJoin`/`ragtag`.
+It's important to stress that the default here is `False` because we have not tested `yahs` extensively, but preliminary tests show more accurate scaffolding.
+Please open an issue on this GitHub page if you tested `yahs` and encountered problems.
+
 After scaffolding, the sequences in the scaffolded assembly are renamed to reflect their actual chromosome names according to the reference genome.
 Finally, `nucmer` is run again to produce an alignment plot for visual inspection of the scaffolding process.
 If Hi-C reads were provided, the Hi-C contact map is also produced for visual inspection of the `ntJoin` scaffolding process.
-
-**NB**: It's important to stress that Hi-C reads are not used in the scaffolding process itself, but only for visual inspection.
-The reason for this is that none of the currently available algorithms for Hi-C scaffolding can guarantee a correct assembly, and we believe that the reference-guided scaffolding is more reliable for automated pipelines.
 
 #### Next steps
 As the assembly as outputted by this module is used as starting point for the annotate and qa modules, it is crucial it matches the expectations in terms of size and chromosome number.
@@ -391,4 +392,3 @@ However, we have not tested this functionality extensively, so please open an is
 
 ### Contact
 If the above information does not answer your question or solve your issue, feel free to open an issue on this GitHub page.
-

@@ -1,7 +1,200 @@
+rule bwa_index_contigs:
+    input:
+        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+    output:
+        index1 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.0123",
+        index2 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.amb",
+        index3 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.ann",
+        index4 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.bwt.2bit.64",
+        index5 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.pac",
+    log:
+        "results/logs/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.txt"
+    conda:
+        "../../envs/mapping.yaml"
+    shell:
+        "bwa-mem2 index {input.contigs} &> {log}"
+
+rule map_hic:
+    input:
+        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
+        index1 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.0123", minlen=config["min_contig_len"],),
+        index2 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.amb", minlen=config["min_contig_len"],),
+        index3 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.ann", minlen=config["min_contig_len"],),
+        index4 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.bwt.2bit.64", minlen=config["min_contig_len"],),
+        index5 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.pac", minlen=config["min_contig_len"],),
+        forward = get_hic_1,
+        backward = get_hic_2,
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.bam",
+    log:
+        "results/logs/1.assembly/map_hic/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/map_hic/{asmname}.txt"
+    threads:
+        10
+    conda:
+        "../../envs/mapping.yaml"
+    shell:
+        "(bwa-mem2 mem -t {threads} -5SP {input.contigs} {input.forward} {input.backward} | samblaster | samtools view - -@ $(({threads}-1)) -S -h -b -F 3340 -o {output}) &> {log}"
+
+rule filter_hic:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+    log:
+        "results/logs/1.assembly/filter_hic/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/filter_hic/{asmname}.txt"
+    threads:
+        10
+    container:
+        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
+    shell:
+        "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
+
+rule sort_hic:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+    log:
+        "results/logs/1.assembly/sort_hic/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/sort_hic/{asmname}.txt"
+    threads:
+        10
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools sort -@$(({threads}-1)) -o {output} {input} &> {log}"
+
+rule index_hic:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
+    log:
+        "results/logs/1.assembly/index_hic/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/index_hic/{asmname}.txt"
+    threads:
+        10
+    conda:
+        "../../envs/samtools.yaml"
+    shell:
+        "samtools index -@$(({threads}-1)) {input} &> {log}"
+
+rule yahs:
+    input:
+        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigsfai = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.fai",
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam",
+        bai = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.sorted.bam.bai",
+    output:
+        scaffolds = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
+        agp = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.agp",
+    log:
+        "results/logs/1.assembly/yahs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/yahs/{asmname}.min{minlen}.txt"
+    conda:
+        "../../envs/yahs.yaml"
+    shell:
+        """
+        (
+        mkdir -p $(dirname {output})
+        yahs -o $(echo {output.scaffolds} | rev | cut -d '_' -f 3- | rev) {input.contigs} {input.bam}
+        ) &> {log}
+        """
+
+rule yahs_plot_hic:
+    input:
+        agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.agp",
+            minlen=config["min_contig_len"],
+        ),
+        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam",
+    output:
+        pdf = report("results/{asmname}/1.assembly/04.yahs/contact_map.pdf",
+            category="Assembly",
+            subcategory="Hi-C",
+            caption="../../report/hic.rst",
+            labels={"assembly": "{asmname}",
+                    "stage": "scaffolds",
+                    "algorithm": "YAHS (contact map)"}
+        ),
+        pkl = "results/{asmname}/1.assembly/04.yahs/contact_matrix.pkl",
+    log:
+        "results/logs/1.assembly/yahs_plot/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/yahs_plot/{asmname}.txt"
+    threads:
+        8
+    container:
+        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
+    shell:
+        """
+        (
+        agp="$(realpath {input.agp})"
+        bam="$(realpath {input.bam})"
+        cd $(dirname {output.pdf})
+        haphic plot --threads {threads} $agp $bam
+        ) &> {log}
+        """
+
+use rule bwa_index_contigs as bwa_index_yahs with:
+    input:
+        contigs = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa",
+    output:
+        index1 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.0123",
+        index2 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.amb",
+        index3 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.ann",
+        index4 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.bwt.2bit.64",
+        index5 = "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa.pac",
+    log:
+        "results/logs/1.assembly/bwa_index_yahs/{asmname}.min{minlen}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/bwa_index_yahs/{asmname}.min{minlen}.txt"
+
+use rule map_hic as map_hic_again with:
+    input:
+        contigs = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa", minlen=config["min_contig_len"],),
+        index1 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.0123", minlen=config["min_contig_len"],),
+        index2 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.amb", minlen=config["min_contig_len"],),
+        index3 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.ann", minlen=config["min_contig_len"],),
+        index4 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.bwt.2bit.64", minlen=config["min_contig_len"],),
+        index5 = expand("results/{{asmname}}/1.assembly/04.yahs/{{asmname}}.min{minlen}.yahs_scaffolds_final.fa.pac", minlen=config["min_contig_len"],),
+        forward = get_hic_1,
+        backward = get_hic_2,
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.bam",
+    log:
+        "results/logs/1.assembly/map_hic_again/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/map_hic_again/{asmname}.txt"
+
+use rule filter_hic as filter_hic_again with:
+    input:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.bam",
+    output:
+        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.filtered.bam",
+    log:
+        "results/logs/1.assembly/filter_hic_again/{asmname}.log"
+    benchmark:
+        "results/benchmarks/1.assembly/filter_hic_again/{asmname}.txt"
+
+def get_scaffolding_input(wildcards):
+    if config["YAHS"] and has_hic(wildcards.asmname):
+        return "results/{asmname}/1.assembly/04.yahs/{asmname}.min{minlen}.yahs_scaffolds_final.fa"
+    else:
+        return "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa"
+
 rule ntjoin:
     input:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigs = get_scaffolding_input,
     output:
         all = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.fa",
         assigned = "results/{asmname}/1.assembly/04.ntjoin/{asmname}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.assigned.scaffolds.fa",
@@ -32,7 +225,7 @@ rule ntjoin:
 rule ragtag:
     input:
         reference = lambda wildcards: config["reference_genomes"][wildcards.reference]["genome"],
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
+        contigs = get_scaffolding_input,
     output:
         agp = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.agp",
         paf = "results/{asmname}/1.assembly/04.ragtag/{asmname}.vs.{reference}.min{minlen}/ragtag.scaffold.asm.paf",
@@ -52,64 +245,13 @@ rule ragtag:
     shell:
         "ragtag.py scaffold -rt{threads} -o$(dirname {output.fasta}) {input.reference} {input.contigs} &> {log}"
 
-rule bwa_index_contigs:
-    input:
-        contigs = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa",
-    output:
-        index1 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.0123",
-        index2 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.amb",
-        index3 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.ann",
-        index4 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.bwt.2bit.64",
-        index5 = "results/{asmname}/1.assembly/02.contigs/{asmname}.min{minlen}.sorted.renamed.fa.pac",
-    log:
-        "results/logs/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/bwa_index_contigs/{asmname}.min{minlen}.txt"
-    conda:
-        "../../envs/mapping.yaml"
-    shell:
-        "bwa-mem2 index {input.contigs} &> {log}"
+def get_hic_mapping(wildcards):
+    if config["YAHS"] and has_hic(wildcards.asmname):
+        return "results/{asmname}/1.assembly/04.hic/{asmname}.hic.yahs.filtered.bam"
+    else:
+        return "results/{asmname}/1.assembly/04.hic/{asmname}.hic.filtered.bam"
 
-rule map_hic:
-    input:
-        contigs = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa", minlen=config["min_contig_len"],),
-        index1 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.0123", minlen=config["min_contig_len"],),
-        index2 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.amb", minlen=config["min_contig_len"],),
-        index3 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.ann", minlen=config["min_contig_len"],),
-        index4 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.bwt.2bit.64", minlen=config["min_contig_len"],),
-        index5 = expand("results/{{asmname}}/1.assembly/02.contigs/{{asmname}}.min{minlen}.sorted.renamed.fa.pac", minlen=config["min_contig_len"],),
-        forward = get_hic_1,
-        backward = get_hic_2,
-    output:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
-    log:
-        "results/logs/1.assembly/map_hic/{asmname}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/map_hic/{asmname}.txt"
-    threads:
-        10
-    conda:
-        "../../envs/mapping.yaml"
-    shell:
-        "(bwa-mem2 mem -t {threads} -5SP {input.contigs} {input.forward} {input.backward} | samblaster | samtools view - -@ $(({threads}-1)) -S -h -b -F 3340 -o {output}) &> {log}"
-
-rule filter_hic:
-    input:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.bam",
-    output:
-        "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
-    log:
-        "results/logs/1.assembly/filter_hic/{asmname}.log"
-    benchmark:
-        "results/benchmarks/1.assembly/filter_hic/{asmname}.txt"
-    threads:
-        10
-    container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
-    shell:
-        "(filter_bam.py {input} 1 --NM 3 --threads {threads} | samtools view - -b -@ $(({threads}-1)) -o {output}) &> {log}"
-
-rule ntjoin_plot_hic:
+use rule yahs_plot_hic as ntjoin_plot_hic with:
     input:
         agp = lambda wildcards: expand("results/{{asmname}}/1.assembly/04.ntjoin/{{asmname}}.vs.{reference}.min{minlen}.k{k}.w{w}.n2.all.scaffolds.agp",
             reference=get_reference_id(wildcards.asmname),
@@ -117,7 +259,7 @@ rule ntjoin_plot_hic:
             k=config["ntjoin_k"],
             w=config["ntjoin_w"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        bam = get_hic_mapping,
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ntjoin.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ntjoin/contact_map.pdf",
@@ -126,26 +268,13 @@ rule ntjoin_plot_hic:
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ntjoin (contact map)"}
+                    "algorithm": "ntJoin (contact map)"}
         ),
         pkl = "results/{asmname}/1.assembly/04.ntjoin/contact_matrix.pkl",
     log:
         "results/logs/1.assembly/ntjoin_plot/{asmname}.log"
     benchmark:
         "results/benchmarks/1.assembly/ntjoin_plot/{asmname}.txt"
-    threads:
-        8
-    container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/haphic.f8f7451:latest"
-    shell:
-        """
-        (
-        agp="$(realpath {input.agp})"
-        bam="$(realpath {input.bam})"
-        cd $(dirname {output.pdf})
-        haphic plot --threads {threads} $agp $bam
-        ) &> {log}
-        """
 
 use rule ntjoin_plot_hic as ragtag_plot_hic with:
     input:
@@ -153,7 +282,7 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             reference=get_reference_id(wildcards.asmname),
             minlen=config["min_contig_len"],
         ),
-        bam = "results/{asmname}/1.assembly/04.hic/{asmname}.hic.sorted.filtered.bam",
+        bam = get_hic_mapping,
         table = "results/{asmname}/1.assembly/05.renaming/{asmname}.ragtag.html", #making sure that the table is generated before the plot so that the report can be interpreted
     output:
         pdf = report("results/{asmname}/1.assembly/04.ragtag/contact_map.pdf",
@@ -162,7 +291,7 @@ use rule ntjoin_plot_hic as ragtag_plot_hic with:
             caption="../../report/hic.rst",
             labels={"assembly": "{asmname}",
                     "stage": "scaffolds",
-                    "algorithm": "ragtag (contact map)"}
+                    "algorithm": "RagTag (contact map)"}
         ),
         pkl = "results/{asmname}/1.assembly/04.ragtag/contact_matrix.pkl",
     log:

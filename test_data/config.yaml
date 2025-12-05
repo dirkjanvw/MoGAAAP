@@ -12,6 +12,10 @@ samples: "../test_data/test_samples.tsv"
 # Assembly settings
 assembler: "hifiasm" #supported assemblers: hifiasm, verkko
 
+# Scaffolding settings
+YAHS: true #whether to run YAHS on Hi-C data prior to scaffolding if Hi-C is available
+scaffolder: "ntjoin" #supported scaffolders: ntjoin, ragtag
+
 # All filtering and scaffolding parameters
 min_contig_len: 10000
 ntjoin_k: 52
