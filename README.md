@@ -106,7 +106,7 @@ At the time of writing (February 2025), the total size of the databases is aroun
 Importantly, the location of the GXDB database has be included in the `APPTAINER_BIND` environment variable (see note above).
 
 A helper script is provided to automate the download of the databases.
-As the locations of the databases are hardcoded, please leave an issue on the GitHub page if any of the locations no longer works.
+As the hyperlinks of the databases are hardcoded in the script, please leave an issue on the GitHub page if any of the locations no longer works.
 ```bash
 MoGAAAP download_databases -d databases/ all
 ```
@@ -135,7 +135,7 @@ The sample TSV sheet has the following columns to fill in (one row per sample):
 | Column name          | Required? | Description                                                                                                                                                              |
 |----------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `accessionId`        | Required  | The accession ID of the sample. This name has to be unique.                                                                                                              |
-| `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided.                                                                      |
+| `assemblyLocation`   | `*`       | The path to a scaffolded assembly in FASTA format. Pipeline will skip assembly if this is provided. This is especially useful for performing QA on existing assemblies.  |
 | `annotationLocation` | Optional  | The path to an annotation in GFF3 format. Only allowed if `assemblyLocation` is provided. Pipeline will skip annotation if this is provided.                             |
 | `hifi`               | `*`       | The path to the HiFi reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                             |
 | `ont`                | `*`       | The path to the ONT reads in FASTQ or FASTA format. Multiple libraries can be provided by separating them with a semicolon.                                              |
@@ -327,7 +327,15 @@ Next steps could include (but are not limited to) removal of contaminants, disco
 ## Citation
 If you use MoGAAAP in your work, please cite this work as:
 ```bibtex
-in prep.
+@misc{workum_mogaaap_2025,
+	title = {{MoGAAAP}: {A} modular {Snakemake} workflow for automated genome assembly and annotation with quality assessment},
+	author = {Workum, Dirk-Jan M. van and Dey, Kuntal K. and Kozik, Alexander and Lavelle, Dean and Ridder, Dick de and Schranz, M. Eric and Michelmore, Richard W. and Smit, Sandra},
+	doi = {10.1101/2025.08.26.672321},
+	publisher = {bioRxiv},
+	month = aug,
+	year = {2025},
+}
+
 ```
 
 
