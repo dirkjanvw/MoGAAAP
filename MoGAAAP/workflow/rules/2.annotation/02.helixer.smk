@@ -18,7 +18,7 @@ rule helixer_download_model:
 rule helixer:
     input:
         genome = "final_output/{asmname}.full.fa",
-        helixer_model = rules.helixer_download_model.output,
+        helixer_model = ancient(rules.helixer_download_model.output),
     output:
         "results/{asmname}/2.annotation/02.helixer/helixer.gff",
     log:
