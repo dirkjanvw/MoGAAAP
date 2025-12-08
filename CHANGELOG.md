@@ -2,6 +2,9 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Add validation check for YAHS configuration (#122).
+
 ### Changed
 - No longer re-run Helixer for all samples if only one has to be re-run (#123).
 

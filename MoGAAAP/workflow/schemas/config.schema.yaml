@@ -20,6 +20,10 @@ properties:
         pattern: "^(hifiasm|verkko|flye)$"
         default: "hifiasm"
 
+    YAHS:
+        type: boolean
+        description: whether to use YAHS for Hi-C scaffolding prior to reference-guided scaffolding
+        default: false
     scaffolder:
         type: string
         description: scaffolder to use; supported scaffolders are ntjoin, ragtag
