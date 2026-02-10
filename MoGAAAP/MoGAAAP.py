@@ -161,12 +161,17 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
 
 def validate_targets(ctx, param, value):
     """
-    Validate that the targets are valid (i.e. one of: all, assembly, scaffold,
-        analyse, annotate, qa)
+    Validate that the targets are valid (i.e. one of: all, assemble, annotate,
+    qa or their respective sub-targets)
     """
 
-    valid_targets = ['all', 'assemble', 'contig', 'annotate', 'annotate_genes',
-        'annotate_custom', 'qa']
+    valid_targets = ['all',
+                     'assemble', 'contig',
+                     'annotate', 'annotate_genes', 'annotate_custom',
+                     'qa', 'merqury', 'kraken2', 'fcs_gx', 'fcs_adaptor',
+                     'mapping', 'pantools', 'busco', 'omark', 'mash', 'ntsynt',
+                     'sans', 'pangrowth', 'statistics'
+                     ]
 
     for target in value:
         if target not in valid_targets:
