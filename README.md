@@ -178,6 +178,19 @@ Several modules are available in this pipeline (will be referred to later as `${
   - `annotate_custom`: This only performs the custom analysis step of the `annotate` module without performing gene annotation.
 - `qa`: This module will perform quality assessment of the scaffolded assembly and the provisional annotation.
 - `all`: This module will run all the above modules (DEFAULT).
+  - `merqury`: This only performs the k-mer completeness assessment using `merqury`.
+  - `kraken2`: This only performs the k-mer contamination assessment using `kraken2`.
+  - `fcs-gx`: This only performs the NCBI contamination assessment using `fcs-gx`.
+  - `fcs-adaptor`: This only performs the adapter contamination assessment using `fcs-adaptor`.
+  - `mapping`: This only performs the read mapping assessment.
+  - `pantools`: This only performs the gene-based pangenome assessment using `pantools`.
+  - `busco`: This only performs the BUSCO completeness assessment.
+  - `omark`: This only performs the OMA completeness assessment.
+  - `mash`: This only performs the mash distance assessment.
+  - `ntsynt`: This only performs the minimizer collinearity assessment.
+  - `sans`: This only performs the k-mer phylogeny assessment.
+  - `pangrowth`: This only performs the k-mer-based pangenome assessment using `pangrowth`.
+  - `statistics`: This only creates the general statistics table.
 
 It is advisable to run the pipeline module by module for a new set of assemblies and critically look at the results of each module before continuing.
 All modules except for `annotate` have visual output that can be inspected in an HTML report file (see at [Reporting](#reporting)).
