@@ -11,6 +11,7 @@
 # - run: Run the MoGAAAP pipeline and create a report
 
 import click
+import subprocess
 from importlib.metadata import version
 import multiprocessing, psutil, os
 from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap, download_databases as utils_download_databases
@@ -32,8 +33,22 @@ class OrderedGroup(click.Group):
         return self.order
 
 
+def get_version():
+    """Obtain the git version via git, if available."""
+    base = version("MoGAAAP")
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            cwd=os.path.dirname(__file__)
+        ).decode().strip()
+        return f"{base}, {commit}"
+    except Exception:
+        return base
+
+
 @click.group(cls=OrderedGroup, context_settings=dict(help_option_names=["-h", "--help"]))
-@click.version_option(version=version("MoGAAAP"))
+@click.version_option(version=get_version(), prog_name="MoGAAAP")
 def cli():
     """This is a wrapper script around the MoGAAAP Snakemake workflow."""
     pass
