@@ -1,4 +1,4 @@
-rule kraken2:
+rule kraken2_run:
     input:
         "final_output/{asmname}.full.fa",
     output:

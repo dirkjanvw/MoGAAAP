@@ -22,7 +22,7 @@ rule meryl:
     shell:
         "meryl count threads={threads} k={wildcards.k} output {output} {input} &> {log}"
 
-rule merqury:
+rule merqury_run:
     input:
         meryl = "results/{asmname}/3.quality_assessment/01.meryl_databases/{k}/{wgstype}.meryl",
         genome = "final_output/{asmname}.full.fa",

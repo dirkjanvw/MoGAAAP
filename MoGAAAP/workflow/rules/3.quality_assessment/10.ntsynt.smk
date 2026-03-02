@@ -1,4 +1,4 @@
-rule ntsynt:
+rule ntsynt_run:
     input:
         genomes = lambda wildcards: expand("final_output/{asmname}.full.fa", asmname=get_all_accessions_from_asmset(wildcards.asmset)),
         divergence = "results/{asmset}/3.quality_assessment/09.mash/{asmset}.tsv",

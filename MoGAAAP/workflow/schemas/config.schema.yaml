@@ -163,17 +163,7 @@ properties:
 
 required:
     - samples
-    - assembler
-    - scaffolder
-    - min_contig_len
-    - reference_genomes
-    - organellar
-    - nucl_queries
-    - telomere_motif
-    - helixer_model
-    - helixer_max_gene_length
-    - gxdb
-    - odb
-    - kraken2_nt
-    - OMAdb
     - set
+    - nucmer_maxgap
+    - nucmer_minmatch
+    - custom_singularity

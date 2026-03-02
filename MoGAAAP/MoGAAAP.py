@@ -126,7 +126,6 @@ def download_databases(workdir, databases):
     type=click.Path(exists=True),
     help='Reference GFF file')
 @click.option('--mitochondrion', '-m',
-    required=True,
     type=click.Path(exists=True),
     help='Mitochondrion FASTA file')
 @click.option('--chloroplast', '-c',
@@ -137,21 +136,16 @@ def download_databases(workdir, databases):
     show_default=True,
     help='Telomere motif')
 @click.option('--odb', '-b',
-    required=True,
     help='ODB name for BUSCO')
 @click.option('--helixer-model', '-e',
-    required=True,
     help='Helixer model name (land_plant, vertebrate, invertebrate, fungi)')
 @click.option('--gxdb', '-x',
-    required=True,
     type=click.Path(exists=True),
     help='GXDB database location')
 @click.option('--omadb', '-o',
-    required=True,
     type=click.Path(exists=True),
     help='OMA database location')
 @click.option('--kraken2db', '-k',
-    required=True,
     type=click.Path(exists=True),
     help='kraken2 database location')
 def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
@@ -162,12 +156,16 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
     samples = os.path.abspath(samples)
     reference_fasta = os.path.abspath(reference_fasta)
     reference_gff = os.path.abspath(reference_gff)
-    mitochondrion = os.path.abspath(mitochondrion)
+    if mitochondrion:
+        mitochondrion = os.path.abspath(mitochondrion)
     if chloroplast:
         chloroplast = os.path.abspath(chloroplast)
-    gxdb = os.path.abspath(gxdb)
-    omadb = os.path.abspath(omadb)
-    kraken2db = os.path.abspath(kraken2db)
+    if gxdb:
+        gxdb = os.path.abspath(gxdb)
+    if omadb:
+        omadb = os.path.abspath(omadb)
+    if kraken2db:
+        kraken2db = os.path.abspath(kraken2db)
 
     configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         mitochondrion, chloroplast, telomere, odb, helixer_model, gxdb, omadb,
@@ -236,6 +234,8 @@ def run(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
     workdir = os.path.abspath(workdir)
     configfile = os.path.abspath(configfile)
     reportfile = os.path.abspath(reportfile)
+    if not targets:
+        targets = ["all"]
 
     run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets)
 

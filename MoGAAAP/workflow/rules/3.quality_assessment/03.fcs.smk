@@ -1,4 +1,4 @@
-rule fcs_gx:
+rule fcs_gx_run:
     input:
         "final_output/{asmname}.full.fa"
     output:
@@ -44,7 +44,7 @@ rule visualise_fcs_gx:
         ) &> {log}
         """
 
-rule fcs_adaptor:
+rule fcs_adaptor_run:
     input:
         "final_output/{asmname}.full.fa"
     output:
