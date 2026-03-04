@@ -4,7 +4,7 @@ rule helixer_download_model:
     log:
         "results/logs/2.annotation/helixer_download_model.log"
     params:
-        helixer_model = config["helixer_model"],
+        helixer_model = lambda _: config["helixer_model"],
     container:
         "docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8"
     shell:
@@ -28,7 +28,7 @@ rule helixer:
     params:
         subseqlen = config["helixer_max_gene_length"],
         species = lambda wildcards: get_species_name(wildcards),
-        helixer_model = config["helixer_model"],
+        helixer_model = lambda _: config["helixer_model"],
     threads:
         lambda wildcards: len(config["reference_genomes"][get_reference_id(wildcards.asmname)]["chromosomes"]) + 1  #the number of chromosomes plus 1
     resources:

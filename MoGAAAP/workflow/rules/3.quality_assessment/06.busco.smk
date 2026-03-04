@@ -6,7 +6,7 @@ rule busco_download:
     benchmark:
         "results/benchmarks/3.quality_assessment/busco_download.txt"
     params:
-        odb = config["odb"]
+        odb = lambda _: config["odb"]
     conda:
         "../../envs/busco.yaml"
     shell:

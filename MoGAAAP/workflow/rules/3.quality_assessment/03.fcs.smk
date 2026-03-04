@@ -10,7 +10,7 @@ rule fcs_gx_run:
         "results/benchmarks/3.quality_assessment/fcs-gx/{asmname}.txt"
     params:
         taxid = lambda wildcards: get_taxid(wildcards),
-        gxdb = config["gxdb"],
+        gxdb = lambda _: config["gxdb"],
     resources:
         gbmem = 500
     container:
