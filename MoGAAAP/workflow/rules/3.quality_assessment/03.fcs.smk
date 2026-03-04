@@ -1,4 +1,4 @@
-rule fcs_gx:
+rule fcs_gx_run:
     input:
         "final_output/{asmname}.full.fa"
     output:
@@ -10,7 +10,7 @@ rule fcs_gx:
         "results/benchmarks/3.quality_assessment/fcs-gx/{asmname}.txt"
     params:
         taxid = lambda wildcards: get_taxid(wildcards),
-        gxdb = config["gxdb"],
+        gxdb = lambda _: config["gxdb"],
     resources:
         gbmem = 500
     container:
@@ -44,7 +44,7 @@ rule visualise_fcs_gx:
         ) &> {log}
         """
 
-rule fcs_adaptor:
+rule fcs_adaptor_run:
     input:
         "final_output/{asmname}.full.fa"
     output:

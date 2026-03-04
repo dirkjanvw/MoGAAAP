@@ -7,6 +7,7 @@ All notable changes to MoGAAAP will be documented in this file.
 
 ### Changed
 - No longer re-run Helixer for all samples if only one has to be re-run (#123).
+- Update the pipeline in such a way that it is truly modular for the QA steps (#125).
 
 ## [1.1.0 - 2025-12-05]
 

@@ -8,7 +8,7 @@ rule identify_telomere:
     benchmark:
         "results/benchmarks/2.annotation/identify_telomere/{asmname}.txt"
     params:
-        telomere_motif = config["telomere_motif"]
+        telomere_motif = lambda _: config["telomere_motif"]
     conda:
         "../../envs/seqtk.yaml"
     shell:

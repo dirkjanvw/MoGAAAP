@@ -1,4 +1,4 @@
-rule kraken2:
+rule kraken2_run:
     input:
         "final_output/{asmname}.full.fa",
     output:
@@ -9,9 +9,9 @@ rule kraken2:
     benchmark:
         "results/benchmarks/3.quality_assessment/kraken2/{asmname}.txt"
     params:
-        db=config["kraken2_nt"]
+        db = lambda _: config["kraken2_nt"]
     resources:
-        gbmem=500  #should be just above what the kraken2 nt database actually uses
+        gbmem = 500  #should be just above what the kraken2 nt database actually uses
     threads:
         10
     conda:

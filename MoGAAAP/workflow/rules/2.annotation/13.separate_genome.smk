@@ -24,9 +24,9 @@ rule extract_organelle:
 rule extract_nuclear:
     input:
         assembly = "final_output/{asmname}.full.fa",
-        organelles = expand("results/{{asmname}}/2.annotation/13.separate_genome/{{asmname}}.{organelle}.fa", organelle=config["organellar"]),
+        organelles = lambda _: expand("results/{{asmname}}/2.annotation/13.separate_genome/{{asmname}}.{organelle}.fa", organelle=config["organellar"]),
     output:
-        txt = temporary("results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.txt"),
+        txt = temporary("results/{asmname}/2.annotation/13.separate_genome/{asmname}.organelles.txt"),
         fa = "results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.fa",
     log:
         "results/logs/2.annotation/extract_nuclear/{asmname}.log",

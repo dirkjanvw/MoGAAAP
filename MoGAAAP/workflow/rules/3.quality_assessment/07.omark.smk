@@ -16,7 +16,7 @@ rule omamer_search:
     shell:
         "omamer search -d {params.database} -q {input} -o {output} -t {threads} &> {log}"
 
-rule omark:
+rule omark_run:
     input:
         omamer = "results/{asmname}/3.quality_assessment/07.omamer/{asmname}.omamer",
         splice = "results/{asmname}/3.quality_assessment/proteome.splice",

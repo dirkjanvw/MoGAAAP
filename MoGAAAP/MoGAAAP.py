@@ -11,6 +11,7 @@
 # - run: Run the MoGAAAP pipeline and create a report
 
 import click
+import subprocess
 from importlib.metadata import version
 import multiprocessing, psutil, os
 from .utils import show_ascii_art, init_mogaaap, configure_mogaaap, run_mogaaap, download_databases as utils_download_databases
@@ -32,8 +33,22 @@ class OrderedGroup(click.Group):
         return self.order
 
 
+def get_version():
+    """Obtain the git version via git, if available."""
+    base = version("MoGAAAP")
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            cwd=os.path.dirname(__file__)
+        ).decode().strip()
+        return f"{base}, {commit}"
+    except Exception:
+        return base
+
+
 @click.group(cls=OrderedGroup, context_settings=dict(help_option_names=["-h", "--help"]))
-@click.version_option(version=version("MoGAAAP"))
+@click.version_option(version=get_version(), prog_name="MoGAAAP")
 def cli():
     """This is a wrapper script around the MoGAAAP Snakemake workflow."""
     pass
@@ -111,7 +126,6 @@ def download_databases(workdir, databases):
     type=click.Path(exists=True),
     help='Reference GFF file')
 @click.option('--mitochondrion', '-m',
-    required=True,
     type=click.Path(exists=True),
     help='Mitochondrion FASTA file')
 @click.option('--chloroplast', '-c',
@@ -122,21 +136,16 @@ def download_databases(workdir, databases):
     show_default=True,
     help='Telomere motif')
 @click.option('--odb', '-b',
-    required=True,
     help='ODB name for BUSCO')
 @click.option('--helixer-model', '-e',
-    required=True,
     help='Helixer model name (land_plant, vertebrate, invertebrate, fungi)')
 @click.option('--gxdb', '-x',
-    required=True,
     type=click.Path(exists=True),
     help='GXDB database location')
 @click.option('--omadb', '-o',
-    required=True,
     type=click.Path(exists=True),
     help='OMA database location')
 @click.option('--kraken2db', '-k',
-    required=True,
     type=click.Path(exists=True),
     help='kraken2 database location')
 def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
@@ -147,12 +156,16 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
     samples = os.path.abspath(samples)
     reference_fasta = os.path.abspath(reference_fasta)
     reference_gff = os.path.abspath(reference_gff)
-    mitochondrion = os.path.abspath(mitochondrion)
+    if mitochondrion:
+        mitochondrion = os.path.abspath(mitochondrion)
     if chloroplast:
         chloroplast = os.path.abspath(chloroplast)
-    gxdb = os.path.abspath(gxdb)
-    omadb = os.path.abspath(omadb)
-    kraken2db = os.path.abspath(kraken2db)
+    if gxdb:
+        gxdb = os.path.abspath(gxdb)
+    if omadb:
+        omadb = os.path.abspath(omadb)
+    if kraken2db:
+        kraken2db = os.path.abspath(kraken2db)
 
     configure_mogaaap(workdir, samples, reference_fasta, reference_gff,
         mitochondrion, chloroplast, telomere, odb, helixer_model, gxdb, omadb,
@@ -161,12 +174,17 @@ def configure(workdir, samples, reference_fasta, reference_gff, mitochondrion,
 
 def validate_targets(ctx, param, value):
     """
-    Validate that the targets are valid (i.e. one of: all, assembly, scaffold,
-        analyse, annotate, qa)
+    Validate that the targets are valid (i.e. one of: all, assemble, annotate,
+    qa or their respective sub-targets)
     """
 
-    valid_targets = ['all', 'assemble', 'contig', 'annotate', 'annotate_genes',
-        'annotate_custom', 'qa']
+    valid_targets = ['all',
+                     'assemble', 'contig',
+                     'annotate', 'annotate_genes', 'annotate_custom',
+                     'qa', 'merqury', 'kraken2', 'fcs_gx', 'fcs_adaptor',
+                     'mapping', 'pantools', 'busco', 'omark', 'mash', 'ntsynt',
+                     'sans', 'pangrowth', 'statistics'
+                     ]
 
     for target in value:
         if target not in valid_targets:
@@ -216,6 +234,8 @@ def run(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
     workdir = os.path.abspath(workdir)
     configfile = os.path.abspath(configfile)
     reportfile = os.path.abspath(reportfile)
+    if not targets:
+        targets = ["all"]
 
     run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets)
 
