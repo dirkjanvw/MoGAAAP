@@ -6,7 +6,7 @@ rule helixer_download_model:
     params:
         helixer_model = lambda _: config["helixer_model"],
     container:
-        "docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8"
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8_1"
     shell:
         """
         (
@@ -34,6 +34,6 @@ rule helixer:
     resources:
         helixer = 1
     container:
-        "docker://gglyptodon/helixer-docker:helixer_v0.3.5_cuda_12.2.2-cudnn8"
+        "docker://gglyptodon/helixer-docker:helixer_v0.3.6_cuda_12.2.2-cudnn8_1"
     shell:
         "Helixer.py --fasta-path {input.genome} --gff-output-path {output} --species {params.species} --subsequence-length {params.subseqlen} --downloaded-model-path {input.helixer_model} --lineage {params.helixer_model} &> {log}"

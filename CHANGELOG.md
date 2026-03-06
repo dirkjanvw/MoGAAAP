@@ -1,6 +1,6 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.2.0 - 2026-03-06]
 
 ### Added
 - Add validation check for YAHS configuration (#122).
