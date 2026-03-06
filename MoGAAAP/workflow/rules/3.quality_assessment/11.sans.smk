@@ -18,7 +18,7 @@ rule sans_prepare_genome:
         ) &> {log}
         """
 
-rule sans:
+rule sans_run:
     input:
         "results/{asmset}/3.quality_assessment/11.sans.list",
     output:

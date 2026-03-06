@@ -120,23 +120,102 @@ def get_statistics_output(wildcards):
         all_output.append(f"results/{asmset}/3.quality_assessment/13.statistics/{asmset}.html")
     return all_output
 
+rule merqury:
+    input:
+        get_merqury_output,  #merqury
+    output:
+        touch("results/quality_assessment_merqury.done")
+
+rule kraken2:
+    input:
+        expand("results/{asmname}/3.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
+    output:
+        touch("results/quality_assessment_kraken2.done")
+
+rule fcs_gx:
+    input:
+        expand("results/{asmname}/3.quality_assessment/03.fcs/{asmname}.fcs_gx_report.html", asmname=get_all_accessions()),  #fcs-gx
+    output:
+        touch("results/quality_assessment_fcs_gx.done")
+
+rule fcs_adaptor:
+    input:
+        expand("results/{asmname}/3.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.html", asmname=get_all_accessions()),  #fcs-adaptor
+    output:
+        touch("results/quality_assessment_fcs_adaptor.done")
+
+rule mapping:
+    input:
+        get_multiqc_output,  #mapping
+    output:
+        touch("results/quality_assessment_mapping.done")
+
+rule pantools:
+    input:
+        get_pantools_output,  #pantools
+    output:
+        touch("results/quality_assessment_pantools.done")
+
+rule busco:
+    input:
+        get_busco_output,  #busco
+    output:
+        touch("results/quality_assessment_busco.done")
+
+rule omark:
+    input:
+        get_omark_output,  #omark
+    output:
+        touch("results/quality_assessment_omark.done")
+
+rule mash:
+    input:
+        get_mash_output,  #mash
+    output:
+        touch("results/quality_assessment_mash.done")
+
+rule ntsynt:
+    input:
+        get_ntsynt_output, #ntsynt
+    output:
+        touch("results/quality_assessment_ntsynt.done")
+
+rule sans:
+    input:
+        get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
+    output:
+        touch("results/quality_assessment_sans.done")
+
+rule pangrowth:
+    input:
+        get_pangrowth_output,  #pangrowth
+    output:
+        touch("results/quality_assessment_pangrowth.done")
+
+rule statistics:
+    input:
+        get_statistics_output, #statistics
+    output:
+        touch("results/quality_assessment_statistics.done")
+
 rule qa:
     input:
         # individual outputs
-        get_merqury_output,  #merqury
-        expand("results/{asmname}/3.quality_assessment/02.kraken2/{asmname}.kraken2.krona.html", asmname=get_all_accessions()),  #kraken2
-        expand("results/{asmname}/3.quality_assessment/03.fcs/{asmname}.fcs_gx_report.html", asmname=get_all_accessions()),  #fcs-gx
-        expand("results/{asmname}/3.quality_assessment/03.fcs/{asmname}/fcs_adaptor_report.html", asmname=get_all_accessions()),  #fcs-adaptor
-        get_multiqc_output,  #mapping
+        "results/quality_assessment_merqury.done",
+        "results/quality_assessment_kraken2.done",
+        "results/quality_assessment_fcs_gx.done",
+        "results/quality_assessment_fcs_adaptor.done",
+        "results/quality_assessment_mapping.done",
 
         # grouped outputs
-        get_pantools_output,  #pantools
-        get_busco_output,  #busco
-        get_omark_output,  #omark
-        get_mash_output,  #mash
-        get_ntsynt_output, #ntsynt
-        get_sans_output,  #sans nexus file (genome only with 1000 bootstrap)
-        get_pangrowth_output,  #pangrowth
-        get_statistics_output, #statistics
+        "results/quality_assessment_pantools.done",
+        "results/quality_assessment_busco.done",
+        "results/quality_assessment_omark.done",
+        "results/quality_assessment_mash.done",
+        "results/quality_assessment_ntsynt.done",
+        "results/quality_assessment_sans.done",
+        "results/quality_assessment_pangrowth.done",
+        "results/quality_assessment_statistics.done",
     output:
         touch("results/quality_assessment.done")
+

@@ -20,6 +20,10 @@ properties:
         pattern: "^(hifiasm|verkko|flye)$"
         default: "hifiasm"
 
+    YAHS:
+        type: boolean
+        description: whether to use YAHS for Hi-C scaffolding prior to reference-guided scaffolding
+        default: false
     scaffolder:
         type: string
         description: scaffolder to use; supported scaffolders are ntjoin, ragtag
@@ -159,17 +163,7 @@ properties:
 
 required:
     - samples
-    - assembler
-    - scaffolder
-    - min_contig_len
-    - reference_genomes
-    - organellar
-    - nucl_queries
-    - telomere_motif
-    - helixer_model
-    - helixer_max_gene_length
-    - gxdb
-    - odb
-    - kraken2_nt
-    - OMAdb
     - set
+    - nucmer_maxgap
+    - nucmer_minmatch
+    - custom_singularity

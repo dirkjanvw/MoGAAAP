@@ -37,22 +37,27 @@ rule copy_annotation:
 
 rule copy_separated_genome:
     input:
-        nuclear = "results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.fa",
-        organellar = expand("results/{{asmname}}/2.annotation/13.separate_genome/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
+        "results/{asmname}/2.annotation/13.separate_genome/{asmname}.nuclear.fa",
     output:
-        nuclear = "final_output/{asmname}.nuclear.fa",
-        organellar = expand("final_output/{{asmname}}.{organelle}.fa", organelle = config["organellar"]),
+        "final_output/{asmname}.nuclear.fa",
     log:
         "results/logs/2.annotation/copy_separated_genome/{asmname}.log"
     benchmark:
         "results/benchmarks/2.annotation/copy_separated_genome/{asmname}.txt"
     shell:
-        """
-        (
-        cp $(realpath {input.nuclear}) {output.nuclear}
-        cp $(realpath {input.organellar}) $(dirname {output.organellar} | uniq)
-        ) &> {log}
-        """
+        "cp $(realpath {input}) {output} &> {log}"
+
+rule copy_separated_nuclear_genome:
+    input:
+        "results/{asmname}/2.annotation/13.separate_genome/{asmname}.{organelle}.fa",
+    output:
+        "final_output/{asmname}.{organelle}.fa",
+    log:
+        "results/logs/2.annotation/copy_separated_nuclear_genome/{asmname}/{organelle}.log"
+    benchmark:
+        "results/benchmarks/2.annotation/copy_separated_nuclear_genome/{asmname}/{organelle}.txt"
+    shell:
+        "cp $(realpath {input}) {output} &> {log}"
 
 def get_query_files(wildcards):
     query_files = []
@@ -80,11 +85,11 @@ rule annotate_genes:
 rule annotate_custom:
     input:
         get_query_files, ### optional BLAST results ###
-        expand("results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.html", query_name = config["organellar"], asmname = get_all_accessions()), ### BLASTN results for organellar ###
+        lambda _: expand("results/{asmname}/2.annotation/07.blast_n/{query_name}.vs.{asmname}.html", query_name = config["organellar"], asmname = get_all_accessions()), ### BLASTN results for organellar ###
         expand("results/{asmname}/2.annotation/12.circos/{asmname}.circos.html", asmname = get_all_accessions()), ### CIRCOS configuration ###
         expand("results/{asmname}/2.annotation/12.circos/{asmname}.circos.png", asmname = get_all_accessions()), ### CIRCOS PLOT ###
         expand("results/{asmname}/2.annotation/14.telo/{asmname}.telo.html", asmname = get_all_accessions()), ### TELOMERE LOCATIONS ###
-        expand("final_output/{asmname}.{section}.fa", section = [x for x in config["organellar"]] + ["nuclear"], asmname = get_all_accessions()), ### SEPARATED GENOMES ###
+        lambda _: expand("final_output/{asmname}.{section}.fa", section = [x for x in config["organellar"]] + ["nuclear"], asmname = get_all_accessions()), ### SEPARATED GENOMES ###
     output:
         touch("results/custom_annotation.done")
 

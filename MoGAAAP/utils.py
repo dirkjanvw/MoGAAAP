@@ -5,7 +5,7 @@ import sys
 from math import log
 
 import click
-from yaml import dump
+from yaml import dump, safe_load
 
 try:
     import importlib.resources as importlib_resources  # Python 3.9+
@@ -409,18 +409,24 @@ def configure_mogaaap(
         }
     }
     configuration["nucl_queries"] = {"telomere": telomerefile}
-    configuration["organellar"] = {"mitochondrion": mitochondrion}
-    if chloroplast:
-        configuration["organellar"]["chloroplast"] = chloroplast
+    if mitochondrion:
+        configuration["organellar"] = {"mitochondrion": mitochondrion}
+        if chloroplast:
+            configuration["organellar"]["chloroplast"] = chloroplast
     configuration["telomere_motif"] = telomere
-    configuration["helixer_model"] = helixer_model
-    configuration["helixer_max_gene_length"] = 64152
+    if helixer_model:
+        configuration["helixer_model"] = helixer_model
+        configuration["helixer_max_gene_length"] = 64152
     configuration["k_qa"] = kmer_size
-    configuration["gxdb"] = gxdb
+    if gxdb:
+        configuration["gxdb"] = gxdb
     configuration["pantools_grouping"] = 3
-    configuration["odb"] = odb
-    configuration["kraken2_nt"] = kraken2db
-    configuration["OMAdb"] = omadb
+    if odb:
+        configuration["odb"] = odb
+    if kraken2db:
+        configuration["kraken2_nt"] = kraken2db
+    if omadb:
+        configuration["OMAdb"] = omadb
     configuration["set"] = {"all": accession_names}
     configuration["jvm"] = "-Xmx100g -Xms100g"
     configuration["tmpdir"] = "/dev/shm/"
@@ -445,6 +451,30 @@ def configure_mogaaap(
     )
 
 
+def get_nested(data, key_path):
+    """Access nested keys using dot notation, e.g. 'organellar.mitochondrion'"""
+    keys = key_path.split(".")
+    for key in keys:
+        if not isinstance(data, dict) or key not in data:
+            return None
+        data = data[key]
+    return data
+
+
+def get_required_keys(target, deps, _seen=None):
+    """Recursively get all required config keys"""
+    _seen = _seen or set()
+    if target in _seen:
+        return []
+    _seen.add(target)
+
+    node = deps[target]
+    keys = list(node["own_keys"])
+    for parent in node["parents"]:
+        keys += get_required_keys(parent, deps, _seen)
+    return keys
+
+
 def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, targets):
     click.secho(f"[INFO ] Running the MoGAAAP pipeline at {workdir}", fg="blue")
 
@@ -462,6 +492,42 @@ def run_mogaaap(workdir, configfile, reportfile, cores, memory, dryrun, other, t
             return
         else:
             configfile = os.path.abspath(os.path.join(workdir, "config", "config.yaml"))
+    click.secho(f"[INFO ] Found configuration file: {configfile}", fg="blue")
+
+    # Check if configfile is valid
+    TARGET_DEPS = {
+            "common":           {"parents": [],             "own_keys": ["samples", "set", "nucmer_maxgap", "nucmer_minmatch", "custom_singularity"]},
+            "contig":           {"parents": ["common"],     "own_keys": ["assembler", "min_contig_len"]},
+            "assemble":         {"parents": ["contig"],     "own_keys": ["YAHS", "scaffolder", "ntjoin_k", "ntjoin_w", "reference_genomes"]},
+            "annotate_genes":   {"parents": ["assemble"],   "own_keys": ["helixer_model", "helixer_max_gene_length", "reference_genomes"]},
+            "annotate_custom":  {"parents": ["assemble"],   "own_keys": ["nucl_queries", "telomere_motif", "organellar.mitochondrion"]},
+            "annotate":         {"parents": ["annotate_genes", "annotate_custom"], "own_keys": []},
+            "merqury":          {"parents": ["assemble"],   "own_keys": ["k_qa"]},
+            "kraken2":          {"parents": ["assemble"],   "own_keys": ["kraken2_nt"]},
+            "fcs_gx":           {"parents": ["assemble"],   "own_keys": ["gxdb"]},
+            "fcs_adaptor":      {"parents": ["assemble"],   "own_keys": []},
+            "mapping":          {"parents": ["assemble"],   "own_keys": []},
+            "pantools":         {"parents": ["annotate"],   "own_keys": ["pantools_grouping", "tmpdir", "jvm"]},
+            "busco":            {"parents": ["annotate"],   "own_keys": ["odb"]},
+            "omark":            {"parents": ["annotate"],   "own_keys": ["OMAdb"]},
+            "mash":             {"parents": ["assemble"],   "own_keys": []},
+            "ntsynt":           {"parents": ["assemble"],   "own_keys": []},
+            "sans":             {"parents": ["assemble"],   "own_keys": []},
+            "pangrowth":        {"parents": ["assemble"],   "own_keys": ["k_qa"]},
+            "statistics":       {"parents": ["annotate"],   "own_keys": ["assembler", "k_qa", "min_contig_len"]},
+            "qa":               {"parents": ["merqury", "kraken2", "fcs_gx", "fcs_adaptor", "mapping", "pantools", "busco", "omark", "mash", "ntsynt", "sans", "pangrowth", "statistics"], "own_keys": ["k_qa"]},
+            "all":              {"parents": ["assemble", "annotate", "qa"], "own_keys": []}
+    }
+    required_keys = []
+    for target in targets:
+        required_keys.extend(get_required_keys(target, TARGET_DEPS))
+    required_keys = set(required_keys)
+    with open(configfile, "r") as f:
+        config = safe_load(f)
+    missing = [key for key in required_keys if get_nested(config, key) is None]
+    if missing:
+        click.secho(f"[ERROR] For target '{target}', the configuration file is missing the following keys: {missing}", fg="red")
+        return
 
     # Check if Snakemake and Singularity (or Apptainer) are available
     if not shutil.which("snakemake"):
