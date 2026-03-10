@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- Update ntSynt-viz to v1.0.2 to allow for three-way comparisons with tree (#?128).
+
 ## [1.2.0 - 2026-03-06]
 
 ### Added
