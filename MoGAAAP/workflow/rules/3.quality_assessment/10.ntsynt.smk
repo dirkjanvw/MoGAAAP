@@ -51,7 +51,7 @@ rule visualise_ntsynt:
     params:
         minlen = 10000000 #minimum length for a block
     container:
-        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt-viz.v1.0.0:latest"
+        "oras://ghcr.io/dirkjanvw/mogaaap/ntsynt-viz.v1.0.2:latest"
     shell:
         """
         (
