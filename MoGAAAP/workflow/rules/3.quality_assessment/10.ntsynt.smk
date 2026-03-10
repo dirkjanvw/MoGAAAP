@@ -59,6 +59,6 @@ rule visualise_ntsynt:
         fais="$(realpath {input.fais})"
         cd $(dirname {output.default_plot})
         env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev)
-        (env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick}) 2>&1 | awk '{{if ($0==l){{c++;}} else{{c=1;l=$0;}} if (c>=100) exit 1; print;}}') || cp $(basename {output.default_plot}) $(basename {output.tree_plot})
+        env -u SNAKEMAKE_PROFILE ntsynt_viz.py --blocks ${{blocks}} --fais ${{fais}} --seq_length {params.minlen} --prefix $(basename {output.default_plot} | rev | cut -d '_' -f 2- | rev) --tree $(basename {output.newick}) 2>&1 | awk '{{if ($0==l){{c++;}} else{{c=1;l=$0;}} if (c>=100) exit 1; print;}}'
         ) &> {log}
         """
