@@ -9,12 +9,12 @@ From: condaforge/mambaforge:24.9.2-0
 
 %post
     cd /opt
-    wget https://github.com/bcgsc/ntSynt-viz/releases/download/v1.0.0/ntSynt-viz-1.0.0.tar.gz
-    tar xvzf ntSynt-viz-1.0.0.tar.gz
-    rm ntSynt-viz-1.0.0.tar.gz
+    wget https://github.com/bcgsc/ntSynt-viz/releases/download/v1.0.2/ntSynt-viz-1.0.2.tar.gz
+    tar xvzf ntSynt-viz-1.0.2.tar.gz
+    rm ntSynt-viz-1.0.2.tar.gz
 
 %post
     R -e 'install.packages(c("gggenomes"), repos = "https://cran.r-project.org")'
 
 %environment
-    PATH="$PATH:/opt/ntSynt-viz-1.0.0/bin"
+    PATH="$PATH:/opt/ntSynt-viz-1.0.2/bin"
