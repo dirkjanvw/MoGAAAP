@@ -8,7 +8,7 @@ rule omamer_search:
     benchmark:
         "results/benchmarks/3.quality_assessment/omamer/{asmname}.txt"
     params:
-        database = config["OMAdb"]
+        database = lambda _: config["OMAdb"]
     threads:
         10
     conda:
@@ -34,7 +34,7 @@ rule omark_run:
     benchmark:
         "results/benchmarks/3.quality_assessment/omark/{asmname}.txt"
     params:
-        database = config["OMAdb"]
+        database = lambda _: config["OMAdb"]
     conda:
         "../../envs/oma.yaml"
     shell:
