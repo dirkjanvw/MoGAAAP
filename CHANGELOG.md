@@ -1,9 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
-## [Unreleased]
+## [1.2.1 - 2026-03-11]
 
 ### Changed
-- Update ntSynt-viz to v1.0.2 to allow for three-way comparisons with tree (#?128).
+- Update ntSynt-viz to v1.0.2 to allow for three-way comparisons with tree (#128).
+- Fix small issue that arises when no OMA database is configured when it's not used, caused by #125 (#128).
 
 ## [1.2.0 - 2026-03-06]
 
