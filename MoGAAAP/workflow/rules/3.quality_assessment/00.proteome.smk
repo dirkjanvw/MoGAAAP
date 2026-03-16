@@ -4,7 +4,7 @@ rule get_proteome:
         annotation = "final_output/{asmname}.full.gff",
         config = "results/{asmname}/agat_config.yaml",
     output:
-        "results/{asmname}/3.quality_assessment/proteome.pep.fa",
+        ensure("results/{asmname}/3.quality_assessment/proteome.pep.fa"), non_empty=True),
     log:
         "results/logs/3.quality_assessment/proteome/{asmname}.log",
     benchmark:

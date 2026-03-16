@@ -52,19 +52,25 @@ def get_best_wgstype(asmname):
     return "HiFi"
 
 def has_hifi(asmname): #false is only possible when an assembly is provided
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hifi"].isnull().values.item()
+    if "hifi" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hifi"].isnull().values.item()
+    return False
 
 def get_hifi(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hifi"].values.item().split(";")
 
 def has_ont(asmname):
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item()
+    if "ont" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["ont"].isnull().values.item()
+    return False
 
 def get_ont(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["ont"].values.item().split(";")
 
 def has_illumina(asmname):
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item()
+    if "illumina_1" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["illumina_1"].isnull().values.item()
+    return False
 
 def get_illumina_1(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_1"].values.item()
@@ -73,7 +79,9 @@ def get_illumina_2(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["illumina_2"].values.item()
 
 def has_hic(asmname):
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hic_1"].isnull().values.item()
+    if "hic_1" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["hic_1"].isnull().values.item()
+    return False
 
 def get_hic_1(wildcards):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(wildcards.asmname)]["hic_1"].values.item()
@@ -97,13 +105,17 @@ def get_reference_id(asmname):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["referenceId"].values.item()
 
 def has_assembly_location(asmname):
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].isnull().values.item()
+    if "assemblyLocation" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].isnull().values.item()
+    return False
 
 def get_assembly_location(asmname):
     return SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["assemblyLocation"].values.item()
 
 def has_annotation_location(asmname):
-    return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
+    if "annotationLocation" in SAMPLES:
+        return not SAMPLES[SAMPLES["accessionId"] == get_clean_accession_id(asmname)]["annotationLocation"].isnull().values.item()
+    return False
 
 def get_annotation_location(asmname):
     """

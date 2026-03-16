@@ -1,5 +1,10 @@
 All notable changes to MoGAAAP will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- Allow for not listing the optional columns in the sample sheet (#131).
+
 ## [1.2.1 - 2026-03-11]
 
 ### Changed
